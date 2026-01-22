@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-public class RobotContainer {
+public class RobotSystem {
         // kSpeedAt12Volts desired top speed
         private static double MaxSpeedScaler = 0.25;
         private double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -43,7 +43,7 @@ public class RobotContainer {
 
         public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-        public RobotContainer() {
+        public RobotSystem() {
                 configureBindings();
         }
 
