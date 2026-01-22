@@ -43,10 +43,12 @@ public class RobotSystem {
 
         public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+        // -------------------------------------------------------------------------------------------------------------
         public RobotSystem() {
                 configureBindings();
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private void configureBindings() {
                 // Note that X is defined as forward according to WPILib convention,
                 // and Y is defined as to the left according to WPILib convention.
@@ -84,6 +86,7 @@ public class RobotSystem {
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         public Command getAutonomousCommand() {
                 // Simple drive forward auton
                 final var idle = new SwerveRequest.Idle();
