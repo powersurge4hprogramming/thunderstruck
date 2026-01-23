@@ -42,8 +42,8 @@ public class VelocityAngleSolver {
 
     /**
      * Calculates the firing solution accounting for robot motion.
-     * * @param targetX Field X coordinate of the hoop center (meters)
      * 
+     * @param targetX     Field X coordinate of the hoop center (meters)
      * @param targetY     Field Y coordinate of the hoop center (meters)
      * @param targetZ     Field Z height of the hoop rim (meters)
      * @param robotX      Current Field X position of robot (meters)
