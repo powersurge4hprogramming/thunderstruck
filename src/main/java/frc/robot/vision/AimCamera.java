@@ -3,6 +3,7 @@ package frc.robot.vision;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class AimCamera {
+
     /**
      * {@summary}
      * This gets the {@link Transform3d} when the camera is pointed at the Hub
