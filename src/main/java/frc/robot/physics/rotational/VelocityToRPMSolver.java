@@ -4,59 +4,79 @@ import java.util.function.DoubleSupplier;
 
 /**
  * VelocityToRPMSolver.java
- *
+ * <p>
  * This class implements the simplified physics-based shooter math for FRC
- * RoboRIO 2 with high-inertia flywheel.
- * It models the linear surface speed for target RPM, voltage compensation, and
- * readiness check.
+ * RoboRIO 2 with high-inertia flywheel. It models the linear surface speed
+ * for target RPM, voltage compensation, and readiness check.
+ * </p>
  *
- * Numeric worked example (using class defaults):
+ * <h3>Numeric worked example (using class defaults):</h3>
+ * 
+ * <pre>
  * Assume desiredExitVelocityMps = 10.0 m/s
  * targetWheelOmega = 10.0 / (0.05 * 0.95) ≈ 10 / 0.0475 ≈ 210.53 rad/s
- * maxWheelOmega at V=12: kv_rad_per_v ≈ 59.38 (for 567 RPM/V), max = 59.38 *
- * (12/12) / 1.5 ≈ 59.38 / 1.5 ≈ 39.59 rad/s? Wait, recalculate properly:
+ * maxWheelOmega at V=12: kv_rad_per_v ≈ 59.38 (for 567 RPM/V),
+ * max = 59.38 * (12/12) / 1.5 ≈ 59.38 / 1.5 ≈ 39.59 rad/s?
+ * Wait, recalculate properly:
  * kv_rad_per_v = 567 * pi / 30 ≈ 59.38 rad/s per V
- * maxWheelOmega = 59.38 * 12 / 1.5 ≈ 712.56 / 1.5 ≈ 475.04 rad/s (clamped if
- * needed, but 210.53 < 475)
- * targetMotorRPM = 210.53 * 1.5 * 60 / (2*pi) ≈ 210.53 * 1.5 * 9.549 ≈ 3015 RPM
+ * maxWheelOmega = 59.38 * 12 / 1.5 ≈ 712.56 / 1.5 ≈ 475.04 rad/s
+ * (clamped if needed, but 210.53 < 475)
+ * targetMotorRPM = 210.53 * 1.5 * 60 / (2*pi) ≈
+ *                  210.53 * 1.5 * 9.549 ≈ 3015 RPM
+ * </pre>
  *
- * Pit-test checklist for measuring/tuning constants:
- * - WHEEL_RADIUS_M: Measure physical wheel radius with calipers or from CAD.
- * - EXIT_VELOCITY_EFFICIENCY: Fire shots at various known RPM (measured by
- * encoder), measure exit velocity with chronograph, fit efficiency = measured_v
- * / (wheel_omega * radius).
- * - READY_TOLERANCE_RPM: Tune based on acceptable velocity error (e.g., 50 RPM
- * ≈ 5% at 1000 RPM).
- * - MIN_READY_TIME_S: Tune to filter noise/oscillations (start at 0.1s).
- * - KV_RPM_PER_V: From motor datasheet (e.g., Kraken ~567 RPM/V).
+ * <h3>Pit-test checklist for measuring/tuning constants:</h3>
+ * <ul>
+ * <li>WHEEL_RADIUS_M: Measure physical wheel radius with calipers
+ * or from CAD.</li>
+ * <li>EXIT_VELOCITY_EFFICIENCY: Fire shots at various known RPM
+ * (measured by encoder), measure exit velocity with chronograph,
+ * fit efficiency = measured_v / (wheel_omega * radius).</li>
+ * <li>READY_TOLERANCE_RPM: Tune based on acceptable velocity error
+ * (e.g., 50 RPM ≈ 5% at 1000 RPM).</li>
+ * <li>MIN_READY_TIME_S: Tune to filter noise/oscillations
+ * (start at 0.1s).</li>
+ * <li>KV_RPM_PER_V: From motor datasheet (e.g., Kraken ~567 RPM/V).</li>
+ * </ul>
  *
- * Unit-test plan:
- * - Test linear calc: Call calculateMotorRPM(10.0), verify ≈3015 RPM (per
- * example).
- * - Test voltage clamp: Mock vbat=6V, verify RPM clamped to half max (e.g., if
- * target high, cap at ~1507 RPM).
- * - Test readiness: Mock measuredRPM close to target, verify true after
- * hysteresis time; far, false.
- * - Edge: v=0 → RPM=0; high v > max, clamped.
- * - Numeric check: Verify precomputes used, no div by zero.
+ * <h3>Unit-test plan:</h3>
+ * <ul>
+ * <li>Test linear calc: Call calculateMotorRPM(10.0), verify
+ * ≈3015 RPM (per example).</li>
+ * <li>Test voltage clamp: Mock vbat=6V, verify RPM clamped to half
+ * max (e.g., if target high, cap at ~1507 RPM).</li>
+ * <li>Test readiness: Mock measuredRPM close to target, verify true
+ * after hysteresis time; far, false.</li>
+ * <li>Edge: v=0 → RPM=0; high v > max, clamped.</li>
+ * <li>Numeric check: Verify precomputes used, no div by zero.</li>
+ * </ul>
  *
- * Telemetry logging guidance during practice:
+ * <h3>Telemetry logging guidance during practice:</h3>
+ * <p>
  * Log targetMotorRPM, measuredMotorRPM, battery voltage, error RPM,
- * isReadyToFire flag, motor current (from PDH/PDP), measured exit speed (if
- * sensor available).
- * Plot spool-up curves, compare commanded vs actual RPM, adjust efficiency/PID.
+ * isReadyToFire flag, motor current (from PDH/PDP), measured exit
+ * speed (if sensor available). Plot spool-up curves, compare commanded
+ * vs actual RPM, adjust efficiency/PID.
+ * </p>
  *
- * PID + Feedforward (PIDF) Tuning Guidance:
- * - Tune kF first in open-loop (kP/kI/kD=0): Command RPM, measure steady-state
- * voltage/RPM, set kF ≈ voltage / (RPM * vbat / V_NOM). Use SysId for kV/kA.
- * - Add kP low (e.g., 0.0001 V/RPM error) to correct, reduce if oscillating.
- * - Minimal kI (e.g., 0.00001) for load errors, avoid windup.
- * - kD small for damping.
- * - Use CTRE Phoenix Tuner X for live tuning on Kraken X60/Talon FX.
- * - Test under load (balls), expect 1-3s rise time due to inertia.
+ * <h3>PID + Feedforward (PIDF) Tuning Guidance:</h3>
+ * <ul>
+ * <li>Tune kF first in open-loop (kP/kI/kD=0): Command RPM, measure
+ * steady-state voltage/RPM, set kF ≈ voltage /
+ * (RPM * vbat / V_NOM). Use SysId for kV/kA.</li>
+ * <li>Add kP low (e.g., 0.0001 V/RPM error) to correct,
+ * reduce if oscillating.</li>
+ * <li>Minimal kI (e.g., 0.00001) for load errors, avoid windup.</li>
+ * <li>kD small for damping.</li>
+ * <li>Use CTRE Phoenix Tuner X for live tuning on Kraken X60/Talon FX.</li>
+ * <li>Test under load (balls), expect 1-3s rise time due to inertia.</li>
+ * </ul>
  *
- * TODO: Update motor constants from Kraken X60 datasheet.
- * TODO: Tune constants empirically from robot data.
+ * <h3>TODOs:</h3>
+ * <ul>
+ * <li>Update motor constants from Kraken X60 datasheet.</li>
+ * <li>Tune constants empirically from robot data.</li>
+ * </ul>
  */
 public class VelocityToRPMSolver {
     // Measured/tunable constants
