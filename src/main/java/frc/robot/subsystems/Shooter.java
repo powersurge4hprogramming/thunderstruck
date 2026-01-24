@@ -21,9 +21,9 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * This function creates a single command to shoot the ball at a particular
-     * instant. It will shoot the ball at any
-     * given velocity and launch angle
+     * This function creates a single {@link Command} to shoot the ball at a
+     * particular instant. It will shoot the ball at any given velocity and launch
+     * angle.
      * 
      * @param velocityBall The velocity at which to shoot the ball.
      * @param angleLaunch  The angle at which to shoot the ball.
