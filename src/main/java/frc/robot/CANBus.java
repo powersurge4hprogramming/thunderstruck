@@ -13,8 +13,8 @@ public class CANBus {
      * This holds all of the CANBus names.
      */
     public static final class BUS {
-        public static final String RIO = com.ctre.phoenix6.CANBus.roboRIO().getName();
-        public static final String CANIVORE = "canivore";
+        public static final com.ctre.phoenix6.CANBus RIO = com.ctre.phoenix6.CANBus.roboRIO();
+        public static final com.ctre.phoenix6.CANBus CANIVORE = new com.ctre.phoenix6.CANBus("canivore");
     }
 
     // =================================================================================================================
