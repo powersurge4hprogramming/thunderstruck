@@ -3,7 +3,7 @@ package frc.robot.physics.rotational;
 import java.util.function.DoubleSupplier;
 
 /**
- * VelocityToRpmSolver.java
+ * VelocityToRPMSolver.java
  *
  * This class implements the simplified physics-based shooter math for FRC
  * RoboRIO 2 with high-inertia flywheel.
@@ -58,7 +58,7 @@ import java.util.function.DoubleSupplier;
  * TODO: Update motor constants from Kraken X60 datasheet.
  * TODO: Tune constants empirically from robot data.
  */
-public class VelocityToRpmSolver {
+public class VelocityToRPMSolver {
     // Measured/tunable constants
     private static final double WHEEL_RADIUS_M = 0.05; // Wheel radius (m)
     private static final double EXIT_VELOCITY_EFFICIENCY = 0.95; // Efficiency factor (dimensionless)
@@ -88,13 +88,13 @@ public class VelocityToRpmSolver {
     private final DoubleSupplier measuredMotorRPMSupplier;
 
     /**
-     * Constructor for VelocityToRpmSolver.
+     * Constructor for VelocityToRPMSolver.
      *
      * @param batteryVoltageSupplier   Supplier for current battery voltage.
      * @param measuredMotorRPMSupplier Supplier for measured motor RPM (from
      *                                 encoder).
      */
-    public VelocityToRpmSolver(DoubleSupplier batteryVoltageSupplier, DoubleSupplier measuredMotorRPMSupplier) {
+    public VelocityToRPMSolver(DoubleSupplier batteryVoltageSupplier, DoubleSupplier measuredMotorRPMSupplier) {
         this.batteryVoltageSupplier = batteryVoltageSupplier;
         this.measuredMotorRPMSupplier = measuredMotorRPMSupplier;
     }
