@@ -24,7 +24,10 @@ public class Shooter extends SubsystemBase {
      * instant. It will shoot the ball at any
      * given velocity and launch angle
      * 
-     * @param velocityBall
+     * @param velocityBall The velocity at which to shoot the ball.
+     * @param angleLaunch  The angle at which to shoot the ball.
+     * 
+     * @return The {@link Command} at which to shoot the ball.
      */
     public Command shootBall(final double velocityBall, final double angleLaunch) {
         throw new RuntimeException("Did implement the shootBall method yet");

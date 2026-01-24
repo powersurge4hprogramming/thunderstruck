@@ -205,7 +205,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * drivetrain.
      *
      * @param request Function returning the request to apply
-     * @return Command to run
+     * @return The {@link Command} to run.
      */
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return run(() -> this.setControl(request.get()));
@@ -218,7 +218,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * 
      * @param aprilTagToRobot Get this from the {@link frc.robot.vision.AimCamera
      *                        AimCamera}.
-     * @return
+     * @return The {@link Command} to run.
      */
     public Command applyLockOn(Supplier<Transform3d> aprilTagToRobot) {
         throw new RuntimeException("Not Implemented yet.");

@@ -8,6 +8,8 @@ public class Climber extends SubsystemBase {
     /**
      * {@summary}
      * Tell the climber to go upward.
+     * 
+     * @return The {@link Command} to perform the action.
      */
     public Command upward() {
         throw new RuntimeException("Not implemented yet.");
@@ -16,6 +18,8 @@ public class Climber extends SubsystemBase {
     /**
      * {@summary}
      * Tell the climber to go downward.
+     * 
+     * @return The {@link Command} to perform the action.
      */
     public Command downward() {
         throw new RuntimeException("Not implemented yet.");

@@ -8,6 +8,8 @@ public class Collector extends SubsystemBase {
     /**
      * {@summary}
      * Run the collector.
+     * 
+     * @return The {@link Command} to perform the action.
      */
     public Command collect() {
         throw new RuntimeException("Not implemented yet.");
@@ -16,6 +18,8 @@ public class Collector extends SubsystemBase {
     /**
      * {@summary}
      * Stop the collector.
+     * 
+     * @return The {@link Command} to perform the action.
      */
     public Command collectStop() {
         throw new RuntimeException("Not implemented yet.");
