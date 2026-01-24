@@ -21,7 +21,7 @@ public class Collector extends SubsystemBase {
      * 
      * @return The {@link Command} to perform the action.
      */
-    public Command collectStop() {
+    public Command stop() {
         throw new RuntimeException("Not implemented yet.");
     }
 }
