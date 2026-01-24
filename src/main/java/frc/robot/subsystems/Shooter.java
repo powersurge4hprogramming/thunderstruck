@@ -11,7 +11,7 @@ public class Shooter extends SubsystemBase {
      * 
      * @param velocityBall
      */
-    public Command shootBall(final double velocityBall, final double angleLaunch) throws RuntimeException {
+    public Command shootBall(final double velocityBall, final double angleLaunch) {
         throw new RuntimeException("Did implement the shootBall method yet");
     }
 }

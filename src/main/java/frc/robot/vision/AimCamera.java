@@ -15,7 +15,7 @@ public class AimCamera {
      * @return The {@link Transform3d} when the camera is pointed at the Hub, or
      *         null if it isn't.
      */
-    public Transform3d getHubRelativeLocation() throws RuntimeException {
+    public Transform3d getHubRelativeLocation() {
         throw new RuntimeException("Not implemented yet.");
     }
 }
