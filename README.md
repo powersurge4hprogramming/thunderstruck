@@ -5,8 +5,8 @@ Today we are going to be *"hooking up"* (still trying to think of a better name 
 shooter system.
 
 ---
-The camera system is called *from here on out* as the `AimCamera`. This file
-[Open main file](src/main/java/frc/robot/vision/AimCamera.java) is to simply give back the `x, y, z` distances of the
+The camera system is called *from here on out* as the `AimCamera`. This file,
+[AimCamera](src/main/java/frc/robot/vision/AimCamera.java), is to simply give back the `x, y, z` distances of the
 robot relative to the *AprilTag*. This package of data--the `x, y, z`--is called a
 [Transform3d](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Transform3d.html)
 ***So far, the only one we need to point at is the Hub's AprilTag(s).*** 
