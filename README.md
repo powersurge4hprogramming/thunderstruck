@@ -31,7 +31,14 @@ final Transform3d robotRelativeToHub = aimCamera.getHubRelativeLocation();
 Fantastic! We have now the real life distance of the Hub relative to the robot: pretty amazing. Where do we go from here
 now? We now need to give this data to the **shooting sub-system**.
 
-1. 
+### The `Shooter` Sub-System
+The `Shooter` sub-system is the representation of the entire shooting mechanism. It's responsibility is to control the
+***x number*** of motors that *drive* the shooting mechanism. The `Shooter`, though, needs to know how **hard** and at
+**angle** to shoot the ball. Before we can shoot a ball, we first need to know how to shoot it. We need to understand
+some [physics](src/main/java/frc/robot/physics).
+
+We need to perform some [physics](src/main/java/frc/robot/physics). We need to get an angle and a velocity. This is done
+with the [VelocityAngleSolver](src/main/java/frc/robot/physics/ballistics/VelocityAngleSolver.java). This
 
 ## What's Done
 ### Robot.java
