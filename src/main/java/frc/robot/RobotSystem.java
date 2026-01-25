@@ -33,7 +33,7 @@ public class RobotSystem {
         // =============================================================================================================
         // Sub-Systems
         // =============================================================================================================
-        public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
         // =============================================================================================================
         // Swerve Drive Configurations
