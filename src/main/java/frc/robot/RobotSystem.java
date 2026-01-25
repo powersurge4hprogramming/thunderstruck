@@ -56,7 +56,7 @@ public class RobotSystem {
         // =============================================================================================================
         // Driver Inputs
         // =============================================================================================================
-        private final CommandXboxController joystick = new CommandXboxController(0);
+        private final CommandXboxController controller = new CommandXboxController(0);
 
         // =============================================================================================================
         // The Constructor
@@ -81,11 +81,11 @@ public class RobotSystem {
                                 // Drivetrain will execute this command periodically
                                 drivetrain.applyRequest(() ->
                                 // Drive forward with negative Y (forward)
-                                fieldDrive.withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
                                                 // Drive left with negative X (left)
-                                                .withVelocityY(-joystick.getLeftX() * MaxSpeed)
+                                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
                                                 // Drive counterclockwise with negative X (left)
-                                                .withRotationalRate(-joystick.getRightX() * MaxAngularRate)));
+                                                .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
 
                 /*
                  * Idle while the robot is disabled. This ensures the configured neutral mode is
@@ -95,22 +95,22 @@ public class RobotSystem {
                 RobotModeTriggers.disabled().whileTrue(
                                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-                joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-                joystick.b().whileTrue(drivetrain.applyRequest(
+                controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
-                                                new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+                                                new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
 
                 /*
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
                  */
-                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-                joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-                joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-                joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+                controller.back().and(controller.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+                controller.back().and(controller.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+                controller.start().and(controller.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+                controller.start().and(controller.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
                 // Reset the field-centric heading on left bumper press.
-                joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
