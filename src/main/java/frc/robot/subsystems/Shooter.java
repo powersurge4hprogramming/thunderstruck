@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command shootBall(final double velocityBall, final double angleLaunch) {
+    public Command manualShootBall(final double velocityBall, final double angleLaunch) {
         throw new RuntimeException("Not implemented yet.");
     }
 }
