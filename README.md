@@ -66,6 +66,12 @@ As you can see, there is a lot more data this method, `calculate`, needs.
 All of this data we'll get to soon. For now, just make variables, with those names above the call to the `calculate()`
 function. It'll be like, `double robotVx = 0;`, again and again. Do that just so that we can move on.
 
+---
+#### Time to Make the Shot!
+Ok, we now officially have what we need to make a shot! Let's now, make a command to the `Shooter` sub-system.
+
+OOps, I need to make a custom Command.
+
 ## What's Done
 ### Robot.java
 I think **autonomous** and **teleop** will work here automatically. CTRE's generation software really hooked us up I
