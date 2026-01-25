@@ -37,8 +37,33 @@ The `Shooter` sub-system is the representation of the entire shooting mechanism.
 **angle** to shoot the ball. Before we can shoot a ball, we first need to know how to shoot it. We need to understand
 some [physics](src/main/java/frc/robot/physics).
 
+#### The Velocity and Angle Solving Function
 We need to perform some [physics](src/main/java/frc/robot/physics). We need to get an angle and a velocity. This is done
-with the [VelocityAngleSolver](src/main/java/frc/robot/physics/ballistics/VelocityAngleSolver.java). This
+with the [VelocityAngleSolver](src/main/java/frc/robot/physics/ballistics/VelocityAngleSolver.java). This *class* is
+meant to solve, from our robot position relative to the Hub and our current x and y velocities, for our needed angle and
+velocity to shoot the ball.
+
+We must first *instantiate* a solver.
+```java
+final VelocityAngleSolver vASolver = new VelocityAngleSolver();
+```
+This is great, we now have some-"thing" to do our calculations. Let's tell it to do so. We need to give it our
+`robotRelativeToHub`, `Transform3d` *object* so that it now knows how far we are from the Hub. Then, once it has that,
+we can then give it our solver. We do it, like this:
+```java
+final VelocityAngleSolver vaSolver = new VelocityAngleSolver();
+final ShotResult vaSolution = vaSolver.calculate(robotRelativeToHub, robotVx, robotVy, shapeScalar, isInBlockedMode);
+```
+As you can see, there is a lot more data this method, `calculate`, needs.
+
+* `robotVx`: This is the velocity of the robot, in *m/s*, in a field relative *x* direction.
+* `robotVy`: This is the velocity of the robot, in *m/s*, in a field relative *y* direction.
+* `shapeScaler`: This is a dimensionless value that controls the shape of the shot curvature; for now, make it 0.8.
+* `isInBlockedMode`: This is a boolean to control whether to not use the `shapeScalar`, and just shoot at a launch
+    angle of 80 degress. As an aside, it certainly makes the math simpler.
+
+All of this data we'll get to soon. For now, just make variables, with those names above the call to the `calculate()`
+function. It'll be like, `double robotVx = 0;`, again and again. Do that just so that we can move on.
 
 ## What's Done
 ### Robot.java
