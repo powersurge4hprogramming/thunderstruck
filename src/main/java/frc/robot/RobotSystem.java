@@ -20,28 +20,43 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotSystem {
+        // =============================================================================================================
+        // Constants
+        // =============================================================================================================
         // kSpeedAt12Volts desired top speed
         private static double MaxSpeedScaler = 0.25;
-        private double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-
+        private static double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
         private static double MaxAngularRateScaler = 0.75;
-        private double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
+        private static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
 
-        /* Setting up bindings for necessary control of the swerve drive platform */
-        private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+        // =============================================================================================================
+        // Sub-Systems
+        // =============================================================================================================
+        public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+        // =============================================================================================================
+        // Swerve Drive Configurations
+        // =============================================================================================================
+        final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
                         // Add a 10% deadband
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+        final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+        final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+        // =============================================================================================================
+        // Logging
+        // =============================================================================================================
         private final Telemetry logger = new Telemetry(MaxSpeed);
 
+        // =============================================================================================================
+        // Driver Inputs
+        // =============================================================================================================
         private final CommandXboxController joystick = new CommandXboxController(0);
-
-        public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
         // -------------------------------------------------------------------------------------------------------------
         public RobotSystem() {
@@ -56,7 +71,7 @@ public class RobotSystem {
                                 // Drivetrain will execute this command periodically
                                 drivetrain.applyRequest(() ->
                                 // Drive forward with negative Y (forward)
-                                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                                fieldDrive.withVelocityX(-joystick.getLeftY() * MaxSpeed)
                                                 // Drive left with negative X (left)
                                                 .withVelocityY(-joystick.getLeftX() * MaxSpeed)
                                                 // Drive counterclockwise with negative X (left)
@@ -95,7 +110,7 @@ public class RobotSystem {
                                 // facing away from our alliance station wall (0 deg).
                                 drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
                                 // Then slowly drive forward (away from us) for 5 seconds.
-                                drivetrain.applyRequest(() -> drive.withVelocityX(0.5)
+                                drivetrain.applyRequest(() -> fieldDrive.withVelocityX(0.5)
                                                 .withVelocityY(0)
                                                 .withRotationalRate(0))
                                                 .withTimeout(5.0),
