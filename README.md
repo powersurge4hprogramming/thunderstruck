@@ -10,11 +10,10 @@ we can even make our needed command, we must first gather the required component
 command's ***dependencies***.
 
 1. `Shooter`: The command needs access to the shooter sub-system so that it can take complete control over it.
-2. `CommandSwerveDrivetrain`: The command needs access to the swerve drivetrain so that it can control it's yaw
-    automatically and read it's current x and y velocity while simultaneously allowing driver input on the x and y
-    plane.
-3. `AimCamera`: This is not a sub-system, but can the though of as an entirely separate *system*. We only read data from
-    the `AimCamera`, and therefore do not control it. We still need access to this live data though.
+2. `CommandSwerveDrivetrain`: The command needs access to the swerve drivetrain so that it can control its yaw
+    automatically and read its current x and y velocity while simultaneously allowing driver input on the x and y plane.
+3. `AimCamera`: This is not a sub-system, but can the thought of as an entirely separate *system*. We only read data
+    from the `AimCamera`, and therefore do not control it. We still need access to this live data though.
 4. `DoubleSupplier xMove`: This will be used to drive the robot, field-centrically, on the x-axis. This is just a
     function that the command can run when it needs to get the user input from the controller. 
 5. `DoubleSupplier yMove`: This will be used to drive the robot, field-centrically, on the y-axis. This is just a
