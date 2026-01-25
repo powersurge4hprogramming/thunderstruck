@@ -18,7 +18,7 @@ under that code you copied. This is good. We need to *instanciate* the `AimCamer
 final AimCamera aimCamera = new AimCamera();
 ```
 
-Now we have a real, *living*, `AimCamera`. Since we have created it*--instanciated it--*we can now **use it**. This is
+Now we have a real, *living*, `AimCamera`. Since we have created it--*instanciated it*--we can now **use it**. This is
 very important. Now, we can combine these 2 lines:
 ```java
 final AimCamera aimCamera = new AimCamera();
