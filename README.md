@@ -1,4 +1,6 @@
 # Thunderstruck
+This is the code base for the **ThunderStruck** Robot. This file acts as our ***"work-board"*** to keep track of what to
+do, to communicate remotely to each other, and allow for any of my review to happen at night outside of the shop.
 
 ## What Needs to Be Worked On Today
 Today we are going to be *"hooking up"* (still trying to think of a better name for this) the
