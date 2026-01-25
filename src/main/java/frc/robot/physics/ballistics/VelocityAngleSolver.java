@@ -36,7 +36,16 @@ public class VelocityAngleSolver {
         public double turretYawDegrees; // Field-relative angle to aim the turret
         public double hoodPitchDegrees; // Angle of the shooter hood
         public double flywheelSpeedMPS; // Tangential velocity of the flywheel
+
+        private ShoteResult(final double turretYawDegrees,
+                            final double hoodPitchDegrees,
+                            final double flywheelSpeedMPS) {
+            this.turretYawDegrees = turretYawDegrees;
+            this.hoodPitchDegrees = hoodPitchDegrees;
+            this.flywheelSpeedMPS = flywheelSpeedMPS;
+        }
     }
+
 
     // =========================================================================
     // PUBLIC API
@@ -54,10 +63,9 @@ public class VelocityAngleSolver {
      * @param isBlocked   If true, prioritizes high launch angle.
      * @param outResult   Output container.
      */
-    public void calculate(
+    public ShotResult calculate(
             Transform3d t3d, double robotVx, double robotVy,
-            double shapeScalar, boolean isBlocked,
-            ShotResult outResult) {
+            double shapeScalar, boolean isBlocked) {
 
         // 1. Calculate relative distances
         double dx = t3d.getX();
@@ -148,14 +156,16 @@ public class VelocityAngleSolver {
 
         // New Turret Angle (Field Relative)
         // This automatically handles the "lead" angle for strafing
-        outResult.turretYawDegrees = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
+        ShotResult.turretYawDegrees = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
 
         // New Hood Pitch
         // Note: Using atan2 ensures correct quadrant
-        outResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
+        ShotResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
 
         // New Flywheel Speed (Total Magnitude)
-        outResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
+        ShotResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
+
+        return this.ShotResult;
     }
 
     // =========================================================================
