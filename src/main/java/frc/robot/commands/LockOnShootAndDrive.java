@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.vision.AimCamera;
+import frc.robot.physics.ballistics.VelocityAngleSolver;
+import frc.robot.physics.rotational.VelocityToRPMSolver;
 
 public class LockOnShootAndDrive extends Command {
     private final Shooter shooter;
@@ -15,6 +17,9 @@ public class LockOnShootAndDrive extends Command {
     private final DoubleSupplier xSupplier;
     private final DoubleSupplier ySupplier;
 
+    private final VelocityAngleSolver vaSolver;
+    // private final VelocityToRPMSolver vRpmSolver;
+
     public LockOnShootAndDrive(Shooter shooter, CommandSwerveDrivetrain drive, AimCamera aimCamera,
             DoubleSupplier x, DoubleSupplier y) {
         this.shooter = shooter;
@@ -22,6 +27,9 @@ public class LockOnShootAndDrive extends Command {
         this.aimCamera = aimCamera;
         this.xSupplier = x;
         this.ySupplier = y;
+
+        this.vaSolver = new VelocityAngleSolver();
+        // this.vRpmSolver = new VelocityToRPMSolver(y, y)
 
         // REQUIRE BOTH: This stops any other drive or shooter commands
         addRequirements(shooter, drive);
