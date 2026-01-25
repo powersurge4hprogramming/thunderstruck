@@ -37,6 +37,7 @@ The `Shooter` sub-system is the representation of the entire shooting mechanism.
 **angle** to shoot the ball. Before we can shoot a ball, we first need to know how to shoot it. We need to understand
 some [physics](src/main/java/frc/robot/physics).
 
+---
 #### The Velocity and Angle Solving Function
 We need to perform some [physics](src/main/java/frc/robot/physics). We need to get an angle and a velocity. This is done
 with the [VelocityAngleSolver](src/main/java/frc/robot/physics/ballistics/VelocityAngleSolver.java). This *class* is
