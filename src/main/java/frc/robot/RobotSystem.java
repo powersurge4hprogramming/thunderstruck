@@ -87,8 +87,10 @@ public class RobotSystem {
                                                 // Drive counterclockwise with negative X (left)
                                                 .withRotationalRate(-joystick.getRightX() * MaxAngularRate)));
 
-                // Idle while the robot is disabled. This ensures the configured
-                // neutral mode is applied to the drive motors while disabled.
+                /*
+                 * Idle while the robot is disabled. This ensures the configured neutral mode is
+                 * applied to the drive motors while disabled.
+                 */
                 final var idle = new SwerveRequest.Idle();
                 RobotModeTriggers.disabled().whileTrue(
                                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
@@ -98,8 +100,10 @@ public class RobotSystem {
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-                // Run SysId routines when holding back/start and X/Y.
-                // Note that each routine should be run exactly once in a single log.
+                /*
+                 * Run SysId routines when holding back/start and X/Y. Note that each routine
+                 * should be run exactly once in a single log.
+                 */
                 joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
                 joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
                 joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
