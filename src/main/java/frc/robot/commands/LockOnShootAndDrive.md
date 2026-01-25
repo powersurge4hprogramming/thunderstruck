@@ -9,9 +9,8 @@ robot relative to the *AprilTag*. This package of data--the `x, y, z`--is called
 That's ok, we want to be pointing at the Hub's AprilTag when we are about to shoot. So, we are going to get that data
 packet--the `Transform3d`--from the `AimCamera` with this method:
     [getHubRelativeLocation()](src/main/java/frc/robot/vision/AimCamera.java).
-We are going to call it like this: `aimCamera.getHubRelativeLocation()`. Very nice, you'll probably notice that you'd
-get a red line under that code you copied. This is good. We need to *instanciate* the `AimCamera` system first. We do
-that like this:
+We are going to call it like this: `aimCamera.getHubRelativeLocation()`. You'd probably notice that you'd get a red line
+under that code you copied. This is good. We need to *instanciate* the `AimCamera` system first. We do that like this:
 ```java
 final AimCamera aimCamera = new AimCamera();
 ```
