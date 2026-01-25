@@ -25,12 +25,39 @@ public class Shooter extends SubsystemBase {
      * particular instant. It will shoot the ball at any given velocity and launch
      * angle.
      * 
-     * @param velocityBall The velocity at which to shoot the ball.
-     * @param angleLaunch  The angle at which to shoot the ball.
+     * @param motorRPMScalar The "speed" at which to set the motor in percentage of
+     *                       possible RPM.
+     * @param angleLaunch    The angle at which to shoot the ball.
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command manualShootBall(final double velocityBall, final double angleLaunch) {
+    public Command manualShootBall(final double motorRPMScalar, final double angleLaunch) {
+        throw new RuntimeException("Not implemented yet.");
+    }
+
+    /**
+     * {@summary}
+     * This method sets the Shooter's motors to an exact RPM.
+     * 
+     * @apiNote
+     *          This should only be used if you know what you're doing.
+     * 
+     * @param rpm The motor RPM.
+     */
+    public void setRPM(final double rpm) {
+        throw new RuntimeException("Not implemented yet.");
+    }
+
+    /**
+     * {@summary}
+     * This method sets the Shooter's launch angle.
+     * 
+     * @apiNote
+     *          This should only be used if you know what you're doing.
+     * 
+     * @param launchAngleDeg The angle, in degrees, at which to set the shooter.
+     */
+    public void setLaunchAngle(final double launchAngleDeg) {
         throw new RuntimeException("Not implemented yet.");
     }
 }
