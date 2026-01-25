@@ -1,5 +1,7 @@
 package frc.robot.physics.ballistics;
 
+import edu.wpi.first.math.geometry.Transform3d;
+
 /**
  * Zero-Allocation Ballistic Solver for FRC RoboRIO 2.
  * Supports:
@@ -44,11 +46,8 @@ public class VelocityAngleSolver {
      * Calculates the firing solution accounting for robot motion.
      * * @param targetX Field X coordinate of the hoop center (meters)
      * 
-     * @param targetY     Field Y coordinate of the hoop center (meters)
-     * @param targetZ     Field Z height of the hoop rim (meters)
-     * @param robotX      Current Field X position of robot (meters)
-     * @param robotY      Current Field Y position of robot (meters)
-     * @param robotZ      Height of shooter release point (meters)
+     * @param t3d         The {@link Transform3d} that has out relative distance
+     *                    from the shooter.
      * @param robotVx     Robot velocity X component (m/s)
      * @param robotVy     Robot velocity Y component (m/s)
      * @param shapeScalar 0.0 (Flat/Laser) to 1.0 (Steep/Lob)
@@ -56,16 +55,14 @@ public class VelocityAngleSolver {
      * @param outResult   Output container.
      */
     public void calculate(
-            double targetX, double targetY, double targetZ,
-            double robotX, double robotY, double robotZ,
-            double robotVx, double robotVy,
+            Transform3d t3d, double robotVx, double robotVy,
             double shapeScalar, boolean isBlocked,
             ShotResult outResult) {
 
         // 1. Calculate relative distances
-        double dx = targetX - robotX;
-        double dy = targetY - robotY;
-        double dz = targetZ - robotZ;
+        double dx = t3d.getX();
+        double dy = t3d.getY();
+        double dz = t3d.getZ();
 
         // Horizontal distance to target (on the floor)
         double distFloor = Math.sqrt(dx * dx + dy * dy);
