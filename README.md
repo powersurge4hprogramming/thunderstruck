@@ -144,6 +144,20 @@ I think **autonomous** and **teleop** will work here automatically. CTRE's gener
 think.
 
 ## What Needs to Be Done
+* Implement `LockOnShootAndDrive::execute`.
+    * Figure out how to use `SwerveRequest.FieldCentricFacingAngle`.
+    * Figure out how to get the swerve drive's current x and y velocities.
+* Implement `Shooter::setRPM`.
+* Implement `Shooter::setLaunchAngle`.
+* Implement `AimCamera::getHubRelativeLocation`.
+* Implement `Collector::run`.
+* Implement `Collector::stop`.
+* Implement `Climber::upward`.
+    * Still waiting on what this would even be via the rest of the engineering team.
+* Implement `Climber::downward`.
+    * Still waiting on what this would even be via the rest of the engineering team.
+* Figure out how to get rumble working on `Triggers`.
+* The entire autonomous plan!!!
 
 ## What Needs to Be Tested
 
