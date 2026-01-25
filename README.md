@@ -4,14 +4,13 @@
 Today we are going to be *"hooking up"* (still trying to think of a better name for this) the camera system to the
 shooter system.
 
----
+### The `AimCamera`
 The camera system is called *from here on out* as the `AimCamera`. This file,
 [AimCamera](src/main/java/frc/robot/vision/AimCamera.java), is to simply give back the `x, y, z` distances of the
 robot relative to the *AprilTag*. This package of data--the `x, y, z`--is called a
 [Transform3d](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Transform3d.html).
 ***So far, the only AprilTag we need to point at is the Hub's AprilTag(s).*** 
 
-### The `AimCamera`
 That's ok, we want to be pointing at the Hub's AprilTag when we are about to shoot. So, we are going to get that data
 packet--the `Transform3d`--from the `AimCamera` with this method:
     [getHubRelativeLocation()](src/main/java/frc/robot/vision/AimCamera.java).
