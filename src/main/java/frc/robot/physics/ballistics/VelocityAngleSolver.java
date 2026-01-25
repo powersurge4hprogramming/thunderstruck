@@ -33,19 +33,32 @@ public class VelocityAngleSolver {
      * Now includes Turret Yaw for strafe compensation.
      */
     public static class ShotResult {
-        public double turretYawDegrees; // Field-relative angle to aim the turret
-        public double hoodPitchDegrees; // Angle of the shooter hood
-        public double flywheelSpeedMPS; // Tangential velocity of the flywheel
+        private double turretYawDegrees; // Field-relative angle to aim the turret
+        private double hoodPitchDegrees; // Angle of the shooter hood
+        private double flywheelSpeedMPS; // Tangential velocity of the flywheel
 
-        private ShoteResult(final double turretYawDegrees,
-                            final double hoodPitchDegrees,
-                            final double flywheelSpeedMPS) {
+        private ShotResult(final double turretYawDegrees,
+                final double hoodPitchDegrees,
+                final double flywheelSpeedMPS) {
             this.turretYawDegrees = turretYawDegrees;
             this.hoodPitchDegrees = hoodPitchDegrees;
             this.flywheelSpeedMPS = flywheelSpeedMPS;
         }
+
+        public double getTurretYawDegrees() {
+            return this.turretYawDegrees;
+        }
+
+        public double getHoodPitchDegrees() {
+            return this.hoodPitchDegrees;
+        }
+
+        public double getFlyWheelSpeedMPS() {
+            return this.flywheelSpeedMPS;
+        }
     }
 
+    private static ShotResult ShotResult;
 
     // =========================================================================
     // PUBLIC API
@@ -165,7 +178,7 @@ public class VelocityAngleSolver {
         // New Flywheel Speed (Total Magnitude)
         ShotResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
 
-        return this.ShotResult;
+        return VelocityAngleSolver.ShotResult;
     }
 
     // =========================================================================
