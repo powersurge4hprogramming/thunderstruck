@@ -21,12 +21,12 @@ public class LockOnShootAndDrive extends Command {
     // private final VelocityToRPMSolver vRpmSolver;
 
     public LockOnShootAndDrive(Shooter shooter, CommandSwerveDrivetrain drive, AimCamera aimCamera,
-            DoubleSupplier x, DoubleSupplier y) {
+            DoubleSupplier xMove, DoubleSupplier yMove) {
         this.shooter = shooter;
         this.drive = drive;
         this.aimCamera = aimCamera;
-        this.xSupplier = x;
-        this.ySupplier = y;
+        this.xSupplier = xMove;
+        this.ySupplier = yMove;
 
         this.vaSolver = new VelocityAngleSolver();
         // this.vRpmSolver = new VelocityToRPMSolver(y, y)
