@@ -149,19 +149,31 @@ think.
     * Figure out how to get the swerve drive's current x and y velocities.
 * Implement `Shooter::setRPM`.
 * Implement `Shooter::setLaunchAngle`.
+* Implement `Shooter::manualShootBall` command.
 * Implement `AimCamera::getHubRelativeLocation`.
-* Implement `Collector::run`.
-* Implement `Collector::stop`.
-* Implement `Climber::upward`.
+* Implement `Collector::run` command.
+* Implement `Collector::stop` command.
+* Implement `Climber::upward` command.
     * Still waiting on what this would even be via the rest of the engineering team.
-* Implement `Climber::downward`.
+* Implement `Climber::downward` command.
     * Still waiting on what this would even be via the rest of the engineering team.
 * Figure out how to get rumble working on `Triggers`.
-* The entire autonomous plan!!!
+* <mark>The entire autonomous plan!!!</mark>
+    * Should we just handmake the plan? Probably not! Need to figure out how PathPlanner works!!!!
+* Bind `Shooter::manualShootBall` command.
+* Bind `Collector::run` command.
+* Bind `Collector::stop` command.
+* Bind `Climber::upward` command.
+* Bind `Climber::downward` command.
 
 ## What Needs to Be Tested
 
-## Helpful Commands for Mentor Mike
+## Mentor Mike's Notes to Himself
 `SwerveRequest.FieldCentricFacingAngle`
+
 `SwerveRequest.FieldCentric`
+
 `SwerveRequest.RobotCentric`
+
+The `Collector` should definitely run on the roborio can bus. The climber probably will too. Not sure yet though on that
+one.
