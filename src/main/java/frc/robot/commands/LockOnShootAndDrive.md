@@ -1,4 +1,7 @@
-# The LockOnShootAndDrive Command: Turning our Entire Robot Into a Weapon System
+# The `LockOnShootAndDrive` Command: Turning our Entire Robot Into a Weapon System
+This file is meant to explain, in detail, this complex custom command. I wanted to do this so that we can refer to it
+for educational purposes, and for any other systems in the future that may take advantage of this kind of shooting.
+
 ## The `AimCamera`
 The camera system is called *from here on out* as the `AimCamera`. This file,
 [AimCamera](src/main/java/frc/robot/vision/AimCamera.java), is to simply give back the `x, y, z` distances of the
