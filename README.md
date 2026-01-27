@@ -127,7 +127,7 @@ Please change the `null`s to their appropriate values. The last 2 I will provide
 controller.y().toggleOnTrue(
                 new LockOnShootAndDrive(
                                 null,
-                                drivetrain,
+                                null,
                                 null,
                                 () -> -controller.getLeftX() * MaxSpeed,
                                 () -> -controller.getLeftY() * MaxSpeed));
