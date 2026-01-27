@@ -143,12 +143,14 @@ Once you change the `null`s, you have completed today's task! Fantastic job!!
 I think **autonomous** and **teleop** will work here automatically. CTRE's generation software really hooked us up I
 think.
 
+### LockOnShootAndDrive.java
+* Figure out how to get the swerve drive's current x and y velocities.
+    * <mark>The answer for this is in
+        [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
+
 ## What Needs to Be Done
 * Implement `LockOnShootAndDrive::execute`.
     * Figure out how to use `SwerveRequest.FieldCentricFacingAngle`.
-    * Figure out how to get the swerve drive's current x and y velocities.
-        * <mark>The answer for this is in
-            [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 * Implement `Shooter::setRPM`.
 * Implement `Shooter::setLaunchAngle`.
 * Implement `Shooter::manualShootBall` command.
