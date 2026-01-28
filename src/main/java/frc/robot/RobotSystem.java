@@ -101,12 +101,13 @@ public class RobotSystem {
                 controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
                 /*
                  * NOTE:
-                 * All this does it point the wheels to whatever direction it is controlled to point towards. Not
-                 * sure of its usefulness. Can either of you think of one?
+                 * All this does it point the wheels to whatever direction it is controlled to
+                 * point towards. Not sure of its usefulness. Can either of you think of one?
                  */
                 controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+
                 controller.y().toggleOnTrue(
                                 new LockOnShootAndDrive(
                                                 shooter,
