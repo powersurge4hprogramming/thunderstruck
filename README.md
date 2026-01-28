@@ -5,8 +5,8 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 ## What Needs to Be Worked On Today
 ### Actual "Weapon" Swapping
 I kinda fibbed that yesterday's logic would work. We are only toggling `LockOnShootAndDrive` on and off; but what is the
-roborio suppossed to run when it is toggled off? **The roborio has nothing to run when that toggle is off.** Obviously an
-issue. So, we need to have our own toggling state to control manual vs. auto-aim. This will require our own `Trigger`.
+roborio suppossed to run when it is toggled off? **The roborio has nothing to run when that toggle is off.** Obviously
+an issue. So, we need to have our own toggling state to control manual vs. auto-aim.
 
 First off we are going to need some kind of **auto-aim flag variable** to keep track of what "weapon" we have selected.
 Define this with a initial value in the ***Driver Inputs*** code section.
