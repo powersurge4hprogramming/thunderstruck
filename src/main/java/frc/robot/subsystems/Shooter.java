@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -26,12 +28,12 @@ public class Shooter extends SubsystemBase {
      * angle.
      * 
      * @param motorRPMScalar The "speed" at which to set the motor in percentage of
-     *                       possible RPM.
+     *                       possible RPM from 0 to 1.
      * @param angleLaunch    The angle at which to shoot the ball.
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command manualShootBall(final double motorRPMScalar, final double angleLaunch) {
+    public Command manualShootBall(final DoubleSupplier motorRPMScalar, final DoubleSupplier angleLaunch) {
         throw new RuntimeException("Not implemented yet.");
     }
 
