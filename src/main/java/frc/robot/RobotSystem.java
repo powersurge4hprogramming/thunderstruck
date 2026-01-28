@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.subsystems.Shooter;
+import frc.robot.commands.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.vision.AimCamera;
 
 public class RobotSystem {
         // =============================================================================================================
@@ -34,6 +36,8 @@ public class RobotSystem {
         // Sub-Systems
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        private final Shooter shooter = new Shooter();
+        private final AimCamera aimCamera = new AimCamera();
 
         // =============================================================================================================
         // Swerve Drive Configurations
@@ -99,6 +103,13 @@ public class RobotSystem {
                 controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+                controller.y().toggleOnTrue(
+                                new LockOnShootAndDrive(
+                                                shooter,
+                                                drivetrain,
+                                                aimCamera,
+                                                () -> -controller.getLeftX() * MaxSpeed,
+                                                () -> -controller.getLeftY() * MaxSpeed));
 
                 // Reset the field-centric heading on left bumper press.
                 controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
