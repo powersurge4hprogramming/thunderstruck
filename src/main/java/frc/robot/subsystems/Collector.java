@@ -11,7 +11,8 @@ public class Collector extends SubsystemBase {
      * {@summary}
      * Run the collector.
      *
-     * @param motorRpmScalar A value from 0 to 1 that represents the percentage at which to run the motor.
+     * @param motorRpmScalar A value from 0 to 1 that represents the percentage at
+     *                       which to run the motor.
      * 
      * @return The {@link Command} to perform the action.
      */
