@@ -20,73 +20,104 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotSystem {
+        // =============================================================================================================
+        // Constants
+        // =============================================================================================================
         // kSpeedAt12Volts desired top speed
         private static double MaxSpeedScaler = 0.25;
-        private double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-
+        private static double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
         private static double MaxAngularRateScaler = 0.75;
-        private double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
+        private static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
 
-        /* Setting up bindings for necessary control of the swerve drive platform */
-        private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+        // =============================================================================================================
+        // Sub-Systems
+        // =============================================================================================================
+        private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+        // =============================================================================================================
+        // Swerve Drive Configurations
+        // =============================================================================================================
+        final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
                         // Add a 10% deadband
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+        final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+        final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+        // =============================================================================================================
+        // Logging
+        // =============================================================================================================
         private final Telemetry logger = new Telemetry(MaxSpeed);
 
-        private final CommandXboxController joystick = new CommandXboxController(0);
+        // =============================================================================================================
+        // Driver Inputs
+        // =============================================================================================================
+        private final CommandXboxController controller = new CommandXboxController(0);
 
-        public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-        // -------------------------------------------------------------------------------------------------------------
+        // =============================================================================================================
+        // The Constructor
+        // =============================================================================================================
         public RobotSystem() {
                 configureBindings();
         }
 
+        // =============================================================================================================
+        // Private Methods
+        // =============================================================================================================
         // -------------------------------------------------------------------------------------------------------------
         private void configureBindings() {
-                // Note that X is defined as forward according to WPILib convention,
-                // and Y is defined as to the left according to WPILib convention.
+                /*
+                 * Note that X is defined as forward according to WPILib convention, and Y is
+                 * defined as to the left according to WPILib convention.
+                 * 
+                 * This command will always run on the drivetrain until another command takes
+                 * control of it.
+                 */
                 drivetrain.setDefaultCommand(
                                 // Drivetrain will execute this command periodically
                                 drivetrain.applyRequest(() ->
                                 // Drive forward with negative Y (forward)
-                                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
                                                 // Drive left with negative X (left)
-                                                .withVelocityY(-joystick.getLeftX() * MaxSpeed)
+                                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
                                                 // Drive counterclockwise with negative X (left)
-                                                .withRotationalRate(-joystick.getRightX() * MaxAngularRate)));
+                                                .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
 
-                // Idle while the robot is disabled. This ensures the configured
-                // neutral mode is applied to the drive motors while disabled.
+                /*
+                 * Idle while the robot is disabled. This ensures the configured neutral mode is
+                 * applied to the drive motors while disabled.
+                 */
                 final var idle = new SwerveRequest.Idle();
                 RobotModeTriggers.disabled().whileTrue(
                                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-                joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-                joystick.b().whileTrue(drivetrain.applyRequest(
+                controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
-                                                new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
-                // Run SysId routines when holding back/start and X/Y.
-                // Note that each routine should be run exactly once in a single log.
-                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-                joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-                joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-                joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+                                                new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
 
                 // Reset the field-centric heading on left bumper press.
-                joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+                /*
+                 * Run SysId routines when holding back/start and X/Y. Note that each routine
+                 * should be run exactly once in a single log.
+                 */
+                controller.back().and(controller.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+                controller.back().and(controller.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+                controller.start().and(controller.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+                controller.start().and(controller.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
+        // =============================================================================================================
+        // Public Methods
+        // =============================================================================================================
         public Command getAutonomousCommand() {
                 // Simple drive forward auton
                 final var idle = new SwerveRequest.Idle();
@@ -95,7 +126,7 @@ public class RobotSystem {
                                 // facing away from our alliance station wall (0 deg).
                                 drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
                                 // Then slowly drive forward (away from us) for 5 seconds.
-                                drivetrain.applyRequest(() -> drive.withVelocityX(0.5)
+                                drivetrain.applyRequest(() -> fieldDrive.withVelocityX(0.5)
                                                 .withVelocityY(0)
                                                 .withRotationalRate(0))
                                                 .withTimeout(5.0),

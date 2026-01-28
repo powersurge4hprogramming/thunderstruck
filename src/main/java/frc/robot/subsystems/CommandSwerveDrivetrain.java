@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -70,6 +71,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * SysId routine for characterizing steer. This is used to find PID gains for
      * the steer motors.
      */
+    @SuppressWarnings("unused")
     private final SysIdRoutine sysIdRoutineSteer = new SysIdRoutine(
             new SysIdRoutine.Config(
                     null, // Use default ramp rate (1 V/s)
@@ -89,6 +91,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * See the documentation of SwerveRequest.SysIdSwerveRotation for info on
      * importing the log to SysId.
      */
+    @SuppressWarnings("unused")
     private final SysIdRoutine sysIdRoutineRotation = new SysIdRoutine(
             new SysIdRoutine.Config(
                     /* This is in radians per second², but SysId only supports "volts per second" */
@@ -202,10 +205,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * drivetrain.
      *
      * @param request Function returning the request to apply
-     * @return Command to run
+     * @return The {@link Command} to run.
      */
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return run(() -> this.setControl(request.get()));
+    }
+
+    /**
+     * {@summary}
+     * This returns a {@link Command} to lock onto a given AprilTag's position. The
+     * lock on is for the rotation of the robot.
+     * 
+     * @param aprilTagToRobot Get this from the {@link frc.robot.vision.AimCamera
+     *                        AimCamera}.
+     * @return The {@link Command} to run.
+     */
+    public Command applyLockOn(Supplier<Transform3d> aprilTagToRobot) {
+        throw new RuntimeException("Not Implemented yet.");
     }
 
     /**

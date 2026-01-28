@@ -1,5 +1,7 @@
 package frc.robot.physics.ballistics;
 
+import edu.wpi.first.math.geometry.Transform3d;
+
 /**
  * Zero-Allocation Ballistic Solver for FRC RoboRIO 2.
  * Supports:
@@ -31,10 +33,32 @@ public class VelocityAngleSolver {
      * Now includes Turret Yaw for strafe compensation.
      */
     public static class ShotResult {
-        public double turretYawDegrees; // Field-relative angle to aim the turret
-        public double hoodPitchDegrees; // Angle of the shooter hood
-        public double flywheelSpeedMPS; // Tangential velocity of the flywheel
+        private double turretYawDegrees; // Field-relative angle to aim the turret
+        private double hoodPitchDegrees; // Angle of the shooter hood
+        private double flywheelSpeedMPS; // Tangential velocity of the flywheel
+
+        private ShotResult(final double turretYawDegrees,
+                final double hoodPitchDegrees,
+                final double flywheelSpeedMPS) {
+            this.turretYawDegrees = turretYawDegrees;
+            this.hoodPitchDegrees = hoodPitchDegrees;
+            this.flywheelSpeedMPS = flywheelSpeedMPS;
+        }
+
+        public double getTurretYawDegrees() {
+            return this.turretYawDegrees;
+        }
+
+        public double getHoodPitchDegrees() {
+            return this.hoodPitchDegrees;
+        }
+
+        public double getFlyWheelSpeedMPS() {
+            return this.flywheelSpeedMPS;
+        }
     }
+
+    private static ShotResult ShotResult;
 
     // =========================================================================
     // PUBLIC API
@@ -43,29 +67,22 @@ public class VelocityAngleSolver {
     /**
      * Calculates the firing solution accounting for robot motion.
      * 
-     * @param targetX     Field X coordinate of the hoop center (meters)
-     * @param targetY     Field Y coordinate of the hoop center (meters)
-     * @param targetZ     Field Z height of the hoop rim (meters)
-     * @param robotX      Current Field X position of robot (meters)
-     * @param robotY      Current Field Y position of robot (meters)
-     * @param robotZ      Height of shooter release point (meters)
+     * @param t3d         The {@link Transform3d} that has out relative distance
+     *                    from the shooter.
      * @param robotVx     Robot velocity X component (m/s)
      * @param robotVy     Robot velocity Y component (m/s)
      * @param shapeScalar 0.0 (Flat/Laser) to 1.0 (Steep/Lob)
      * @param isBlocked   If true, prioritizes high launch angle.
      * @param outResult   Output container.
      */
-    public void calculate(
-            double targetX, double targetY, double targetZ,
-            double robotX, double robotY, double robotZ,
-            double robotVx, double robotVy,
-            double shapeScalar, boolean isBlocked,
-            ShotResult outResult) {
+    public ShotResult calculate(
+            Transform3d t3d, double robotVx, double robotVy,
+            double shapeScalar, boolean isBlocked) {
 
         // 1. Calculate relative distances
-        double dx = targetX - robotX;
-        double dy = targetY - robotY;
-        double dz = targetZ - robotZ;
+        double dx = t3d.getX();
+        double dy = t3d.getY();
+        double dz = t3d.getZ();
 
         // Horizontal distance to target (on the floor)
         double distFloor = Math.sqrt(dx * dx + dy * dy);
@@ -151,14 +168,16 @@ public class VelocityAngleSolver {
 
         // New Turret Angle (Field Relative)
         // This automatically handles the "lead" angle for strafing
-        outResult.turretYawDegrees = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
+        ShotResult.turretYawDegrees = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
 
         // New Hood Pitch
         // Note: Using atan2 ensures correct quadrant
-        outResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
+        ShotResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
 
         // New Flywheel Speed (Total Magnitude)
-        outResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
+        ShotResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
+
+        return VelocityAngleSolver.ShotResult;
     }
 
     // =========================================================================
