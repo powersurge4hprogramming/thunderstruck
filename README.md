@@ -9,10 +9,29 @@ I kinda fibbed that yesterday's logic would work. We are only toggling `LockOnSh
 roborio suppossed to run when it is toggled off? **The roborio has nothing to run when that toggle is off.** Obviously an
 issue. So, we need to have our own toggling state to control manual vs. auto-aim. This will require our own `Trigger`.
 
-First off we are going to need some kind of **program state variable** to keep track of what "weapon" we have selected.
+First off we are going to need some kind of **auto-aim flag variable** to keep track of what "weapon" we have selected.
 Define this with a initial value in the ***Driver Inputs*** code section.
 
-Then, in the old **y()** toggle, we are going to change it to a "Command Supplier."
+Then, in the old **y()** toggle, we are going to change it to a "Command Orchestrator."
+
+Here is the
+[`Trigger`](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html)
+documentation and the
+[`Commands`](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Commands.html)
+documentation.
+
+First off, define our `LockOnShootAndDrive` outside the trigger so that is its own variable. Then, do the same with the
+manual aim command from the `Shooter` class. These should be there own variables now inside of the `configureBindings()`
+function now. These will be used in the next step.
+
+Change the trigger from a toggle to a trigger that will execute when the button is true. Then, in that trigger, give it
+a command from `Commands` to run one time. This onetime command will check if we are in lock-on mode. If we are, check
+if the manual aim command `isScheduled()` and if it is, `cancel()` it. Then, `schedule()` the lock on command variable
+from earlier and finally set the auto aim flag to `false`. Else if we are not in lock-on mode, then we check if the
+lock-on command `isScheduled()` and if it is then `cancel()` it, then `schedule()` the manual aim command and set the
+auto aim flag to `true`.
+
+We now have actual weapon swapping!
 
 ---
 ---
