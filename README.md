@@ -3,8 +3,7 @@ This is the code base for the **ThunderStruck** Robot. This file acts as our ***
 do, to communicate remotely to each other, and allow for any of my review to happen at night outside of the shop.
 
 ## What Needs to Be Worked On Today
-### More Mappings
-#### Actual "Weapon" Swapping
+### Actual "Weapon" Swapping
 I kinda fibbed that yesterday's logic would work. We are only toggling `LockOnShootAndDrive` on and off; but what is the
 roborio suppossed to run when it is toggled off? **The roborio has nothing to run when that toggle is off.** Obviously an
 issue. So, we need to have our own toggling state to control manual vs. auto-aim. This will require our own `Trigger`.
@@ -32,6 +31,13 @@ lock-on command `isScheduled()` and if it is then `cancel()` it, then `schedule(
 auto aim flag to `true`.
 
 We now have actual weapon swapping!
+
+### Collector Binding
+This one will be much simpler since we don't have to handle any variable state. This trigger is going to be on the right
+**trigger** of the controller. This `Trigger` will only trigger when the `Trigger` **has changed**. Use the `Command`
+from the `Collector` called [`run()`](src/main/java/frc/robot/subsystems/Collector.java#L18). Make sure to give it the
+correct supplier. Use the other command as an example. The supplier will be the
+[value of the right trigger](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/CommandXboxController.html#getRightTriggerAxis()).
 
 ---
 ---
