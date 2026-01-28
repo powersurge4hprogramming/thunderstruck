@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RPM;
+
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -61,5 +63,15 @@ public class Shooter extends SubsystemBase {
      */
     public void setLaunchAngle(final double launchAngleDeg) {
         throw new RuntimeException("Not implemented yet.");
+    }
+
+    /**
+     * {@summary}
+     * The current RPM of the leader motor.
+     * 
+     * @return The motor's RPM.
+     */
+    public double getMotorRPM() {
+        return this.motorLeader.getVelocity().getValue().in(RPM);
     }
 }
