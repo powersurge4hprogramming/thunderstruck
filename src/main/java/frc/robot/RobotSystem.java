@@ -72,7 +72,6 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
-        // -------------------------------------------------------------------------------------------------------------
         private void configureBindings() {
                 /*
                  * Note that X is defined as forward according to WPILib convention, and Y is
@@ -100,6 +99,11 @@ public class RobotSystem {
                                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
                 controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                /*
+                 * NOTE:
+                 * All this does it point the wheels to whatever direction it is controlled to point towards. Not
+                 * sure of its usefulness. Can either of you think of one?
+                 */
                 controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
