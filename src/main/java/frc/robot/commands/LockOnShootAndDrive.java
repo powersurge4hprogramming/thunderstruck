@@ -97,7 +97,10 @@ public class LockOnShootAndDrive extends Command {
 
         // 3. Command the Drivebase
         // We use the driver's X/Y but OVERRIDE the rotation with our 3D solution
-        final double turretYaw = MathUtil.inputModulus(shot.getTurretYawDegrees(), -180, 180);
+        final double BACKWARDS_CLOCKWISE = 180;
+        final double BACKWARDS_COUNTER_CLOCKWISE = -180;
+        final double turretYaw = MathUtil.inputModulus(shot.getTurretYawDegrees(), BACKWARDS_COUNTER_CLOCKWISE,
+                BACKWARDS_CLOCKWISE);
         drive.setControl(fieldFacingAngle
                 .withVelocityX(xSupplier.getAsDouble())
                 .withVelocityY(ySupplier.getAsDouble())
