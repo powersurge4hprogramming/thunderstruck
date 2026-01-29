@@ -16,8 +16,8 @@ public class AimCamera {
     // =================================================================================================================
     // Constants
     // =================================================================================================================
-    private final static short HUB_CENTER = 9;
-    private final static short HUB_OFF_CENTER_RIGHT = 10;
+    private final static short HUB_CENTER_TAG = 9;
+    private final static short HUB_OFF_CENTER_RIGHT_TAG = 10;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             Distance.ofBaseUnits(5, Inches),
             Distance.ofBaseUnits(0, Inches),
@@ -53,7 +53,7 @@ public class AimCamera {
 
         for (final PhotonPipelineResult result : camera.getAllUnreadResults()) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
-                if (target.fiducialId != HUB_CENTER || target.fiducialId != HUB_OFF_CENTER_RIGHT)
+                if (target.fiducialId != HUB_CENTER_TAG || target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
                 hub = target.getBestCameraToTarget();
             }
