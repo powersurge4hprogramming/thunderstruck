@@ -133,7 +133,7 @@ public class RobotSystem {
                                                 checkAimbotStatus = true;
                                         }
                                 }, shooter, drivetrain));
-                Collector.run(() -> controller.getRightTriggerAxis());
+                controller.rightTrigger().onTrue(Collector.run(() -> controller.getRightTriggerAxis()));
 
                 // Reset the field-centric heading on left bumper press.
                 controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
