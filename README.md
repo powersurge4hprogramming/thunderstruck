@@ -40,7 +40,7 @@ The ID you are going to pass to the `krakenX60` is going to come from
 The first piece of data to the `TalonFX` **constructor** is an ID; so, lets give it that with this:
 `CANBus.ID.COLLECTOR.MOTOR`. The second piece of data is *what* canbus it is on, and that comes from `CANBus.BUS.RIO`.
 
-And there you go, you've made a motor :)
+And there you go, you've made a motor :smile
 
 ---
 #### Let's Drive That Motor: run()
