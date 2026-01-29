@@ -1,5 +1,6 @@
 package frc.robot.physics.ballistics;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 /**
@@ -76,7 +77,7 @@ public class VelocityAngleSolver {
      * @param outResult   Output container.
      */
     public ShotResult calculate(
-            Transform3d t3d, double robotVx, double robotVy,
+            Transform3d t3d, Rotation2d heading, double robotVx, double robotVy,
             double shapeScalar, boolean isBlocked) {
 
         // 1. Calculate relative distances
@@ -163,18 +164,18 @@ public class VelocityAngleSolver {
         double vShooterZ = vWorldZ; // Assuming robot isn't moving vertically (jumping)
 
         // 5. Re-Calculate Polar Coordinates for Hardware
-        // New Horizontal Speed required by shooter
         double vShooterHoriz = Math.sqrt(vShooterX * vShooterX + vShooterY * vShooterY);
 
-        // New Turret Angle (Field Relative)
-        // This automatically handles the "lead" angle for strafing
-        ShotResult.turretYawDegrees = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
+        // This angle is FIELD RELATIVE (e.g. 90 degrees = North)
+        double fieldRelativeTurretAngle = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
 
-        // New Hood Pitch
-        // Note: Using atan2 ensures correct quadrant
+        // CONVERSION: Field Relative -> Robot Relative
+        double robotRelativeTurretAngle = fieldRelativeTurretAngle - heading.getDegrees();
+
+        // Normalize to -180 to 180 range for safety
+        ShotResult.turretYawDegrees = robotRelativeTurretAngle;
+
         ShotResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
-
-        // New Flywheel Speed (Total Magnitude)
         ShotResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
 
         return VelocityAngleSolver.ShotResult;
