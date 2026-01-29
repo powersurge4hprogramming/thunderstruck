@@ -58,6 +58,7 @@ public class AimCamera {
                 hub = target.getBestCameraToTarget();
             }
         }
+
         if (hub != null)
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
