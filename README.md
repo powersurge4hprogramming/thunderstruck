@@ -109,3 +109,5 @@ think.
 
 The `Collector` should definitely run on the roborio can bus. The climber probably will too. Not sure yet though on that
 one.
+
+CommandScheduler.getInstance().getActiveButtonLoop().clear();
