@@ -81,7 +81,6 @@ think.
 * Implement `Shooter::setRPM`.
 * Implement `Shooter::setLaunchAngle`.
 * Implement `Shooter::manualShootBall` command.
-* Implement `AimCamera::getHubRelativeLocation`.
 * Implement `Collector::run` command.
 * Implement `Collector::stop` command.
 * Implement `Climber::upward` command.
@@ -99,6 +98,7 @@ think.
 
 ## What Needs to Be Tested
 * The `LockOnShootAndDrive` **y** binding.
+* The `AimCamera::getHubRelativeLocation` function.
 
 ## Mentor Mike's Notes to Himself
 `SwerveRequest.FieldCentricFacingAngle`
