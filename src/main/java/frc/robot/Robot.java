@@ -8,7 +8,6 @@ import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
     private final RobotSystem robotContainer;
@@ -29,7 +28,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         timeAndJoystickReplay.update();
-        CommandScheduler.getInstance().run();
+        this.robotContainer.getCommandScheduler().run();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class Robot extends TimedRobot {
         autonomousCommand = robotContainer.getAutonomousCommand();
 
         if (autonomousCommand != null) {
-            CommandScheduler.getInstance().schedule(autonomousCommand);
+            this.robotContainer.getCommandScheduler().schedule(autonomousCommand);
         }
     }
 
@@ -64,7 +63,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         if (autonomousCommand != null) {
-            CommandScheduler.getInstance().cancel(autonomousCommand);
+            this.robotContainer.getCommandScheduler().cancel(autonomousCommand);
         }
     }
 
@@ -78,7 +77,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
+        this.robotContainer.getCommandScheduler().cancelAll();
     }
 
     @Override
