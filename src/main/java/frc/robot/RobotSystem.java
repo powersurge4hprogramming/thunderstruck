@@ -22,6 +22,7 @@ import frc.robot.commands.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
+import frc.robot.subsystems.Collector;
 
 public class RobotSystem {
         // =============================================================================================================
@@ -40,6 +41,7 @@ public class RobotSystem {
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
         private final AimCamera aimCamera = new AimCamera();
+        private final Collector Collector = new Collector();
 
         // =============================================================================================================
         // Swerve Drive Configurations
@@ -133,6 +135,8 @@ public class RobotSystem {
                                                 checkAimbotStatus = true;
                                         }
                                 }, shooter, drivetrain));
+                Collector.run(
+                                () -> controller.getRightTriggerAxis());
 
                 // Reset the field-centric heading on left bumper press.
                 controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
