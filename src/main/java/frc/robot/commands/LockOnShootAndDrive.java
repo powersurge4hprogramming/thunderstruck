@@ -78,6 +78,12 @@ public class LockOnShootAndDrive extends Command {
         double fieldVx = fieldRelative.vxMetersPerSecond; // x in field frame (blue origin forward)
         double fieldVy = fieldRelative.vyMetersPerSecond; // y in field frame
         final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
+
+        if (hubRelativeTransform == null) {
+            // TODO: Need a way to handle outside state, or something to handle it.
+            this.cancel();
+        }
+
         final double shapeScalar = 1;
         final boolean isBlocked = false;
 
