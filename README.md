@@ -5,8 +5,10 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 ## What Needs to Be Worked On Today
 
 ## Desmond
-1. We will be continuing on button bindings.
-2. We will also be figuring out binding behaviors.
+1. We are going to do the camera glueing/taping again. I can't get the cap on for the lense securely.
+    * Once we do this we will have to re-calibrate.
+2. We will be continuing on button bindings.
+3. We will also be figuring out binding behaviors.
     * When talking about these behaviors, we will be talking about program structures and even some algorithms.
 
 ## Mikey
