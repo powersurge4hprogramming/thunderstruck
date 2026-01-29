@@ -3,41 +3,63 @@ This is the code base for the **ThunderStruck** Robot. This file acts as our ***
 do, to communicate remotely to each other, and allow for any of my review to happen at night outside of the shop.
 
 ## What Needs to Be Worked On Today
-### Actual "Weapon" Swapping
-I kinda fibbed that yesterday's logic would work. We are only toggling `LockOnShootAndDrive` on and off; but what is the
-roborio suppossed to run when it is toggled off? **The roborio has nothing to run when that toggle is off.** Obviously
-an issue. So, we need to have our own toggling state to control manual vs. auto-aim.
 
-First off we are going to need some kind of **auto-aim flag variable** to keep track of what "weapon" we have selected.
-Define this with a initial value in the ***Driver Inputs*** code section.
+## Desmond
+1. We will be continuing on button bindings.
+2. We will also be figuring out binding behaviors.
+    * When talking about these behaviors, we will be talking about program structures and even some algorithms.
 
-Then, in the old **y()** toggle, we are going to change it to a "Command Orchestrator."
+## Mikey
+We are going to need to get off of button binding. We don't know what to set, since there are things we still need to
+decide.
 
-Here is the
-[`Trigger`](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html)
-documentation and the
-[`Commands`](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Commands.html)
-documentation.
+So, since that is the case, we are going to move onto implementing some of the sub-sytems.
 
-First off, define our `LockOnShootAndDrive` outside the trigger so that is its own variable. Then, do the same with the
-manual aim command from the `Shooter` class. These should be there own variables now inside of the `configureBindings()`
-function now. These will be used in the next step.
+### The `Collector`
+We are going to make a motor, and drive the motor from the input we made yesterday.
 
-Change the trigger from a toggle to a trigger that will execute when the button is true. Then, in that trigger, give it
-a command from `Commands` to run one time. This onetime command will check if we are in lock-on mode. If we are, check
-if the manual aim command `isScheduled()` and if it is, `cancel()` it. Then, `schedule()` the lock on command variable
-from earlier and finally set the auto aim flag to `false`. Else if we are not in lock-on mode, then we check if the
-lock-on command `isScheduled()` and if it is then `cancel()` it, then `schedule()` the manual aim command and set the
-auto aim flag to `true`.
+It will be important to refer to the [the `Shooter`](src/main/java/frc/robot/subsystems/Shooter.java) code when thinking
+about, and implementing the `Collector` code.
 
-We now have actual weapon swapping!
+---
+#### The Setup
+We are going to make a single motor **variable**. Will go in `The Collector's Parts` section of the file. The **type**
+of motor we will be making is a `TalonFX`. We are going to call this **variable** `krakenX60`. We are not going to
+*make* the motor here though. We are going to do that in the **Constructor**.
 
-### Collector Binding
-This one will be much simpler since we don't have to handle any variable state. This trigger is going to be on the right
-**trigger** of the controller. This `Trigger` will only trigger when the `Trigger` **has changed**. Use the `Command`
-from the `Collector` called [`run()`](src/main/java/frc/robot/subsystems/Collector.java#L18). Make sure to give it the
-correct supplier. Use the other command as an example. The supplier will be the
-[value of the right trigger](https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/CommandXboxController.html#getRightTriggerAxis()).
+---
+#### In the Constructor
+We are going to make a `krakenX60` motor. **Assign** to our `krakenX60` a new `TalonFX`. In the `TalonFX()` function--
+as an aside you are calling a function there... and it's a function called a constructor--pass to it a **CanBus** ID,
+and a canbus to run on.
+
+The ID you are going to pass to the `krakenX60` is going to come from
+[the `CANBus` container](src/main/java/frc/robot/CANBus.java) where all of our relevent CANBUs settings will come from.
+The first piece of data to the `TalonFX` **constructor** is an ID; so, lets give it that with this:
+`CANBus.ID.COLLECTOR.MOTOR`. The second piece of data is *what* canbus it is on, and that comes from `CANBus.BUS.RIO`.
+
+And there you go, you've made a motor :)
+
+---
+#### Let's Drive That Motor: run()
+Here we are going to implement our code from before: our `run()` function. We have the `motorRPMScalar` from our
+function's input. We are going to use that to set the RPM of the motor in the `run()` function.
+
+We are going to write out code inside of our **"supplier**:
+```java
+return this.run(() -> {
+    // Put Stuff here
+});
+```
+What you write next goes in there.
+
+We need to get the `double` from our `DoubleSupplier`, the `motorRPMScalar`, so that we can use it. We need a
+`final double` **variable** to hold our motor rpm percentage (*scale*); so, make that varible and then assign to it the
+value from our supplier by calling `get()` from our `motorRPMScalar`.
+
+Then, `set()` the speed of our `krakenX60` motor by giving it the value of our previously created **variable**.
+
+There ya go, you've implemented the `Collector`'s `run()` function!
 
 ---
 ---
@@ -47,6 +69,8 @@ I think **autonomous** and **teleop** will work here automatically. CTRE's gener
 think.
 
 ### In LockOnShootAndDrive.java
+* **"Weapon Swapping"**! This command structure should be done.
+    * More data needs to be provided soon.
 * Figure out how to get the swerve drive's current x and y velocities.
     * <mark>The answer for this is in
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>

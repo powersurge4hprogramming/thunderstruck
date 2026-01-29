@@ -30,8 +30,18 @@ public class CANBus {
          * The IDs for the {@link frc.robot.subsystems.Shooter Shooter}.
          */
         public static final class SHOOTER {
+            // TODO: Need real values here.
             public static final short LEADER = 0;
             public static final short FOLLOWER = 0;
+        }
+
+        /**
+         * {@summary}
+         * The IDs for the {@link frc.robot.subsystems.Collector Collector}.
+         */
+        public static final class COLLECTOR {
+            // TODO: Need a real value here.
+            public static final short MOTOR = 0;
         }
     }
 }

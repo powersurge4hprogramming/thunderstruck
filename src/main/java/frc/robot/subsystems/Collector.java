@@ -6,6 +6,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Collector extends SubsystemBase {
+    // =================================================================================================================
+    // The Collector's parts
+    // =================================================================================================================
+
+    // ------------------------------------------------------------------------------------------------------------------
+    // :: The Constructor
+    public Collector() {
+
+    }
 
     /**
      * {@summary}
@@ -17,6 +26,7 @@ public class Collector extends SubsystemBase {
      * @return The {@link Command} to perform the action.
      */
     public Command run(final DoubleSupplier motorRpmScalar) {
+        // :: Delete me ;)
         throw new RuntimeException("Not implemented yet.");
     }
 

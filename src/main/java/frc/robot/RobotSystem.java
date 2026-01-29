@@ -6,8 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -65,7 +63,7 @@ public class RobotSystem {
         // Driver Inputs
         // =============================================================================================================
         private final CommandXboxController controller = new CommandXboxController(0);
-        boolean checkAimbotStatus = false;
+        private boolean checkAimbotStatus = false;
 
         // =============================================================================================================
         // The Constructor
@@ -135,8 +133,7 @@ public class RobotSystem {
                                                 checkAimbotStatus = true;
                                         }
                                 }, shooter, drivetrain));
-                Collector.run(
-                                () -> controller.getRightTriggerAxis());
+                Collector.run(() -> controller.getRightTriggerAxis());
 
                 // Reset the field-centric heading on left bumper press.
                 controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
