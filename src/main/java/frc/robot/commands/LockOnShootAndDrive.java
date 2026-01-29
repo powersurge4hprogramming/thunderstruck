@@ -68,7 +68,7 @@ public class LockOnShootAndDrive extends Command {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         // REQUIRE BOTH: This stops any other drive or shooter commands
-        addRequirements(shooter, drive);
+        addRequirements(this.shooter, this.drive);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
