@@ -142,7 +142,7 @@ public class RobotSystem {
                                                 manualShoot.schedule();
                                                 checkAimbotStatus = true;
                                         }
-                                }, shooter, drivetrain));
+                                }, shooter, drivetrain)); // Does the Command "orchestrator" need those requirements?
                 controller.rightTrigger().onTrue(Collector.run(() -> controller.getRightTriggerAxis()));
 
                 // Reset the field-centric heading on left bumper press.
