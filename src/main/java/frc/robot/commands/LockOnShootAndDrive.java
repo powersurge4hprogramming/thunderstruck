@@ -74,6 +74,7 @@ public class LockOnShootAndDrive extends Command {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void execute() {
+        // TODO: Get these values from the controller too.
         final double shapeScalar = 1;
         final boolean isBlocked = false;
 
