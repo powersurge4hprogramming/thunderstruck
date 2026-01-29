@@ -18,10 +18,10 @@ public class LockOnShootAndDrive extends Command {
     private final DoubleSupplier ySupplier;
 
     private final VelocityAngleSolver vaSolver;
-    // private final VelocityToRPMSolver vRpmSolver;
+    private final VelocityToRPMSolver vRpmSolver;
 
     public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final AimCamera aimCamera,
-            final DoubleSupplier xMove, final DoubleSupplier yMove) {
+            final DoubleSupplier xMove, final DoubleSupplier yMove, final DoubleSupplier batteryVoltageSupplier) {
         this.shooter = shooter;
         this.drive = drive;
         this.aimCamera = aimCamera;
@@ -29,7 +29,7 @@ public class LockOnShootAndDrive extends Command {
         this.ySupplier = yMove;
 
         this.vaSolver = new VelocityAngleSolver();
-        // this.vRpmSolver = new VelocityToRPMSolver(y, y)
+        this.vRpmSolver = new VelocityToRPMSolver(batteryVoltageSupplier, () -> shooter.getMotorRPM());
 
         // REQUIRE BOTH: This stops any other drive or shooter commands
         addRequirements(shooter, drive);

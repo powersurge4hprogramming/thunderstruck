@@ -43,5 +43,14 @@ public class CANBus {
             // TODO: Need a real value here.
             public static final short MOTOR = 0;
         }
+
+        /**
+         * {@summary}
+         * The ID for the
+         * {@link edu.wpi.first.wpilibj.PowerDistribution.PowerDistribution
+         * PowerDistribution} module.
+         */
+        // TODO: Need a real value here.
+        public static final short POWER_DISTRIBUTION = 0;
     }
 }

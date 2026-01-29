@@ -10,6 +10,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -54,6 +56,12 @@ public class RobotSystem {
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
         final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+        // =============================================================================================================
+        // Modules
+        // =============================================================================================================
+        private final PowerDistribution powerDistribution = new PowerDistribution(CANBus.ID.POWER_DISTRIBUTION,
+                        ModuleType.kRev);
 
         // =============================================================================================================
         // Logging
@@ -116,7 +124,8 @@ public class RobotSystem {
                                 drivetrain,
                                 aimCamera,
                                 () -> -controller.getLeftX() * MaxSpeed,
-                                () -> -controller.getLeftY() * MaxSpeed);
+                                () -> -controller.getLeftY() * MaxSpeed,
+                                () -> powerDistribution.getVoltage());
                 final Command manualShoot = shooter.manualShootBall(() -> 0.5, () -> 60);
                 controller.y().onTrue(
                                 Commands.runOnce(() -> {
