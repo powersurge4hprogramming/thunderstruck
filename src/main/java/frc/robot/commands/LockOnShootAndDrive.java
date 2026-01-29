@@ -47,6 +47,9 @@ public class LockOnShootAndDrive extends Command {
     // =================================================================================================================
     final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
 
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final AimCamera aimCamera,
             final DoubleSupplier xMove, final DoubleSupplier yMove, final DoubleSupplier batteryVoltageSupplier,
             final double MaxSpeed) {
@@ -68,39 +71,51 @@ public class LockOnShootAndDrive extends Command {
         addRequirements(shooter, drive);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void execute() {
-        // 1. One physics calculation to rule them all
-        ChassisSpeeds robotCentric = drive.getState().Speeds;
-        Rotation2d heading = drive.getState().Pose.getRotation();
-        // Convert to Field Relative automatically
-        ChassisSpeeds fieldRelative = ChassisSpeeds.fromRobotRelativeSpeeds(robotCentric, heading);
-        double fieldVx = fieldRelative.vxMetersPerSecond; // x in field frame (blue origin forward)
-        double fieldVy = fieldRelative.vyMetersPerSecond; // y in field frame
-        final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
+        final double shapeScalar = 1;
+        final boolean isBlocked = false;
 
+        /*
+         * 1. One physics calculation to rule them all
+         */
+        // Get required speed data.
+        final ChassisSpeeds robotCentric = drive.getState().Speeds;
+        final Rotation2d heading = drive.getState().Pose.getRotation();
+        final ChassisSpeeds fieldRelative = ChassisSpeeds.fromRobotRelativeSpeeds(robotCentric, heading);
+        final double fieldVx = fieldRelative.vxMetersPerSecond; // x in field frame (blue origin forward)
+        final double fieldVy = fieldRelative.vyMetersPerSecond; // y in field frame
+
+        // Get target data.
+        final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
         if (hubRelativeTransform == null) {
             // TODO: Need a way to handle outside state, or something to handle it.
             this.cancel();
         }
 
-        final double shapeScalar = 1;
-        final boolean isBlocked = false;
-
+        // Do some physics.
         final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy, shapeScalar,
                 isBlocked);
-
         final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlyWheelSpeedMPS());
-        // 2. Command the Shooter
+
+        /*
+         * 2. Command the Shooter
+         */
         shooter.setRPM(motorRPM);
         shooter.setLaunchAngle(shot.getHoodPitchDegrees());
 
-        // 3. Command the Drivebase
-        // We use the driver's X/Y but OVERRIDE the rotation with our 3D solution
+        /*
+         * 3. Command the Drivebase
+         * 
+         * We use the driver's X/Y but OVERRIDE the rotation with our 3D solution.
+         */
+        // Correct any input.
         final double BACKWARDS_CLOCKWISE = 180;
         final double BACKWARDS_COUNTER_CLOCKWISE = -180;
         final double turretYaw = MathUtil.inputModulus(shot.getTurretYawDegrees(), BACKWARDS_COUNTER_CLOCKWISE,
                 BACKWARDS_CLOCKWISE);
+        // Actually drive.
         drive.setControl(fieldFacingAngle
                 .withVelocityX(xSupplier.getAsDouble())
                 .withVelocityY(ySupplier.getAsDouble())
