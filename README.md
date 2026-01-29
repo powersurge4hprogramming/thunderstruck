@@ -36,7 +36,7 @@ as an aside you are calling a function there... and it's a function called a con
 and a canbus to run on.
 
 The ID you are going to pass to the `krakenX60` is going to come from
-[the `CANBus` container](src/main/java/frc/robot/CANBus.java) where all of our relevent CANBUs settings will come from.
+[the `CANBus` container](src/main/java/frc/robot/CANBus.java) where all of our relevent CANBus settings will come from.
 The first piece of data to the `TalonFX` **constructor** is an ID; so, lets give it that with this:
 `CANBus.ID.COLLECTOR.MOTOR`. The second piece of data is *what* canbus it is on, and that comes from `CANBus.BUS.RIO`.
 
