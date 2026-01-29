@@ -72,7 +72,7 @@ think.
 
 ### In LockOnShootAndDrive.java
 * **"Weapon Swapping"**! This command structure should be done.
-    * More data needs to be provided soon.
+    * Actually, it may not work or be final.
 * Figure out how to get the swerve drive's current x and y velocities.
     * <mark>The answer for this is in
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
