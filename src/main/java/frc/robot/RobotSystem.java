@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -61,6 +63,7 @@ public class RobotSystem {
         // Driver Inputs
         // =============================================================================================================
         private final CommandXboxController controller = new CommandXboxController(0);
+        boolean checkAimbotStatus = false;
 
         // =============================================================================================================
         // The Constructor
@@ -107,14 +110,29 @@ public class RobotSystem {
                 controller.b().whileTrue(drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
-
-                controller.y().toggleOnTrue(
-                                new LockOnShootAndDrive(
-                                                shooter,
-                                                drivetrain,
-                                                aimCamera,
-                                                () -> -controller.getLeftX() * MaxSpeed,
-                                                () -> -controller.getLeftY() * MaxSpeed));
+                final LockOnShootAndDrive lockOnShootAndDrive = new LockOnShootAndDrive(
+                                shooter,
+                                drivetrain,
+                                aimCamera,
+                                () -> -controller.getLeftX() * MaxSpeed,
+                                () -> -controller.getLeftY() * MaxSpeed);
+                final Command manualShoot = shooter.manualShootBall(() -> 0.5, () -> 60);
+                controller.y().onTrue(
+                                Commands.runOnce(() -> {
+                                        if (checkAimbotStatus == true) {
+                                                if (manualShoot.isScheduled()) {
+                                                        manualShoot.cancel();
+                                                }
+                                                lockOnShootAndDrive.schedule();
+                                                checkAimbotStatus = false;
+                                        } else {
+                                                if (lockOnShootAndDrive.isScheduled()) {
+                                                        lockOnShootAndDrive.cancel();
+                                                }
+                                                manualShoot.schedule();
+                                                checkAimbotStatus = true;
+                                        }
+                                }, shooter, drivetrain));
 
                 // Reset the field-centric heading on left bumper press.
                 controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
