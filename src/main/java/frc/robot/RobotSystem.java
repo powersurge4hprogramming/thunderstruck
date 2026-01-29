@@ -71,7 +71,7 @@ public class RobotSystem {
         // =============================================================================================================
         // Driver Inputs
         // =============================================================================================================
-        private final CommandXboxController controller = new CommandXboxController(0);
+        private final CommandXboxController controller = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private boolean checkAimbotStatus = false;
 
         // =============================================================================================================
