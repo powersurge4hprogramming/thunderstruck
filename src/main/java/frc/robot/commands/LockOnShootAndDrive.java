@@ -10,13 +10,27 @@ import frc.robot.physics.ballistics.VelocityAngleSolver;
 import frc.robot.physics.rotational.VelocityToRPMSolver;
 
 public class LockOnShootAndDrive extends Command {
+    // =================================================================================================================
+    // Sub-Systems
+    // =================================================================================================================
     private final Shooter shooter;
     private final CommandSwerveDrivetrain drive;
+
+    // =================================================================================================================
+    // Systems
+    // =================================================================================================================
     private final AimCamera aimCamera;
+
+    // =================================================================================================================
+    // Data Suppliers
+    // =================================================================================================================
     // Allow driver to still move X/Y
     private final DoubleSupplier xSupplier;
     private final DoubleSupplier ySupplier;
 
+    // =================================================================================================================
+    // Solvers
+    // =================================================================================================================
     private final VelocityAngleSolver vaSolver;
     private final VelocityToRPMSolver vRpmSolver;
 
