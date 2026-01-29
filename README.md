@@ -25,9 +25,9 @@ about, and implementing the `Collector` code.
 
 ---
 #### The Setup
-We are going to make a single motor **variable**. Will go in `The Collector's Parts` section of the file. The **type**
-of motor we will be making is a `TalonFX`. We are going to call this **variable** `krakenX60`. We are not going to
-*make* the motor here though. We are going to do that in the **Constructor**.
+We are going to make a single motor **variable** that will go in `The Collector's Parts` section of the file. The
+**type** of motor we will be making is a `TalonFX`. We are going to call this **variable** `krakenX60`. We are not going
+to *make* the motor here though. We are going to do that in the **Constructor**.
 
 ---
 #### In the Constructor
