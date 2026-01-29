@@ -78,6 +78,7 @@ think.
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 
 ## What Needs to Be Done
+* Give data to the `Shooter::manualShootBall` command.
 * Implement `Shooter::setRPM`.
 * Implement `Shooter::setLaunchAngle`.
 * Implement `Shooter::manualShootBall` command.
@@ -90,7 +91,6 @@ think.
 * Figure out how to get rumble working on `Triggers`.
 * <mark>The entire autonomous plan!!!</mark>
     * Should we just handmake the plan? Probably not! Need to figure out how PathPlanner works!!!!
-* Bind `Shooter::manualShootBall` command.
 * Bind `Collector::run` command.
 * Bind `Collector::stop` command.
 * Bind `Climber::upward` command.
