@@ -78,8 +78,6 @@ think.
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 
 ## What Needs to Be Done
-* Implement `LockOnShootAndDrive::execute`.
-    * Figure out how to use `SwerveRequest.FieldCentricFacingAngle`.
 * Implement `Shooter::setRPM`.
 * Implement `Shooter::setLaunchAngle`.
 * Implement `Shooter::manualShootBall` command.
@@ -101,6 +99,7 @@ think.
 ## What Needs to Be Tested
 * The `LockOnShootAndDrive` **y** binding.
 * The `AimCamera::getHubRelativeLocation` function.
+* The `LockOnShootAndDrive::execute` function.
 
 ## Mentor Mike's Notes to Himself
 `SwerveRequest.FieldCentricFacingAngle`
