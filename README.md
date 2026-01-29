@@ -56,7 +56,7 @@ return this.run(() -> {
 What you write next goes in there.
 
 We need to get the `double` from our `DoubleSupplier`, the `motorRPMScalar`, so that we can use it. We need a
-`final double` **variable** to hold our motor rpm percentage (*scale*); so, make that varible and then assign to it the
+`final double` **variable** to hold our motor rpm percentage (*scale*); so, make that variable and then assign to it the
 value from our supplier by calling `get()` from our `motorRPMScalar`.
 
 Then, `set()` the speed of our `krakenX60` motor by giving it the value of our previously created **variable**.
