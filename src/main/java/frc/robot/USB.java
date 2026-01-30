@@ -10,6 +10,6 @@ public class USB {
      * This holds all of the controller ports we are using.
      */
     public static final class CONTROLLER {
-        public static final short DRIVER = 0;
+        public static final byte DRIVER = 0;
     }
 }

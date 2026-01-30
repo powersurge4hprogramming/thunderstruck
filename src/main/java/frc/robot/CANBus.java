@@ -31,8 +31,8 @@ public class CANBus {
          */
         public static final class SHOOTER {
             // TODO: Need real values here.
-            public static final short LEADER = 0;
-            public static final short FOLLOWER = 0;
+            public static final byte LEADER = 0;
+            public static final byte FOLLOWER = 0;
         }
 
         /**
@@ -41,7 +41,7 @@ public class CANBus {
          */
         public static final class COLLECTOR {
             // TODO: Need a real value here.
-            public static final short MOTOR = 0;
+            public static final byte MOTOR = 0;
         }
 
         /**
@@ -51,6 +51,6 @@ public class CANBus {
          * PowerDistribution} module.
          */
         // TODO: Need a real value here.
-        public static final short POWER_DISTRIBUTION = 0;
+        public static final byte POWER_DISTRIBUTION = 0;
     }
 }
