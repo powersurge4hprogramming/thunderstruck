@@ -88,8 +88,6 @@ public class LockOnShootAndDrive extends Command {
                 final ChassisSpeeds fieldRelative = ChassisSpeeds.fromRobotRelativeSpeeds(robotCentric, heading);
                 final double fieldVx = fieldRelative.vxMetersPerSecond; // x in field frame (blue origin forward)
                 final double fieldVy = fieldRelative.vyMetersPerSecond; // y in field frame
-                // TODO: Get this value from the controller too... maybe?
-                final double shapeScalar = 1;
 
                 // Get target data.
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
@@ -100,7 +98,7 @@ public class LockOnShootAndDrive extends Command {
 
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
-                                LAUNCH_ANGLE_DEGREES, shapeScalar);
+                                LAUNCH_ANGLE_DEGREES);
                 final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlyWheelSpeedMPS());
 
                 /*

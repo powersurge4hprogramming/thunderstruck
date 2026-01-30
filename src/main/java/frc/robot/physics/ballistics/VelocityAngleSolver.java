@@ -70,8 +70,7 @@ public class VelocityAngleSolver {
      * @param shapeScalar 0.0 (Flat/Laser) to 1.0 (Steep/Lob)
      */
     public ShotResult calculate(
-            Transform3d t3d, Rotation2d heading, double robotVx, double robotVy, double launchAngle,
-            double shapeScalar) {
+            Transform3d t3d, Rotation2d heading, double robotVx, double robotVy, double launchAngle) {
 
         // 1. Calculate relative distances
         double dx = t3d.getX();
