@@ -26,19 +26,19 @@ about, and implementing the `Collector` code.
 ---
 #### The Setup
 We are going to make a single motor **variable** that will go in `The Collector's Parts` section of the file. The
-**type** of motor we will be making is a `TalonFX`. We are going to call this **variable** `krakenX60`. We are not going
+**type** of motor we will be making is a `SparkMax`. We are going to call this **variable** `neo`. We are not going
 to *make* the motor here though. We are going to do that in the **Constructor**.
 
 ---
 #### In the Constructor
-We are going to make a `krakenX60` motor. **Assign** to our `krakenX60` a new `TalonFX`. In the `TalonFX()` function--
+We are going to make a `neo` motor. **Assign** to our `neo` a new `SparkMax`. In the `SparkMax()` function--
 as an aside you are calling a function there... and it's a function called a constructor--pass to it a **CanBus** ID,
-and a canbus to run on.
+and a `MotorType`.
 
-The ID you are going to pass to the `krakenX60` is going to come from
+The ID you are going to pass to the `neo` is going to come from
 [the `CANBus` container](src/main/java/frc/robot/CANBus.java) where all of our relevent CANBus settings will come from.
-The first piece of data to the `TalonFX` **constructor** is an ID; so, lets give it that with this:
-`CANBus.ID.COLLECTOR.MOTOR`. The second piece of data is *what* canbus it is on, and that comes from `CANBus.BUS.RIO`.
+The first piece of data to the `SparkMax` **constructor** is an ID; so, lets give it that with this:
+`CANBus.ID.COLLECTOR.MOTOR`. Is the kind of motor it is, for us we'll set it to brushless.
 
 And there you go, you've made a motor :smile:
 
@@ -59,7 +59,7 @@ We need to get the `double` from our `DoubleSupplier`, the `motorRPMScalar`, so 
 `final double` **variable** to hold our motor rpm percentage (*scale*); so, make that variable and then assign to it the
 value from our supplier by calling `get()` from our `motorRPMScalar`.
 
-Then, `set()` the speed of our `krakenX60` motor by giving it the value of our previously created **variable**.
+Then, `set()` the speed of our `neo` motor by giving it the value of our previously created **variable**.
 
 There ya go, you've implemented the `Collector`'s `run()` function!
 
