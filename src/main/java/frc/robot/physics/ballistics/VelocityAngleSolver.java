@@ -86,9 +86,8 @@ public class VelocityAngleSolver {
 
         // 2. Solve for the "Ideal World Vector" (Stationary Shot)
         // We use the Secant/RK4 solver here to get the physics-accurate vertical launch
-        // params.
-        // The solver returns the required Launch Angle (Theta) and Velocity (Magnitude)
-        // as if the robot were standing still.
+        // params. The solver returns the required Launch Angle (Theta) and Velocity
+        // (Magnitude) as if the robot were standing still.
 
         double idealThetaRad;
         double idealVelocityMag;
