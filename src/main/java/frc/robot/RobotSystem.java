@@ -78,13 +78,13 @@ public class RobotSystem {
         // The Constructor
         // =============================================================================================================
         public RobotSystem() {
-                configureBindings();
+                defaultBindingsProfile();
         }
 
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
-        private void configureBindings() {
+        private void defaultBindingsProfile() {
                 /*
                  * Note that X is defined as forward according to WPILib convention, and Y is
                  * defined as to the left according to WPILib convention.
