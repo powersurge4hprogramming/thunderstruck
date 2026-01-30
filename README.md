@@ -111,4 +111,10 @@ think.
 The `Collector` should definitely run on the roborio can bus. The climber probably will too. Not sure yet though on that
 one.
 
+// 1. Clear the Commands so there are no ghost commands.
+CommandScheduler.getInstance().cancelAll();
+// 2. Clear the bindings
+// This removes all Trigger/Button listeners from the active loop.
 CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
+How to keep the profile swap going?
