@@ -118,3 +118,6 @@ CommandScheduler.getInstance().cancelAll();
 CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
 How to keep the profile swap going?
+**Got it**! All of our Commands will go inside of an array, and then when we map, we grab them by reference and add them
+onto a `Trigger`. That way, we can cancel selectively by iterating over the array, cancelling as we go, and skipping
+over the cycleing commands.
