@@ -31,11 +31,10 @@ public class Shooter extends SubsystemBase {
      * 
      * @param motorRPMScalar The "speed" at which to set the motor in percentage of
      *                       possible RPM from 0 to 1.
-     * @param angleLaunch    The angle at which to shoot the ball.
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command manualShootBall(final DoubleSupplier motorRPMScalar, final DoubleSupplier angleLaunch) {
+    public Command manualShootBall(final DoubleSupplier motorRPMScalar) {
         throw new RuntimeException("Not implemented yet.");
     }
 

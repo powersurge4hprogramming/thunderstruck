@@ -127,7 +127,7 @@ public class RobotSystem {
                                 () -> -controller.getLeftY() * MaxSpeed,
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed);
-                final Command manualShoot = shooter.manualShootBall(() -> 0.5, () -> 60);
+                final Command manualShoot = shooter.manualShootBall(() -> 0.5);
                 controller.y().onTrue(
                                 Commands.runOnce(() -> {
                                         if (checkAimbotStatus == true) {

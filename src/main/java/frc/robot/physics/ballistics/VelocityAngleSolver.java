@@ -35,23 +35,17 @@ public class VelocityAngleSolver {
      */
     public static class ShotResult {
         private double turretYawDegrees; // Field-relative angle to aim the turret
-        private double hoodPitchDegrees; // Angle of the shooter hood
         private double flywheelSpeedMPS; // Tangential velocity of the flywheel
 
         private ShotResult(final double turretYawDegrees,
                 final double hoodPitchDegrees,
                 final double flywheelSpeedMPS) {
             this.turretYawDegrees = turretYawDegrees;
-            this.hoodPitchDegrees = hoodPitchDegrees;
             this.flywheelSpeedMPS = flywheelSpeedMPS;
         }
 
         public double getTurretYawDegrees() {
             return this.turretYawDegrees;
-        }
-
-        public double getHoodPitchDegrees() {
-            return this.hoodPitchDegrees;
         }
 
         public double getFlyWheelSpeedMPS() {
@@ -72,13 +66,12 @@ public class VelocityAngleSolver {
      *                    from the shooter.
      * @param robotVx     Robot velocity X component (m/s)
      * @param robotVy     Robot velocity Y component (m/s)
+     * @param launchAngle The angle at which to shoot the ball.
      * @param shapeScalar 0.0 (Flat/Laser) to 1.0 (Steep/Lob)
-     * @param isBlocked   If true, prioritizes high launch angle.
-     * @param outResult   Output container.
      */
     public ShotResult calculate(
-            Transform3d t3d, Rotation2d heading, double robotVx, double robotVy,
-            double shapeScalar, boolean isBlocked) {
+            Transform3d t3d, Rotation2d heading, double robotVx, double robotVy, double launchAngle,
+            double shapeScalar) {
 
         // 1. Calculate relative distances
         double dx = t3d.getX();
@@ -101,18 +94,8 @@ public class VelocityAngleSolver {
         double idealVelocityMag;
 
         // --- Solver Logic Start (Inline for performance) ---
-        // (A) Determine Angle Strategy
-        if (isBlocked) {
-            double launchAngleDeg = 80;
-            idealThetaRad = Math.toRadians(launchAngleDeg);
-        } else {
-            double minEntry = -45.0;
-            double maxEntry = -75.0;
-            double entryRad = Math.toRadians(minEntry + (shapeScalar * (maxEntry - minEntry)));
-            double term1 = (2 * dz) / distFloor;
-            double term2 = Math.tan(entryRad);
-            idealThetaRad = Math.atan(term1 - term2);
-        }
+        // (A) Determine Angle
+        idealThetaRad = Math.toRadians(launchAngle);
 
         // (B) Initial Guess (Vacuum)
         double cosTheta = Math.cos(idealThetaRad);
@@ -175,7 +158,6 @@ public class VelocityAngleSolver {
         // Normalize to -180 to 180 range for safety
         ShotResult.turretYawDegrees = robotRelativeTurretAngle;
 
-        ShotResult.hoodPitchDegrees = Math.toDegrees(Math.atan2(vShooterZ, vShooterHoriz));
         ShotResult.flywheelSpeedMPS = Math.sqrt(vShooterHoriz * vShooterHoriz + vShooterZ * vShooterZ);
 
         return VelocityAngleSolver.ShotResult;

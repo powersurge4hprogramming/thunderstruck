@@ -19,6 +19,11 @@ import frc.robot.physics.rotational.VelocityToRPMSolver;
 
 public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
+        // Constants
+        // =============================================================================================================
+        private final double LAUNCH_ANGLE_DEGREES = 60;
+
+        // =============================================================================================================
         // Sub-Systems
         // =============================================================================================================
         private final Shooter shooter;
@@ -76,9 +81,8 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void execute() {
-                // TODO: Get these values from the controller too.
+                // TODO: Get this value from the controller too... maybe?
                 final double shapeScalar = 1;
-                final boolean isBlocked = false;
 
                 /*
                  * 1. One physics calculation to rule them all
@@ -98,8 +102,8 @@ public class LockOnShootAndDrive extends Command {
                 }
 
                 // Do some physics.
-                final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy, shapeScalar,
-                                isBlocked);
+                final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
+                                LAUNCH_ANGLE_DEGREES, shapeScalar);
                 final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlyWheelSpeedMPS());
 
                 /*
