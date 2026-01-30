@@ -50,7 +50,7 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Swerve Drive Configurations
         // =============================================================================================================
-        final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
+        private final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
 
         // =============================================================================================================
         // Public Methods
