@@ -67,7 +67,6 @@ public class VelocityAngleSolver {
      * @param robotVx     Robot velocity X component (m/s)
      * @param robotVy     Robot velocity Y component (m/s)
      * @param launchAngle The angle at which to shoot the ball.
-     * @param shapeScalar 0.0 (Flat/Laser) to 1.0 (Steep/Lob)
      */
     public ShotResult calculate(
             Transform3d t3d, Rotation2d heading, double robotVx, double robotVy, double launchAngle) {
