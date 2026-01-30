@@ -16,8 +16,8 @@ public class AimCamera {
     // =================================================================================================================
     // Constants
     // =================================================================================================================
-    private final static short HUB_CENTER_TAG = 9;
-    private final static short HUB_OFF_CENTER_RIGHT_TAG = 10;
+    private final static byte HUB_CENTER_TAG = 9;
+    private final static byte HUB_OFF_CENTER_RIGHT_TAG = 10;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             Distance.ofBaseUnits(5, Inches),
             Distance.ofBaseUnits(0, Inches),
