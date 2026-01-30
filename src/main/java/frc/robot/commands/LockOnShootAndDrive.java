@@ -56,10 +56,8 @@ public class LockOnShootAndDrive extends Command {
         // Public Methods
         // =============================================================================================================
         public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive,
-                        final AimCamera aimCamera,
-                        final DoubleSupplier xMove, final DoubleSupplier yMove,
-                        final DoubleSupplier batteryVoltageSupplier,
-                        final double MaxSpeed) {
+                        final AimCamera aimCamera, final DoubleSupplier xMove, final DoubleSupplier yMove,
+                        final DoubleSupplier batteryVoltageSupplier, final double MaxSpeed) {
                 this.shooter = shooter;
                 this.drive = drive;
                 this.aimCamera = aimCamera;
@@ -81,9 +79,6 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void execute() {
-                // TODO: Get this value from the controller too... maybe?
-                final double shapeScalar = 1;
-
                 /*
                  * 1. One physics calculation to rule them all
                  */
@@ -93,6 +88,8 @@ public class LockOnShootAndDrive extends Command {
                 final ChassisSpeeds fieldRelative = ChassisSpeeds.fromRobotRelativeSpeeds(robotCentric, heading);
                 final double fieldVx = fieldRelative.vxMetersPerSecond; // x in field frame (blue origin forward)
                 final double fieldVy = fieldRelative.vyMetersPerSecond; // y in field frame
+                // TODO: Get this value from the controller too... maybe?
+                final double shapeScalar = 1;
 
                 // Get target data.
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
