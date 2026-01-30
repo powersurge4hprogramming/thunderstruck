@@ -54,19 +54,6 @@ public class Shooter extends SubsystemBase {
 
     /**
      * {@summary}
-     * This method sets the Shooter's launch angle.
-     * 
-     * @apiNote
-     *          This should only be used if you know what you're doing.
-     * 
-     * @param launchAngleDeg The angle, in degrees, at which to set the shooter.
-     */
-    public void setLaunchAngle(final double launchAngleDeg) {
-        throw new RuntimeException("Not implemented yet.");
-    }
-
-    /**
-     * {@summary}
      * The current RPM of the leader motor.
      * 
      * @return The motor's RPM.
