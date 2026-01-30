@@ -85,30 +85,7 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void defaultBindingsProfile() {
-                /*
-                 * Note that X is defined as forward according to WPILib convention, and Y is
-                 * defined as to the left according to WPILib convention.
-                 * 
-                 * This command will always run on the drivetrain until another command takes
-                 * control of it.
-                 */
-                drivetrain.setDefaultCommand(
-                                // Drivetrain will execute this command periodically
-                                drivetrain.applyRequest(() ->
-                                // Drive forward with negative Y (forward)
-                                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
-                                                // Drive left with negative X (left)
-                                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
-                                                // Drive counterclockwise with negative X (left)
-                                                .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
-
-                /*
-                 * Idle while the robot is disabled. This ensures the configured neutral mode is
-                 * applied to the drive motors while disabled.
-                 */
-                final var idle = new SwerveRequest.Idle();
-                RobotModeTriggers.disabled().whileTrue(
-                                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
+                setDefaultBindings();
 
                 controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
                 /*
@@ -159,6 +136,34 @@ public class RobotSystem {
                 controller.start().and(controller.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private void setDefaultBindings() {
+                /*
+                 * Note that X is defined as forward according to WPILib convention, and Y is
+                 * defined as to the left according to WPILib convention.
+                 * 
+                 * This command will always run on the drivetrain until another command takes
+                 * control of it.
+                 */
+                drivetrain.setDefaultCommand(
+                                // Drivetrain will execute this command periodically
+                                drivetrain.applyRequest(() ->
+                                // Drive forward with negative Y (forward)
+                                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
+                                                // Drive left with negative X (left)
+                                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
+                                                // Drive counterclockwise with negative X (left)
+                                                .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
+
+                /*
+                 * Idle while the robot is disabled. This ensures the configured neutral mode is
+                 * applied to the drive motors while disabled.
+                 */
+                final var idle = new SwerveRequest.Idle();
+                RobotModeTriggers.disabled().whileTrue(
+                                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
         }
 
         // =============================================================================================================
