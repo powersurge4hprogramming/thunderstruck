@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -43,6 +44,36 @@ public class RobotSystem {
         private final Shooter shooter = new Shooter();
         private final AimCamera aimCamera = new AimCamera();
         private final Collector Collector = new Collector();
+
+        // =============================================================================================================
+        // Commands
+        // =============================================================================================================
+        private static final byte NORMAL_DRIVE_INDEX = 0;
+        private static final byte IDLE_INDEX = 1;
+        private static final byte BRAKE_INDEX = 2;
+        private static final byte WHEEL_POINT_INDEX = 3;
+        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INDEX = 4;
+        private static final byte MANUAL_SHOOT_INDEX = 5;
+        private static final byte COLLECTOR_RUN_INDEX = 6;
+        private static final byte RESET_FIELD_ORIENTATION_INDEX = 7;
+        private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 8;
+        private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 9;
+        private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
+        private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
+        private final Command[] commands = {
+                        makeNormalDriveCommand(),
+                        makeIdleCommand(),
+                        makeBrakeCommand(),
+                        makeWheelsPointCommand(),
+                        makeLockOnShootAndDriveCommand(),
+                        makeManualShootCommand(),
+                        makeCollectorRunCommand(),
+                        makeResetFieldOrientationCommand(),
+                        makeSysIdDynamicForwardCommand(),
+                        makeSysIdDynamicReverseCommand(),
+                        makeSysIdQuasistaticForwardCommand(),
+                        makeSysIdQuasistaticReverseCommand(),
+        };
 
         // =============================================================================================================
         // Swerve Drive Configurations
@@ -79,6 +110,7 @@ public class RobotSystem {
         // =============================================================================================================
         public RobotSystem() {
                 defaultBindingsProfile();
+                drivetrain.registerTelemetry(logger::telemeterize);
         }
 
         // =============================================================================================================
@@ -87,83 +119,42 @@ public class RobotSystem {
         private void defaultBindingsProfile() {
                 setDefaultBindings();
 
-                controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
-                /*
-                 * NOTE:
-                 * All this does it point the wheels to whatever direction it is controlled to
-                 * point towards. Not sure of its usefulness. Can either of you think of one?
-                 */
-                controller.b().whileTrue(drivetrain.applyRequest(
-                                () -> point.withModuleDirection(
-                                                new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
-                final LockOnShootAndDrive lockOnShootAndDrive = new LockOnShootAndDrive(
-                                shooter,
-                                drivetrain,
-                                aimCamera,
-                                () -> -controller.getLeftX() * MaxSpeed,
-                                () -> -controller.getLeftY() * MaxSpeed,
-                                () -> powerDistribution.getVoltage(),
-                                MaxSpeed);
-                final Command manualShoot = shooter.manualShootBall(() -> 0.5);
-                controller.y().onTrue(
-                                Commands.runOnce(() -> {
-                                        if (checkAimbotStatus == true) {
-                                                if (manualShoot.isScheduled()) {
-                                                        getCommandScheduler().cancel(manualShoot);
-                                                }
-                                                getCommandScheduler().schedule(lockOnShootAndDrive);
-                                                checkAimbotStatus = false;
-                                        } else {
-                                                if (lockOnShootAndDrive.isScheduled()) {
-                                                        getCommandScheduler().cancel(lockOnShootAndDrive);
-                                                }
-                                                getCommandScheduler().schedule(manualShoot);
-                                                checkAimbotStatus = true;
-                                        }
-                                }, shooter, drivetrain)); // Does the Command "orchestrator" need those requirements?
-                controller.rightTrigger().onTrue(Collector.run(() -> controller.getRightTriggerAxis()));
-
-                // Reset the field-centric heading on left bumper press.
-                controller.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                controller.a().whileTrue(commands[BRAKE_INDEX]);
+                controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
+                final Command weaponSwap = new InstantCommand(() -> {
+                        if (checkAimbotStatus == true) {
+                                if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
+                                        getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
+                                }
+                                getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
+                                checkAimbotStatus = false;
+                        } else {
+                                if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
+                                        getCommandScheduler().cancel(
+                                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
+                                }
+                                getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                checkAimbotStatus = true;
+                        }
+                });
+                controller.y().onTrue(weaponSwap);
+                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.leftBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
 
                 /*
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
                  */
-                controller.back().and(controller.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-                controller.back().and(controller.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-                controller.start().and(controller.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-                controller.start().and(controller.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-                drivetrain.registerTelemetry(logger::telemeterize);
+                controller.back().and(controller.y()).whileTrue(commands[SYSID_DYNAMIC_FORWARD_INDEX]);
+                controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
+                controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
+                controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private void setDefaultBindings() {
-                /*
-                 * Note that X is defined as forward according to WPILib convention, and Y is
-                 * defined as to the left according to WPILib convention.
-                 * 
-                 * This command will always run on the drivetrain until another command takes
-                 * control of it.
-                 */
-                drivetrain.setDefaultCommand(
-                                // Drivetrain will execute this command periodically
-                                drivetrain.applyRequest(() ->
-                                // Drive forward with negative Y (forward)
-                                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
-                                                // Drive left with negative X (left)
-                                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
-                                                // Drive counterclockwise with negative X (left)
-                                                .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
-
-                /*
-                 * Idle while the robot is disabled. This ensures the configured neutral mode is
-                 * applied to the drive motors while disabled.
-                 */
-                final var idle = new SwerveRequest.Idle();
-                RobotModeTriggers.disabled().whileTrue(
-                                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
+                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
+                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
         }
 
         // =============================================================================================================
@@ -188,5 +179,101 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         public CommandScheduler getCommandScheduler() {
                 return CommandScheduler.getInstance();
+        }
+
+        // =============================================================================================================
+        // Private Methods
+        // =============================================================================================================
+        private Command makeNormalDriveCommand() {
+                /*
+                 * Note that X is defined as forward according to WPILib convention, and Y is
+                 * defined as to the left according to WPILib convention.
+                 * 
+                 * This command will always run on the drivetrain until another command takes
+                 * control of it.
+                 */
+                // Drivetrain will execute this command periodically
+                return drivetrain.applyRequest(() ->
+                // Drive forward with negative Y (forward)
+                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
+                                // Drive left with negative X (left)
+                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
+                                // Drive counterclockwise with negative X (left)
+                                .withRotationalRate(-controller.getRightX() * MaxAngularRate));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeIdleCommand() {
+                /*
+                 * Idle while the robot is disabled. This ensures the configured neutral mode is
+                 * applied to the drive motors while disabled.
+                 */
+                final var idle = new SwerveRequest.Idle();
+                return drivetrain.applyRequest(() -> idle).ignoringDisable(true);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeBrakeCommand() {
+                return drivetrain.applyRequest(() -> brake);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeWheelsPointCommand() {
+                /*
+                 * NOTE:
+                 * All this does it point the wheels to whatever direction it is controlled to
+                 * point towards. Not sure of its usefulness. Can either of you think of one?
+                 */
+                return drivetrain.applyRequest(
+                                () -> point.withModuleDirection(
+                                                new Rotation2d(-controller.getLeftY(), -controller.getLeftX())));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeLockOnShootAndDriveCommand() {
+                return new LockOnShootAndDrive(
+                                shooter,
+                                drivetrain,
+                                aimCamera,
+                                () -> -controller.getLeftX() * MaxSpeed,
+                                () -> -controller.getLeftY() * MaxSpeed,
+                                () -> powerDistribution.getVoltage(),
+                                MaxSpeed);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeManualShootCommand() {
+                return shooter.manualShootBall(() -> 0.5);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeCollectorRunCommand() {
+                return Collector.run(() -> controller.getRightTriggerAxis());
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeResetFieldOrientationCommand() {
+                // Reset the field-centric heading on left bumper press.
+                return drivetrain.runOnce(drivetrain::seedFieldCentric);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdDynamicForwardCommand() {
+                return drivetrain.sysIdDynamic(Direction.kForward);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdDynamicReverseCommand() {
+                return drivetrain.sysIdDynamic(Direction.kReverse);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdQuasistaticForwardCommand() {
+                return drivetrain.sysIdQuasistatic(Direction.kForward);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdQuasistaticReverseCommand() {
+                return drivetrain.sysIdQuasistatic(Direction.kReverse);
         }
 }
