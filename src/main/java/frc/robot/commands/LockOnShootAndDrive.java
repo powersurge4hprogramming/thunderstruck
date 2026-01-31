@@ -97,7 +97,7 @@ public class LockOnShootAndDrive extends Command {
                          * When this command interrupts itself, on the trigger, execute the weapon swap
                          * instant command.
                          */
-                        this.cancel();
+                        this.end(true);
                 }
 
                 // Do some physics.
