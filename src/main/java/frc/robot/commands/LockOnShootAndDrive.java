@@ -92,7 +92,11 @@ public class LockOnShootAndDrive extends Command {
                 // Get target data.
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
                 if (hubRelativeTransform == null) {
-                        // TODO: Need a way to handle outside state, or something to handle it.
+                        /*
+                         * TODO:
+                         * When this command interrupts itself, on the trigger, execute the weapon swap
+                         * instant command.
+                         */
                         this.cancel();
                 }
 
