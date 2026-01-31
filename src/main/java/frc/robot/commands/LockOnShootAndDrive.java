@@ -93,11 +93,13 @@ public class LockOnShootAndDrive extends Command {
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
                 if (hubRelativeTransform == null) {
                         /*
-                         * TODO:
-                         * When this command interrupts itself, on the trigger, execute the weapon swap
-                         * instant command.
+                         * When this command interrupts itself handle the interrupt outside of here.
+                         * 
+                         * The interrupt handler should schedule the manual shooting command and handle
+                         * any needed state.
                          */
-                        this.end(true);
+                        this.cancel();
+                        return;
                 }
 
                 // Do some physics.

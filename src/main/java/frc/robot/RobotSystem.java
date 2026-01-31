@@ -60,6 +60,7 @@ public class RobotSystem {
         private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 9;
         private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
         private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
+        private static final byte WEAPON_SWAP_INDEX = 12;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -73,6 +74,7 @@ public class RobotSystem {
                         makeSysIdDynamicReverseCommand(),
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
+                        makeWeaponSwapCommand(),
         };
 
         // =============================================================================================================
@@ -121,26 +123,9 @@ public class RobotSystem {
 
                 controller.a().whileTrue(commands[BRAKE_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
-                final Command weaponSwap = new InstantCommand(() -> {
-                        if (checkAimbotStatus == true) {
-                                if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
-                                        getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
-                                }
-                                getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
-                                checkAimbotStatus = false;
-                        } else {
-                                if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
-                                        getCommandScheduler().cancel(
-                                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
-                                }
-                                getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
-                                checkAimbotStatus = true;
-                        }
-                });
-                controller.y().onTrue(weaponSwap);
+                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.leftBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-
                 /*
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
@@ -238,12 +223,36 @@ public class RobotSystem {
                                 () -> -controller.getLeftX() * MaxSpeed,
                                 () -> -controller.getLeftY() * MaxSpeed,
                                 () -> powerDistribution.getVoltage(),
-                                MaxSpeed);
+                                MaxSpeed)
+                                .handleInterrupt(() -> {
+                                        checkAimbotStatus = true;
+                                        getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualShootCommand() {
                 return shooter.manualShootBall(() -> 0.5);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeWeaponSwapCommand() {
+                return new InstantCommand(() -> {
+                        if (checkAimbotStatus == true) {
+                                if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
+                                        getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
+                                }
+                                getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
+                                checkAimbotStatus = false;
+                        } else {
+                                if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
+                                        getCommandScheduler().cancel(
+                                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
+                                }
+                                getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                checkAimbotStatus = true;
+                        }
+                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
