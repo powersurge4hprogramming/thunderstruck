@@ -109,15 +109,15 @@ public class RobotSystem {
                                 Commands.runOnce(() -> {
                                         if (checkAimbotStatus == true) {
                                                 if (manualShoot.isScheduled()) {
-                                                        manualShoot.cancel();
+                                                        getCommandScheduler().cancel(manualShoot);
                                                 }
-                                                lockOnShootAndDrive.schedule();
+                                                getCommandScheduler().schedule(lockOnShootAndDrive);
                                                 checkAimbotStatus = false;
                                         } else {
                                                 if (lockOnShootAndDrive.isScheduled()) {
-                                                        lockOnShootAndDrive.cancel();
+                                                        getCommandScheduler().cancel(lockOnShootAndDrive);
                                                 }
-                                                manualShoot.schedule();
+                                                getCommandScheduler().schedule(manualShoot);
                                                 checkAimbotStatus = true;
                                         }
                                 }, shooter, drivetrain)); // Does the Command "orchestrator" need those requirements?
