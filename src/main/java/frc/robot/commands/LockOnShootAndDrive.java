@@ -93,7 +93,7 @@ public class LockOnShootAndDrive extends Command {
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
                 if (hubRelativeTransform == null) {
                         /*
-                         * When this command interrupts itself handle the interrupt outside of here.
+                         * Send the interrupt signal!!!
                          * 
                          * The interrupt handler should schedule the manual shooting command and handle
                          * any needed state.
