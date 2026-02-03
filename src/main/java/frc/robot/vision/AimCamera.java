@@ -56,6 +56,7 @@ public class AimCamera {
                 if (target.fiducialId != HUB_CENTER_TAG || target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
                 hub = target.getBestCameraToTarget();
+                break;
             }
         }
 
