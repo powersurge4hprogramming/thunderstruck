@@ -16,6 +16,37 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 I had to import the SparkMax class, but it didn't work. is it something with how I imported it?
 It's also angry at me for something in the `run()` function. something involving parentheses, but I'm not quite sure what.
 
+### My response to you :smile:
+If you run into any issues, just help out Hogan and the rest of the engineering team. I'm sure they'll need it. You
+could wait until I get back to continue with the programming. It may be best if you continue to run into issues to just
+wait.
+
+To import the `SparkMax` class, you actually do this at the top:
+```java
+import com.revrobotics.spark.SparkMax;
+```
+
+The `SparkMax` instanciation needs to happen inside the `Collector()` function--the instanciation is the part that
+happens after the `=` symbol (the assignment operator)--and where you put the code after the `=` is not correct either:
+**which is ok, you're still learning.** What you are doing in `The Collector's Parts` section is defining what is a part
+of the `Collector` sub-system. Look [at the `Shooter` class](src/main/java/frc/robot/subsystems/Shooter.java#L17) to see
+how the motor should be **defined**. Plus, don't forget that *everything* is case sensitive.
+
+Then, you'd still have to worry about creation (instanciation) inside of the `Collector()` function. That is where you
+assign to the `neo` variable. You'd have to assign a new `SparkMax()` to the `neo` variable, and give to it the correct
+data. The data you give to the `SparkMax` function is explained below. If anything, check out its documentation
+[here](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkmax#%3Cinit%3E(int,com.revrobotics.spark.SparkLowLevel.MotorType)).
+That should hopefully clear some things up. The ID will come from our own
+[our own `CANBus`](src/main/java/frc/robot/CANBus.java) and the `MotorType` 
+[will come from here](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparklowlevel.motortype).
+The ID is the first value to go to the `SparkMax()` function, and the `MotorType` is the second.
+
+If this still doesn't clear anything up, then ***definitely wait for me*** to get back and focus on helping the rest of
+the engineering team **build** some amazing sub-systems! You'll learn a ton--I'm sure--and plus you'll have a blast! If
+anything, when I get back, we can tackle the code to bring everything to life since we'll have almost all--or maybe even
+all--of our sub-systems physically created :smile: So, basically, don't worry if this is still very difficult. It's not
+something to be worried about :smile:
+
 ## Mikey
 We are going to need to get off of button binding. We don't know what to set, since there are things we still need to
 decide.
