@@ -21,7 +21,8 @@ If you run into any issues, just help out Hogan and the rest of the engineering 
 could wait until I get back to continue with the programming. It may be best if you continue to run into issues to just
 wait.
 
-For one, you didn't actually need to edit the `makeCollectorRunCommand()` function. That is done!
+For one, you didn't actually need to edit the `makeCollectorRunCommand()` function. That is done! All of your changes
+are to be done inside the `Collector.java` file.
 
 To import the `SparkMax` class, you actually do this at the top:
 ```java
