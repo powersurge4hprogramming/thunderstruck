@@ -258,11 +258,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand() {
-                return Collector.run(() -> controller.getRightTriggerAxis() (
-                        final double mrs = Collector.get(motorRpmScalar);
-                        neo.set(mrs);
-                )
-                );
+                return Collector.run(() -> controller.getRightTriggerAxis());
         }
 
         // -------------------------------------------------------------------------------------------------------------
