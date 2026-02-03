@@ -13,8 +13,8 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 
 
 ## Quick mike notes from mikey
-I had to import the SparMax class, but it didn't work. is it something with how I imported it?
-It's also angry at me for something in the 'run()' function. something involving parentheses, but I'm not quite sure what.
+I had to import the SparkMax class, but it didn't work. is it something with how I imported it?
+It's also angry at me for something in the `run()` function. something involving parentheses, but I'm not quite sure what.
 
 ## Mikey
 We are going to need to get off of button binding. We don't know what to set, since there are things we still need to
