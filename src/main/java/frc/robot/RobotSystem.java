@@ -25,7 +25,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
-import com.revrobotics.spark.SparkMax;
 
 public class RobotSystem {
         // =============================================================================================================
