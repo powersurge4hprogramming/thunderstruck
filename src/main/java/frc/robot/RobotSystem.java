@@ -80,15 +80,15 @@ public class RobotSystem {
         // =============================================================================================================
         // Swerve Drive Configurations
         // =============================================================================================================
-        final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
+        private final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
                         // Add a 10% deadband
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-        final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
         // =============================================================================================================
         // Modules
