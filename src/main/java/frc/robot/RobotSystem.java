@@ -116,33 +116,6 @@ public class RobotSystem {
         }
 
         // =============================================================================================================
-        // Private Methods
-        // =============================================================================================================
-        private void defaultBindingsProfile() {
-                setDefaultBindings();
-
-                controller.a().whileTrue(commands[BRAKE_INDEX]);
-                controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
-                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.leftBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                /*
-                 * Run SysId routines when holding back/start and X/Y. Note that each routine
-                 * should be run exactly once in a single log.
-                 */
-                controller.back().and(controller.y()).whileTrue(commands[SYSID_DYNAMIC_FORWARD_INDEX]);
-                controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
-                controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
-                controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void setDefaultBindings() {
-                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
-        }
-
-        // =============================================================================================================
         // Public Methods
         // =============================================================================================================
         public Command getAutonomousCommand() {
@@ -169,6 +142,31 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
+        private void defaultBindingsProfile() {
+                setDefaultBindings();
+
+                controller.a().whileTrue(commands[BRAKE_INDEX]);
+                controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
+                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.leftBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                /*
+                 * Run SysId routines when holding back/start and X/Y. Note that each routine
+                 * should be run exactly once in a single log.
+                 */
+                controller.back().and(controller.y()).whileTrue(commands[SYSID_DYNAMIC_FORWARD_INDEX]);
+                controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
+                controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
+                controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private void setDefaultBindings() {
+                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
+                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeNormalDriveCommand() {
                 /*
                  * Note that X is defined as forward according to WPILib convention, and Y is
