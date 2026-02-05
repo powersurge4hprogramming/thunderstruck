@@ -19,8 +19,11 @@ public class AimCamera {
     private final static byte HUB_CENTER_TAG = 9;
     private final static byte HUB_OFF_CENTER_RIGHT_TAG = 10;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
+            // x
             Distance.ofBaseUnits(5, Inches),
+            // y
             Distance.ofBaseUnits(0, Inches),
+            // z
             Distance.ofBaseUnits(-12, Inches),
             new Rotation3d(
                     Angle.ofBaseUnits(0, Degrees),
@@ -56,6 +59,7 @@ public class AimCamera {
                 if (target.fiducialId != HUB_CENTER_TAG || target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
                 hub = target.getBestCameraToTarget();
+                break;
             }
         }
 
