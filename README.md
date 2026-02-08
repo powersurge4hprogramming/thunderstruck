@@ -15,7 +15,7 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 ## Quick mike notes from mikey and desmond
 I got more stuff working, but the `get` function is yelling at me, and (strangely enough), the sparkmax motor only started working AFTER I deleted all of the.stuff except for the `.motor`.
 
-desmond made the key binds for; normal, left claw, right claw, and double claw but he said he could not locate the camera.
+desmond made the key binds for; normal, left claw, right claw, and double claw. we are working on the camera as I type.
 
 ## Mikey
 We are going to need to get off of button binding. We don't know what to set, since there are things we still need to
