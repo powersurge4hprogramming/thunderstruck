@@ -12,9 +12,10 @@ do, to communicate remotely to each other, and allow for any of my review to hap
     * When talking about these behaviors, we will be talking about program structures and even some algorithms.
 
 
-## Quick mike notes from mikey
-I had to import the SparkMax class, but it didn't work. is it something with how I imported it?
-It's also angry at me for something in the `run()` function. something involving parentheses, but I'm not quite sure what.
+## Quick mike notes from mikey and desmond
+I got more stuff working, but the `get` function is yelling at me, and (strangely enough), the sparkmax motor only started working AFTER I deleted all of the.stuff except for the `.motor`.
+
+desmond made the key binds for; normal, left claw, right claw, and double claw but he said he could not locate the camera.
 
 ## Mikey
 We are going to need to get off of button binding. We don't know what to set, since there are things we still need to

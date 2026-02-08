@@ -80,15 +80,15 @@ public class RobotSystem {
         // =============================================================================================================
         // Swerve Drive Configurations
         // =============================================================================================================
-        private final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
+        final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
                         // Add a 10% deadband
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+        final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
         // =============================================================================================================
         // Modules
@@ -113,30 +113,6 @@ public class RobotSystem {
         public RobotSystem() {
                 defaultBindingsProfile();
                 drivetrain.registerTelemetry(logger::telemeterize);
-        }
-
-        // =============================================================================================================
-        // Public Methods
-        // =============================================================================================================
-        public Command getAutonomousCommand() {
-                // Simple drive forward auton
-                final var idle = new SwerveRequest.Idle();
-                return Commands.sequence(
-                                // Reset our field centric heading to match the robot
-                                // facing away from our alliance station wall (0 deg).
-                                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-                                // Then slowly drive forward (away from us) for 5 seconds.
-                                drivetrain.applyRequest(() -> fieldDrive.withVelocityX(0.5)
-                                                .withVelocityY(0)
-                                                .withRotationalRate(0))
-                                                .withTimeout(5.0),
-                                // Finally idle for the rest of auton
-                                drivetrain.applyRequest(() -> idle));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        public CommandScheduler getCommandScheduler() {
-                return CommandScheduler.getInstance();
         }
 
         // =============================================================================================================
@@ -166,7 +142,33 @@ public class RobotSystem {
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
         }
 
+        // =============================================================================================================
+        // Public Methods
+        // =============================================================================================================
+        public Command getAutonomousCommand() {
+                // Simple drive forward auton
+                final var idle = new SwerveRequest.Idle();
+                return Commands.sequence(
+                                // Reset our field centric heading to match the robot
+                                // facing away from our alliance station wall (0 deg).
+                                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+                                // Then slowly drive forward (away from us) for 5 seconds.
+                                drivetrain.applyRequest(() -> fieldDrive.withVelocityX(0.5)
+                                                .withVelocityY(0)
+                                                .withRotationalRate(0))
+                                                .withTimeout(5.0),
+                                // Finally idle for the rest of auton
+                                drivetrain.applyRequest(() -> idle));
+        }
+
         // -------------------------------------------------------------------------------------------------------------
+        public CommandScheduler getCommandScheduler() {
+                return CommandScheduler.getInstance();
+        }
+
+        // =============================================================================================================
+        // Private Methods
+        // =============================================================================================================
         private Command makeNormalDriveCommand() {
                 /*
                  * Note that X is defined as forward according to WPILib convention, and Y is
@@ -255,11 +257,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand() {
-                return Collector.run(() -> controller.getRightTriggerAxis() (
-                        final double mrs = Collector.get(motorRpmScalar);
-                        neo.set(mrs);
-                )
-                );
+                () -> controller.getRightTriggerAxis();
         }
 
         // -------------------------------------------------------------------------------------------------------------
