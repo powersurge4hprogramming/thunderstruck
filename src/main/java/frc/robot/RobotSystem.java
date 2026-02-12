@@ -61,6 +61,8 @@ public class RobotSystem {
         private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
         private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
         private static final byte WEAPON_SWAP_INDEX = 12;
+        private static final byte PROFILE_INCREASE = 13;
+        private static final byte PROFILE_DECREASE = 14;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -75,8 +77,12 @@ public class RobotSystem {
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
                         makeWeaponSwapCommand(),
+                        makeProfileIncreaseCommand(),
+                        makeProfileDecreaseCommand(),
         };
 
+        private final Runnable[] profileArray = new Runnable[4];
+        private static int currentIndex = 0;
         // =============================================================================================================
         // Swerve Drive Configurations
         // =============================================================================================================
@@ -111,6 +117,7 @@ public class RobotSystem {
         // The Constructor
         // =============================================================================================================
         public RobotSystem() {
+                profileArray[0] = this::defaultBindingsProfile;
                 defaultBindingsProfile();
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
@@ -257,13 +264,48 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand() {
-                () -> controller.getRightTriggerAxis();
+                return Collector.run(() -> controller.getRightTriggerAxis());
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeResetFieldOrientationCommand() {
                 // Reset the field-centric heading on left bumper press.
                 return drivetrain.runOnce(drivetrain::seedFieldCentric);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeProfileIncreaseCommand() {
+                return new InstantCommand(() -> {
+                        if (currentIndex == profileArray.length - 1) {
+                                currentIndex = 0;
+                        }
+                        currentIndex = currentIndex + 1;
+                        for (int i = 0; i < commands.length; i++) {
+                                if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
+                                        continue;
+                                }
+                                getCommandScheduler().cancel(commands[i]);
+                        }
+                        getCommandScheduler().getActiveButtonLoop().clear();
+                        Runnable profile = profileArray[currentIndex];
+                        profile.run();
+                });
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeProfileDecreaseCommand() {
+                return new InstantCommand(() -> {
+                        currentIndex = currentIndex - 1;
+                        for (int i = 0; i < commands.length; i++) {
+                                if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
+                                        continue;
+                                }
+                                getCommandScheduler().cancel(commands[i]);
+                        }
+                        getCommandScheduler().getActiveButtonLoop().clear();
+                        Runnable profile = profileArray[currentIndex];
+                        profile.run();
+                });
         }
 
         // -------------------------------------------------------------------------------------------------------------

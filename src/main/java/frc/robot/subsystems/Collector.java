@@ -2,11 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.CANBus;
 
 public class Collector extends SubsystemBase {
     // =================================================================================================================
@@ -17,7 +16,7 @@ public class Collector extends SubsystemBase {
     // -----------------------------------------------------------------------------------------------------------------
     // :: The Constructor
     public Collector() {
-        Neo = new SparkMax(0, SparkMax.MotorType.kBrushless);
+        Neo = new SparkMax(CANBus.ID.COLLECTOR.MOTOR, SparkMax.MotorType.kBrushless);
 
     }
 
@@ -30,12 +29,11 @@ public class Collector extends SubsystemBase {
      * 
      * @return The {@link Command} to perform the action.
      */
-    Double mrs;
-
     public Command run(final DoubleSupplier motorRpmScalar) {
-        mrs = get(motorRpmScalar);
-        Neo.set(mrs);
-        throw new RuntimeException("Not implemented yet.");
+        return this.run(() -> {
+            double mrs = motorRpmScalar.getAsDouble();
+            Neo.set(mrs);
+        });
     }
     // private Double get(DoubleSupplier motorRpmScalar) {
 
