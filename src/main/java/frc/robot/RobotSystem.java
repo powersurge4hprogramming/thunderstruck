@@ -123,7 +123,12 @@ public class RobotSystem {
         // =============================================================================================================
         public RobotSystem() {
                 profileArray[0] = this::defaultBindingsProfile;
+                profileArray[1] = this::leftClawBindingsProfile;
+                profileArray[2] = this::doubleClawBindingsProfile;
+                profileArray[3] = this::rightClawBindingsProfile;
                 defaultBindingsProfile();
+                leftClawBindingsProfile();
+                doubleClawBindingsProfile();
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
@@ -156,6 +161,45 @@ public class RobotSystem {
         private void setDefaultBindings() {
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private void leftClawBindingsProfile() {
+                setDefaultBindings();
+                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
+                controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                controller.povLeft().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.rightBumper().whileTrue(commands[BRAKE_INDEX]);
+                controller.b().onTrue(commands[WHEEL_POINT_INDEX]);
+                controller.povDown().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private void doubleClawBindingsProfile() {
+                setDefaultBindings();
+                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
+                controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.povRight().whileTrue(commands[BRAKE_INDEX]);
+                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
+                controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private void rightClawBindingsProfile() {
+                setDefaultBindings();
+                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
+                controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
+                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
+                controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
         }
 
         // =============================================================================================================
