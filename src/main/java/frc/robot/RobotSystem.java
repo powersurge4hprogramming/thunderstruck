@@ -24,6 +24,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Climber;
 
 public class RobotSystem {
         // =============================================================================================================
@@ -43,6 +44,7 @@ public class RobotSystem {
         private final Shooter shooter = new Shooter();
         private final AimCamera aimCamera = new AimCamera();
         private final Collector Collector = new Collector();
+        private final Climber climber = new Climber();
 
         // =============================================================================================================
         // Commands
@@ -62,6 +64,8 @@ public class RobotSystem {
         private static final byte WEAPON_SWAP_INDEX = 12;
         private static final byte PROFILE_INCREASE = 13;
         private static final byte PROFILE_DECREASE = 14;
+        private static final byte CLIMBER_UP_INDEX = 15;
+        private static final byte CLIMBER_DOWN_INDEX = 16;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -78,6 +82,8 @@ public class RobotSystem {
                         makeWeaponSwapCommand(),
                         makeProfileIncreaseCommand(),
                         makeProfileDecreaseCommand(),
+                        makeClimberUpCommand(),
+                        makeClimberDownCommand(),
         };
 
         private final Runnable[] profileArray = new Runnable[4];
@@ -127,11 +133,15 @@ public class RobotSystem {
         private void defaultBindingsProfile() {
                 setDefaultBindings();
 
-                controller.a().whileTrue(commands[BRAKE_INDEX]);
+                controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
-                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.leftBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                controller.x().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                controller.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                controller.povUp().onTrue(commands[CLIMBER_UP_INDEX]);
+                controller.povDown().onTrue(commands[CLIMBER_DOWN_INDEX]);
+                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 /*
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
@@ -217,7 +227,7 @@ public class RobotSystem {
                  */
                 return drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
-                                                new Rotation2d(-controller.getLeftY(), -controller.getLeftX())));
+                                                new Rotation2d(0, 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -238,7 +248,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualShootCommand() {
-                return shooter.manualShootBall(() -> 0.5);
+                return shooter.manualShootBall(() -> controller.getRightTriggerAxis());
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -329,4 +339,15 @@ public class RobotSystem {
         private Command makeSysIdQuasistaticReverseCommand() {
                 return drivetrain.sysIdQuasistatic(Direction.kReverse);
         }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeClimberUpCommand() {
+                return climber.upward();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeClimberDownCommand() {
+                return climber.downward();
+        }
+
 }
