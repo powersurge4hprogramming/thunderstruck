@@ -24,7 +24,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
-import com.revrobotics.spark.SparkMax;
 
 public class RobotSystem {
         // =============================================================================================================
@@ -276,8 +275,8 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
                 return new InstantCommand(() -> {
-                        if (currentIndex == profileArray.length - 1) {
-                                currentIndex = 0;
+                        if (currentIndex == profileArray.length + 1) {
+                                currentIndex = -1;
                         }
                         currentIndex = currentIndex + 1;
                         for (int i = 0; i < commands.length; i++) {
@@ -295,6 +294,9 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
                 return new InstantCommand(() -> {
+                        if (currentIndex == 0) {
+                                currentIndex = profileArray.length;
+                        }
                         currentIndex = currentIndex - 1;
                         for (int i = 0; i < commands.length; i++) {
                                 if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
