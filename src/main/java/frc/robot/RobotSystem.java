@@ -136,6 +136,12 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
+        private void setDefaultBindings() {
+                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
+                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
 
@@ -156,12 +162,6 @@ public class RobotSystem {
                 controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
                 controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
                 controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void setDefaultBindings() {
-                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
