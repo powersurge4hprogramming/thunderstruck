@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -144,6 +145,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
+                Command CollectorVar = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = CollectorVar;
+                Command manShootVar = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                () -> controller.a().getAsBoolean());
+                commands[MANUAL_SHOOT_INDEX] = manShootVar;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
@@ -167,6 +173,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void leftClawBindingsProfile() {
                 setDefaultBindings();
+                Command CollectorVarLeft = makeCollectorRunCommand(() -> controller.getRightTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = CollectorVarLeft;
+                Command manShootVarLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
+                                () -> controller.povLeft().getAsBoolean());
+                commands[MANUAL_SHOOT_INDEX] = manShootVarLeft;
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -180,6 +191,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void doubleClawBindingsProfile() {
                 setDefaultBindings();
+                Command CollectorVarDouble = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
+                Command manShootVarDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                () -> controller.x().getAsBoolean());
+                commands[MANUAL_SHOOT_INDEX] = manShootVarDouble;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -193,6 +209,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void rightClawBindingsProfile() {
                 setDefaultBindings();
+                Command CollectorVarRight = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
+                Command manShootVarRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                () -> controller.x().getAsBoolean());
+                commands[MANUAL_SHOOT_INDEX] = manShootVarRight;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -293,7 +314,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
-                        final DoubleSupplier loaderVelocityScalar) {
+                        final BooleanSupplier loaderVelocityScalar) {
                 return shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar);
         }
 

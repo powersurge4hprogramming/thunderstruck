@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.RPM;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -73,21 +74,25 @@ public class Shooter extends SubsystemBase {
      * particular instant. It will shoot the ball at any given velocity and launch
      * angle.
      * 
-     * @param motorRPMScalar       The "speed" at which to set the shoot motor in
-     *                             percentage of possible RPM from 0 to 1.
-     * @param loaderMotorRPMScalar The "speed" at which to set the loader motor in
-     *                             percentage of possible RPM from 0 to 1.
+     * @param motorRPMScalar   The "speed" at which to set the shoot motor in
+     *                         percentage of possible RPM from 0 to 1.
+     * @param loaderMotorOnOff The toggle for the loader to turn on or off.
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command manualShootBall(final DoubleSupplier motorRPMScalar, final DoubleSupplier loaderMotorRPMScalar) {
+    public Command manualShootBall(final DoubleSupplier motorRPMScalar, final BooleanSupplier loaderMotorOnOff) {
+        final double loaderMotorSpeed = 0.8;
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
                     double targetRPM = motorRPMScalar.getAsDouble() * MAX_SHOOTER_RPM;
                     setRPM(targetRPM);
 
-                    setLoaderSpeed(loaderMotorRPMScalar.getAsDouble());
+                    if (loaderMotorOnOff.getAsBoolean()) {
+                        setLoaderSpeed(loaderMotorSpeed);
+                    } else {
+                        setLoaderSpeed(0.0);
+                    }
                 },
                 // Cleanup when the command ends (button released)
                 () -> {
