@@ -130,8 +130,6 @@ public class RobotSystem {
                 profileArray[2] = this::doubleClawBindingsProfile;
                 profileArray[3] = this::rightClawBindingsProfile;
                 defaultBindingsProfile();
-                leftClawBindingsProfile();
-                doubleClawBindingsProfile();
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
