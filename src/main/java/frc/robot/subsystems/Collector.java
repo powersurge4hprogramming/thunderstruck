@@ -31,8 +31,7 @@ public class Collector extends SubsystemBase {
         return this.run(() -> {
             double mrs = motorRpmScalar.getAsDouble();
             krakenX60.set(mrs);
-        })
-        .handleInterrupt(() -> {
+        }).handleInterrupt(() -> {
             krakenX60.set(0);
         });
     }

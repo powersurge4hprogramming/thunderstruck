@@ -42,10 +42,9 @@ public class Climber extends SubsystemBase {
                 speed = -speed;
             }
             krakenX60.set(speed * SPEED_SCALAR);
-        })
-                .handleInterrupt(() -> {
-                    krakenX60.set(0);
-                });
+        }).handleInterrupt(() -> {
+            krakenX60.set(0);
+        });
     }
 
     /**
@@ -67,9 +66,8 @@ public class Climber extends SubsystemBase {
                 speed = -speed;
             }
             krakenX60.set(speed * SPEED_SCALAR);
-        })
-                .handleInterrupt(() -> {
-                    krakenX60.set(0);
-                });
+        }).handleInterrupt(() -> {
+            krakenX60.set(0);
+        });
     }
 }
