@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import frc.robot.CANBus;
 import frc.robot.DigitalInputBus;
 
 public class Climber extends SubsystemBase {
@@ -33,7 +34,7 @@ public class Climber extends SubsystemBase {
             final byte clockwise = 1;
             final byte counterClockwise = -1;
             double speed = krakenX60.get();
-            if (speed == 0) {
+            if (speed == 0 || speed == counterClockwise) {
                 speed = clockwise;
             }
             if (leftArmLimit.get() || rightArmLimit.get()) {
@@ -42,9 +43,9 @@ public class Climber extends SubsystemBase {
             }
             krakenX60.set(speed * SPEED_SCALAR);
         })
-        .handleInterrupt(() -> {
-            krakenX60.set(0);
-        });
+                .handleInterrupt(() -> {
+                    krakenX60.set(0);
+                });
     }
 
     /**
@@ -58,7 +59,7 @@ public class Climber extends SubsystemBase {
             final byte counterClockwise = -1;
             final byte clockwise = 1;
             double speed = krakenX60.get();
-            if (speed == 0 || speed = clockwise) {
+            if (speed == 0 || speed == clockwise) {
                 speed = counterClockwise;
             }
             if (leftArmLimit.get() || rightArmLimit.get()) {
@@ -67,8 +68,8 @@ public class Climber extends SubsystemBase {
             }
             krakenX60.set(speed * SPEED_SCALAR);
         })
-        .handleInterrupt(() -> {
-            krakenX60.set(0);
-        });
+                .handleInterrupt(() -> {
+                    krakenX60.set(0);
+                });
     }
 }

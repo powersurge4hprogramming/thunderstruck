@@ -33,7 +33,7 @@ public class CANBus {
             // TODO: Need real values here.
             public static final byte LEADER = 0;
             public static final byte FOLLOWER = 0;
-            public static final byte LOADER = 0
+            public static final byte LOADER = 0;
         }
 
         /**
