@@ -106,11 +106,17 @@ public class LockOnShootAndDrive extends Command {
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
                 final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlyWheelSpeedMPS());
+                final boolean isShooterReady = vRpmSolver.isReadyToFire();
 
                 /*
                  * 2. Command the Shooter
                  */
                 shooter.setRPM(motorRPM);
+                if (isShooterReady) {
+                        shooter.setLoaderSpeed(0.8);
+                } else {
+                        shooter.setLoaderSpeed(0);
+                }
 
                 /*
                  * 3. Command the Drivebase

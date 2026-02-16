@@ -5,6 +5,9 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -72,8 +75,8 @@ public class RobotSystem {
                         makeBrakeCommand(),
                         makeWheelsPointCommand(),
                         makeLockOnShootAndDriveCommand(),
-                        makeManualShootCommand(),
-                        makeCollectorRunCommand(),
+                        null, // A command with an input driver set by the profile.
+                        null, // A command with an input driver set by the profile.
                         makeResetFieldOrientationCommand(),
                         makeSysIdDynamicForwardCommand(),
                         makeSysIdDynamicReverseCommand(),
@@ -127,14 +130,18 @@ public class RobotSystem {
                 profileArray[2] = this::doubleClawBindingsProfile;
                 profileArray[3] = this::rightClawBindingsProfile;
                 defaultBindingsProfile();
-                leftClawBindingsProfile();
-                doubleClawBindingsProfile();
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
+        private void setDefaultBindings() {
+                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
+                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
 
@@ -155,12 +162,6 @@ public class RobotSystem {
                 controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
                 controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
                 controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void setDefaultBindings() {
-                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -291,8 +292,9 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualShootCommand() {
-                return shooter.manualShootBall(() -> controller.getRightTriggerAxis());
+        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
+                        final DoubleSupplier loaderVelocityScalar) {
+                return shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -316,8 +318,8 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeCollectorRunCommand() {
-                return Collector.run(() -> controller.getRightTriggerAxis());
+        private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar) {
+                return Collector.run(collectorScalar);
         }
 
         // -------------------------------------------------------------------------------------------------------------
