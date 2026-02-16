@@ -2,75 +2,6 @@
 This is the code base for the **ThunderStruck** Robot. This file acts as our ***"work-board"*** to keep track of what to
 do, to communicate remotely to each other, and allow for any of my review to happen at night outside of the shop.
 
-## What Needs to Be Worked On Today
-
-## Desmond
-1. We are going to do the camera glueing/taping again. I can't get the cap on for the lense securely.
-    * Once we do this we will have to re-calibrate.
-2. We will be continuing on button bindings.
-3. We will also be figuring out binding behaviors.
-    * When talking about these behaviors, we will be talking about program structures and even some algorithms.
-
-
-## Quick mike notes from mikey and desmond
-I got more stuff working, but the `get` function is yelling at me, and (strangely enough), the sparkmax motor only started working AFTER I deleted all of the.stuff except for the `.motor`.
-
-desmond made the key binds for; normal, left claw, right claw, and double claw. we are working on the camera as I type.
-
-## Mikey
-We are going to need to get off of button binding. We don't know what to set, since there are things we still need to
-decide.
-
-So, since that is the case, we are going to move onto implementing some of the sub-sytems.
-
-### The `Collector`
-We are going to make a motor, and drive the motor from the input we made yesterday.
-
-It will be important to refer to the [the `Shooter`](src/main/java/frc/robot/subsystems/Shooter.java) code when thinking
-about, and implementing the `Collector` code.
-
----
-#### The Setup
-We are going to make a single motor **variable** that will go in `The Collector's Parts` section of the file. The
-**type** of motor we will be making is a `SparkMax`. We are going to call this **variable** `neo`. We are not going
-to *make* the motor here though. We are going to do that in the **Constructor**.
-
----
-#### In the Constructor
-We are going to make a `neo` motor. **Assign** to our `neo` a new `SparkMax`. In the `SparkMax()` function--
-as an aside you are calling a function there... and it's a function called a constructor--pass to it a **CanBus** ID,
-and a `MotorType`.
-
-The ID you are going to pass to the `neo` is going to come from
-[the `CANBus` container](src/main/java/frc/robot/CANBus.java) where all of our relevent CANBus settings will come from.
-The first piece of data to the `SparkMax` **constructor** is an ID; so, lets give it that with this:
-`CANBus.ID.COLLECTOR.MOTOR`. Is the kind of motor it is, for us we'll set it to brushless.
-
-And there you go, you've made a motor :smile:
-
----
-#### Let's Drive That Motor: run()
-Here we are going to implement our code from before: our `run()` function. We have the `motorRPMScalar` from our
-function's input. We are going to use that to set the RPM of the motor in the `run()` function.
-
-We are going to write out code inside of our **"supplier**:
-```java
-return this.run(() -> {
-    // Put Stuff here
-});
-```
-What you write next goes in there.
-
-We need to get the `double` from our `DoubleSupplier`, the `motorRPMScalar`, so that we can use it. We need a
-`final double` **variable** to hold our motor rpm percentage (*scale*); so, make that variable and then assign to it the
-value from our supplier by calling `get()` from our `motorRPMScalar`.
-
-Then, `set()` the speed of our `neo` motor by giving it the value of our previously created **variable**.
-
-There ya go, you've implemented the `Collector`'s `run()` function!
-
----
----
 ## What's Done
 ### Robot.java
 I think **autonomous** and **teleop** will work here automatically. CTRE's generation software really hooked us up I
@@ -84,28 +15,22 @@ think.
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 
 ## What Needs to Be Done
-* Give data to the `Shooter::manualShootBall` command.
 * Implement `Shooter::setRPM`.
-* Implement `Shooter::setLaunchAngle`.
+* Give data to the `Shooter::manualShootBall` command.
 * Implement `Shooter::manualShootBall` command.
-* Implement `Collector::run` command.
 * Implement `Collector::stop` command.
-* Implement `Climber::upward` command.
-    * Still waiting on what this would even be via the rest of the engineering team.
-* Implement `Climber::downward` command.
-    * Still waiting on what this would even be via the rest of the engineering team.
+    * <mark>Do we actually need this?</mark>
 * Figure out how to get rumble working on `Triggers`.
 * <mark>The entire autonomous plan!!!</mark>
     * Should we just handmake the plan? Probably not! Need to figure out how PathPlanner works!!!!
-* Bind `Collector::run` command.
-* Bind `Collector::stop` command.
-* Bind `Climber::upward` command.
-* Bind `Climber::downward` command.
 
 ## What Needs to Be Tested
 * The `LockOnShootAndDrive` **y** binding.
 * The `AimCamera::getHubRelativeLocation` function.
 * The `LockOnShootAndDrive::execute` function.
+* The `Collector::run` command.
+* The `Climber::upward` command.
+* The `Climber::downward` command.
 
 ## Mentor Mike's Notes to Himself
 `SwerveRequest.FieldCentricFacingAngle`
