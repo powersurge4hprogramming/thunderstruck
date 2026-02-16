@@ -292,8 +292,9 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar) {
-                return shooter.manualShootBall(ballVelocityScalar);
+        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
+                        final DoubleSupplier loaderVelocityScalar) {
+                return shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar);
         }
 
         // -------------------------------------------------------------------------------------------------------------
