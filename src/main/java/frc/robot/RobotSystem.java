@@ -5,6 +5,9 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -72,8 +75,8 @@ public class RobotSystem {
                         makeBrakeCommand(),
                         makeWheelsPointCommand(),
                         makeLockOnShootAndDriveCommand(),
-                        makeManualShootCommand(),
-                        makeCollectorRunCommand(),
+                        null, // A command with an input driver set by the profile.
+                        null, // A command with an input driver set by the profile.
                         makeResetFieldOrientationCommand(),
                         makeSysIdDynamicForwardCommand(),
                         makeSysIdDynamicReverseCommand(),
@@ -291,8 +294,8 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualShootCommand() {
-                return shooter.manualShootBall(() -> controller.getRightTriggerAxis());
+        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar) {
+                return shooter.manualShootBall(ballVelocityScalar);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -316,8 +319,8 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeCollectorRunCommand() {
-                return Collector.run(() -> controller.getRightTriggerAxis());
+        private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar) {
+                return Collector.run(collectorScalar);
         }
 
         // -------------------------------------------------------------------------------------------------------------
