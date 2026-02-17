@@ -1,0 +1,142 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.303,
+        "y": 5.731
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.30300000000000005,
+        "y": 4.503
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.6312343470483,
+        "y": 5.731
+      },
+      "prevControl": {
+        "x": 6.095796064400715,
+        "y": 5.860803220035778
+      },
+      "nextControl": {
+        "x": 6.874196873470477,
+        "y": 5.672099993594625
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.864364937388194,
+        "y": 5.178890876565294
+      },
+      "prevControl": {
+        "x": 7.572307692307692,
+        "y": 5.146440071556349
+      },
+      "nextControl": {
+        "x": 8.112835871056598,
+        "y": 5.206498758084005
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.669660107334526,
+        "y": 2.8099821109123435
+      },
+      "prevControl": {
+        "x": 7.734561717352415,
+        "y": 3.5563506261180677
+      },
+      "nextControl": {
+        "x": 7.604758497316636,
+        "y": 2.0636135957066193
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9480679785330945,
+        "y": 2.8099821109123435
+      },
+      "prevControl": {
+        "x": 2.956179713117967,
+        "y": 2.4124597298260437
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.9572192513368973,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3.8074866310160465,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "OverTheHump",
+      "minWaypointRelativePos": 0.5694915254237288,
+      "maxWaypointRelativePos": 0.7423728813559323,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "ThroughTheBalls",
+      "minWaypointRelativePos": 1.4237288135593216,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 41.00908690157019
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

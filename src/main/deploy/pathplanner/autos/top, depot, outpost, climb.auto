@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 10.0
+            "pathName": "start to collector"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Example Path"
+            "pathName": "depot to outpost while shooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 7.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "outpost to climber while shooting"
           }
         }
       ]
