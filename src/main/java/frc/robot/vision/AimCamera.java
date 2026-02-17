@@ -4,11 +4,20 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 
@@ -29,6 +38,26 @@ public class AimCamera {
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees)));
+    private static final Transform3d ROBOT_TO_CAMERA_OFFSET = new Transform3d(
+            // x
+            Distance.ofBaseUnits(5, Inches),
+            // y
+            Distance.ofBaseUnits(0, Inches),
+            // z
+            Distance.ofBaseUnits(-12, Inches),
+            new Rotation3d(
+                    Angle.ofBaseUnits(0, Degrees),
+                    Angle.ofBaseUnits(0, Degrees),
+                    Angle.ofBaseUnits(0, Degrees)));
+
+    public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout
+            .loadField(AprilTagFields.k2026RebuiltWelded);
+    public static final Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.01);
+
+    // =================================================================================================================
+    // Private Members
+    // =================================================================================================================
+    private final PhotonPoseEstimator photonPoseEstimator;
 
     // =================================================================================================================
     // Systems
@@ -37,6 +66,12 @@ public class AimCamera {
 
     public AimCamera() {
         this.camera = new PhotonCamera("photonvision");
+
+        photonPoseEstimator = new PhotonPoseEstimator(
+                fieldLayout,
+                PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, // Or CLOSEST_TO_REFERENCE_POSE for single-tag
+                ROBOT_TO_CAMERA_OFFSET);
+        photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY); // Fallback if multi-tag fails
     }
 
     /**
@@ -68,4 +103,5 @@ public class AimCamera {
 
         return hub;
     }
+
 }
