@@ -145,11 +145,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVar = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
-                commands[COLLECTOR_RUN_INDEX] = CollectorVar;
-                Command manShootVar = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                Command collectorRun = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = collectorRun;
+                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 () -> controller.a().getAsBoolean());
-                commands[MANUAL_SHOOT_INDEX] = manShootVar;
+                commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
@@ -173,11 +173,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void leftClawBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVarLeft = makeCollectorRunCommand(() -> controller.getRightTriggerAxis());
-                commands[COLLECTOR_RUN_INDEX] = CollectorVarLeft;
-                Command manShootVarLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
+                Command collectorRun = makeCollectorRunCommand(() -> controller.getRightTriggerAxis());
+                commands[COLLECTOR_RUN_INDEX] = collectorRun;
+                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
                                 () -> controller.povLeft().getAsBoolean());
-                commands[MANUAL_SHOOT_INDEX] = manShootVarLeft;
+                commands[MANUAL_SHOOT_INDEX] = manShootLeft;
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -193,9 +193,9 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command CollectorVarDouble = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
-                Command manShootVarDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 () -> controller.x().getAsBoolean());
-                commands[MANUAL_SHOOT_INDEX] = manShootVarDouble;
+                commands[MANUAL_SHOOT_INDEX] = manShootDouble;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -211,9 +211,9 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command CollectorVarRight = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
-                Command manShootVarRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 () -> controller.x().getAsBoolean());
-                commands[MANUAL_SHOOT_INDEX] = manShootVarRight;
+                commands[MANUAL_SHOOT_INDEX] = manShootRight;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
