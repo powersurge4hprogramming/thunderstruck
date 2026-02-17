@@ -1,0 +1,97 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.336,
+        "y": 5.958
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.336,
+        "y": 5.958
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8669409660107332,
+        "y": 5.097763864042934
+      },
+      "prevControl": {
+        "x": 2.2943523286178293,
+        "y": 5.917606685764592
+      },
+      "nextControl": {
+        "x": 3.580858676207513,
+        "y": 4.07556350626118
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.234150268336314,
+        "y": 1.5444007155635062
+      },
+      "prevControl": {
+        "x": 3.353703041144901,
+        "y": 1.8526833631484796
+      },
+      "nextControl": {
+        "x": 1.7520922534512229,
+        "y": 1.4116601027690607
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.336,
+        "y": 0.6520035778175304
+      },
+      "prevControl": {
+        "x": 1.0334704830053665,
+        "y": 1.0576386404293374
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.6,
+        "y": 4.0
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 3.0,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
