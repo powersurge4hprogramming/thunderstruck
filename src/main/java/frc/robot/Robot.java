@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         timeAndJoystickReplay.update();
+        this.robotContainer.updatePhotonCameraFrames();
         this.robotContainer.getCommandScheduler().run();
     }
 
