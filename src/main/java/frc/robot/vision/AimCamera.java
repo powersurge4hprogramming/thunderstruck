@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Inches;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
