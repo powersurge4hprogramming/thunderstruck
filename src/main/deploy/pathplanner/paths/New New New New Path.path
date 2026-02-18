@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3093023255813947,
-        "y": 0.2463685152057235
+        "x": 1.3093023255813945,
+        "y": 0.24636851520572356
       },
       "isLocked": false,
       "linkedName": null
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 3.424579606440071,
-        "y": 0.34372093023255734
+        "y": 0.34372093023255745
       },
       "nextControl": {
         "x": 5.424579606440071,
@@ -72,7 +72,7 @@
     "rotation": -176.42366562500254
   },
   "reversed": false,
-  "folder": null,
+  "folder": "teaching",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

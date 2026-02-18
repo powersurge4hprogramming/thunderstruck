@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "New New Path"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New Path"
           }
         },
         {
