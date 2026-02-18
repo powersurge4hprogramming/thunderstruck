@@ -3,9 +3,13 @@ package frc.robot.vision;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -13,11 +17,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 
@@ -58,22 +60,27 @@ public class AimCamera {
     // Private Members
     // =================================================================================================================
     private final PhotonPoseEstimator photonPoseEstimator;
+    private List<PhotonPipelineResult> results;
 
     // =================================================================================================================
     // Systems
     // =================================================================================================================
     private final PhotonCamera camera;
 
+    // =================================================================================================================
+    // Public Parts
+    // =================================================================================================================
     public AimCamera() {
         this.camera = new PhotonCamera("photonvision");
-
-        photonPoseEstimator = new PhotonPoseEstimator(
-                fieldLayout,
-                PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, // Or CLOSEST_TO_REFERENCE_POSE for single-tag
-                ROBOT_TO_CAMERA_OFFSET);
-        photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY); // Fallback if multi-tag fails
+        photonPoseEstimator = new PhotonPoseEstimator(fieldLayout, ROBOT_TO_CAMERA_OFFSET);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public void updateFrames() {
+        this.results = camera.getAllUnreadResults();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * This gets the {@link Transform3d} when the camera is pointed at the Hub
@@ -89,7 +96,7 @@ public class AimCamera {
     public Transform3d getHubRelativeLocation() {
         Transform3d hub = null;
 
-        for (final PhotonPipelineResult result : camera.getAllUnreadResults()) {
+        for (final PhotonPipelineResult result : results) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
                 if (target.fiducialId != HUB_CENTER_TAG || target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
@@ -102,6 +109,35 @@ public class AimCamera {
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
         return hub;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public void updateEstimatedRobotPose(final Consumer<VisionMeasurement> poseUpdator) {
+        for (final PhotonPipelineResult result : results) {
+            if (!result.hasTargets())
+                continue;
+            Optional<EstimatedRobotPose> optionalPose = photonPoseEstimator.estimateCoprocMultiTagPose(result);
+            if (optionalPose.isEmpty())
+                continue;
+
+            EstimatedRobotPose pose = optionalPose.get();
+            // Dynamic std devs: Scale trust based on tag count/distance (lower = more
+            // trust)
+            Vector<N3> dynamicStdDevs = visionStdDevs;
+            if (result.getTargets().size() == 1) {
+                dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.02); // Less trust with single tag
+            } else if (pose.estimatedPose.getTranslation().getNorm() > 5.0) { // Example: Far away
+                dynamicStdDevs = VecBuilder.fill(0.15, 0.15, 0.015);
+            }
+
+            final VisionMeasurement measurement = new VisionMeasurement(
+                    pose.estimatedPose.toPose2d(),
+                    result.getTimestampSeconds(),
+                    dynamicStdDevs);
+            if (result.getTimestampSeconds() < 0.5) {
+                poseUpdator.accept(measurement);
+            }
+        }
     }
 
 }
