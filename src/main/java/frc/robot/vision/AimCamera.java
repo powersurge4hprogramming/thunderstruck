@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Inches;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -112,7 +113,7 @@ public class AimCamera {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public void updateEstimatedRobotPose(final SwerveDrivePoseEstimator swerveDrivePoseEstimator) {
+    public void updateEstimatedRobotPose(final Consumer<VisionMeasurement> poseUpdator) {
         for (final PhotonPipelineResult result : results) {
             if (!result.hasTargets())
                 continue;
@@ -130,11 +131,12 @@ public class AimCamera {
                 dynamicStdDevs = VecBuilder.fill(0.15, 0.15, 0.015);
             }
 
+            final VisionMeasurement measurement = new VisionMeasurement(
+                    pose.estimatedPose.toPose2d(),
+                    result.getTimestampSeconds(),
+                    dynamicStdDevs);
             if (result.getTimestampSeconds() < 0.5) {
-                swerveDrivePoseEstimator.addVisionMeasurement(
-                        pose.estimatedPose.toPose2d(),
-                        result.getTimestampSeconds(),
-                        dynamicStdDevs);
+                poseUpdator.accept(measurement);
             }
         }
     }
