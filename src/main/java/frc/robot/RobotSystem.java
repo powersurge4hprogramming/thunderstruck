@@ -6,15 +6,29 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import org.json.simple.parser.ParseException;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -94,6 +108,12 @@ public class RobotSystem {
         private static int currentIndex = 0;
 
         // =============================================================================================================
+        // PathPlanner
+        // =============================================================================================================
+        private final SendableChooser<Command> autoChooser;
+        private final Map<String, Command> eventMap;
+
+        // =============================================================================================================
         // Swerve Drive Configurations
         // =============================================================================================================
         final SwerveRequest.FieldCentric fieldDrive = new SwerveRequest.FieldCentric()
@@ -103,7 +123,6 @@ public class RobotSystem {
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-
         final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
         // =============================================================================================================
@@ -132,6 +151,47 @@ public class RobotSystem {
                 profileArray[2] = this::doubleClawBindingsProfile;
                 profileArray[3] = this::rightClawBindingsProfile;
                 defaultBindingsProfile();
+
+                // Robot config: Pull from PathPlanner GUI settings (tune mass ~40-50kg for your
+                // bot, MOI from CAD, module drive ratios from SDS/Krakens)
+                RobotConfig robotConfig = null;
+                try {
+                        // Auto-loads from deploy/settings.json; run
+                        // PathPlanner app connected to bot first
+                        robotConfig = RobotConfig.fromGUISettings();
+                } catch (IOException | ParseException e) {
+                        e.printStackTrace();
+                        System.exit(0);
+                }
+                AutoBuilder.configure(
+                                drivetrain::getPose, // Fused pose supplier (vision-corrected)
+                                drivetrain::resetPose, // Pose resetter
+                                drivetrain::getChassisSpeeds, // ChassisSpeeds supplier (from CTRE state)
+                                (speeds) -> drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric()
+                                                .withVelocityX(speeds.vxMetersPerSecond)
+                                                .withVelocityX(speeds.vyMetersPerSecond)
+                                                .withRotationalRate(speeds.omegaRadiansPerSecond)),
+                                new PPHolonomicDriveController(
+                                                // Translation PID (P=1.0 start; tune higher for aggression)
+                                                new PIDConstants(1.0, 0.0, 0.0),
+                                                // Rotation PID (P=2.0 start; tune for turns)
+                                                new PIDConstants(2.0, 0.0, 0.0)),
+                                robotConfig, // Robot config for dynamics
+                                // Flip paths for red
+                                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+                                drivetrain // Subsystem ref
+                );
+
+                // Event map: For PathPlanner markers (e.g., "shoot" triggers shooter)
+                eventMap = new HashMap<>();
+                eventMap.put("shoot",
+                                new LockOnShootAndDrive(shooter, drivetrain, aimCamera, null, null,
+                                                () -> powerDistribution.getVoltage(),
+                                                robotConfig.moduleConfig.maxDriveVelocityMPS));
+
+                autoChooser = AutoBuilder.buildAutoChooser();
+                SmartDashboard.putData("Auto Chooser", autoChooser);
+
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
 
