@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle to depot"
+            "pathName": "top, balls, outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "depot, balls, tower"
+            "pathName": "outpost to climber while shooting"
           }
         }
       ]
