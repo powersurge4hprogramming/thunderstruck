@@ -121,8 +121,10 @@ public class AimCamera {
                 continue;
 
             EstimatedRobotPose pose = optionalPose.get();
-            // Dynamic std devs: Scale trust based on tag count/distance (lower = more
-            // trust)
+            /*
+             * Dynamic std devs: Scale trust based on tag count/distance
+             * (lower = more trust).
+             */
             Vector<N3> dynamicStdDevs = visionStdDevs;
             if (result.getTargets().size() == 1) {
                 dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.02); // Less trust with single tag

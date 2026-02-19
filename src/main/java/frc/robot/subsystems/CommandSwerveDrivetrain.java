@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.vision.AimCamera;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -50,6 +52,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    /* My own */
+    private AimCamera aimCamera;
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -212,19 +217,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /**
-     * {@summary}
-     * This returns a {@link Command} to lock onto a given AprilTag's position. The
-     * lock on is for the rotation of the robot.
-     * 
-     * @param aprilTagToRobot Get this from the {@link frc.robot.vision.AimCamera
-     *                        AimCamera}.
-     * @return The {@link Command} to run.
-     */
-    public Command applyLockOn(Supplier<Transform3d> aprilTagToRobot) {
-        throw new RuntimeException("Not Implemented yet.");
-    }
-
-    /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #sysIdRoutineToApply}.
      *
@@ -268,6 +260,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 hasAppliedOperatorPerspective = true;
             });
         }
+
+        updateWithVision();
+    }
+
+    private void updateWithVision() {
+        aimCamera.updateEstimatedRobotPose((visionMeasurement) -> this.addVisionMeasurement(visionMeasurement.pose(),
+                visionMeasurement.timestampSeconds(), visionMeasurement.stdDevs()));
     }
 
     private void startSimThread() {
@@ -337,5 +336,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public void setAimCamera(final AimCamera aimCamera) {
+        this.aimCamera = aimCamera;
     }
 }
