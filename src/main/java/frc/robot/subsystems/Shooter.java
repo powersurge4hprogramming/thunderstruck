@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CANBus;
 
 public class Shooter extends SubsystemBase {
-    private final double MAX_SHOOTER_RPM = 5_500.0; // ← Tune this after characterization
+    private final double MAX_SHOOTER_RPM = 5_500.0; // <- Tune this after characterization
 
     private final TalonFX motorLeader;
     private final TalonFX motorFollower;
