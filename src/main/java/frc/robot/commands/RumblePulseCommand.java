@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RumblePulseCommand extends SequentialCommandGroup {
@@ -55,6 +56,16 @@ public class RumblePulseCommand extends SequentialCommandGroup {
 
     // -----------------------------------------------------------------------------------------------------------------
     // TODO: Our long pulse command goes here.
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static WaitCommand createShortWaitCommand() {
+        return new WaitCommand(0.1);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static WaitCommand createLongWaitCommand() {
+        return new WaitCommand(0.2);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     /**
