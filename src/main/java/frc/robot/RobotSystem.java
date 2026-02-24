@@ -426,7 +426,7 @@ public class RobotSystem {
                                 getCommandScheduler().cancel(commands[i]);
                         }
                         getCommandScheduler().getActiveButtonLoop().clear();
-                        Runnable profile = profileArray[currentIndex];
+                        final Runnable profile = profileArray[currentIndex];
                         profile.run();
                 });
         }
@@ -445,7 +445,7 @@ public class RobotSystem {
                                 getCommandScheduler().cancel(commands[i]);
                         }
                         getCommandScheduler().getActiveButtonLoop().clear();
-                        Runnable profile = profileArray[currentIndex];
+                        final Runnable profile = profileArray[currentIndex];
                         profile.run();
                 });
         }
