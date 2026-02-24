@@ -23,4 +23,22 @@ public class RumbleDynamicCommand extends Command {
         intensity = intensitySupplier;
         this.side = side;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void initialize() {
+        controller.setRumble(side, intensity.getAsDouble());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void execute() {
+        controller.setRumble(side, intensity.getAsDouble());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void end(boolean interrupted) {
+        controller.setRumble(side, 0.0);
+    }
 }
