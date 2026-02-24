@@ -76,6 +76,12 @@ public class AimCamera {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This needs to be run <b>EVERY</b> frame of the Robot's periodic function.
+     * 
+     * @apiNote Don't ever call this function unless you know what you are doing.
+     */
     public void updateFrames() {
         this.results = camera.getAllUnreadResults();
     }
