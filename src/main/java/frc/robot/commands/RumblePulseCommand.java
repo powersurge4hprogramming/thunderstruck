@@ -52,4 +52,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
         return new RumblePulseCommand(controller, pulseDurationSeconds, interPulseDurationSeconds, intensity, numPulses,
                 side);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // TODO: Our long pulse command goes here.
 }
