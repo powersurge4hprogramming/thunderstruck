@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -12,14 +13,14 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     private final double interPulseDurationSeconds;
     private final double intensity;
     private final byte numPulses;
-    private final VibrationSide side;
+    private final RumbleType side;
 
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
     public RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
             final double interPulseDurationSeconds, final double intensity, final byte numPulses,
-            final VibrationSide side) {
+            final RumbleType side) {
         this.controller = controller;
         this.pulseDurationSeconds = pulseDurationSeconds;
         this.interPulseDurationSeconds = interPulseDurationSeconds;
@@ -36,7 +37,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * short, single, vibration pulse of the controller.
      * 
      * @apiNote Usage example:
-     *          <code>RumblePulseCommand.createShortSinglePulse(controller, 0.5, VibrationSide.RIGHT);</code>
+     *          <code>RumblePulseCommand.createShortSinglePulse(controller, 0.5, RumbleType.kRightRumble);</code>
      * 
      * @param controller The controller to vibrate.
      * @param intensity  The intensity of the vibration from 0 to 1.
@@ -44,7 +45,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * @return The pre-configured vibration command with the given parameters.
      */
     public static RumblePulseCommand createShortSinglePulse(final CommandXboxController controller,
-            final double intensity, final VibrationSide side) {
+            final double intensity, final RumbleType side) {
         final byte numPulses = 1;
         final double pulseDurationSeconds = 0.1;
         final double interPulseDurationSeconds = 0;
