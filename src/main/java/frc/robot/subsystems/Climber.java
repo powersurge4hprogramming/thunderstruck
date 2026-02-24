@@ -10,19 +10,25 @@ import frc.robot.CANBus;
 import frc.robot.DigitalInputBus;
 
 public class Climber extends SubsystemBase {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final double SPEED_SCALAR = 0.5;
 
     private final DigitalInput leftArmLimit;
     private final DigitalInput rightArmLimit;
     private final TalonFX krakenX60;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     public Climber() {
         krakenX60 = new TalonFX(CANBus.ID.CLIMBER.MOTOR, CANBus.BUS.RIO);
         leftArmLimit = new DigitalInput(DigitalInputBus.CLIMBER.LEFT_ARM_LIMIT_SWITCH);
         rightArmLimit = new DigitalInput(DigitalInputBus.CLIMBER.RIGHT_ARM_LIMIT_SWITCH);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * Tell the climber to go upward.
@@ -47,6 +53,7 @@ public class Climber extends SubsystemBase {
         });
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * Tell the climber to go downward.

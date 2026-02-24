@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CANBus;
 
 public class Shooter extends SubsystemBase {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final double MAX_SHOOTER_RPM = 5_500.0; // <- Tune this after characterization
 
     private final TalonFX motorLeader;
@@ -28,6 +31,9 @@ public class Shooter extends SubsystemBase {
     private final SparkMax loader;
     private final VelocityVoltage velocityRequest;
 
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     public Shooter() {
         this.motorLeader = new TalonFX(CANBus.ID.SHOOTER.LEADER, CANBus.BUS.CANIVORE);
         this.motorFollower = new TalonFX(CANBus.ID.SHOOTER.FOLLOWER, CANBus.BUS.CANIVORE);
@@ -39,6 +45,7 @@ public class Shooter extends SubsystemBase {
         configureMotors();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Configures both shooter motors (PIDF, current limits, neutral mode).
      * Called once from the constructor.
@@ -69,6 +76,7 @@ public class Shooter extends SubsystemBase {
         motorFollower.getConfigurator().apply(config);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * This function creates a single {@link Command} to shoot the ball at a
      * particular instant. It will shoot the ball at any given velocity and launch
@@ -101,6 +109,7 @@ public class Shooter extends SubsystemBase {
                 });
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * This method sets the Shooter's motors to an exact RPM.
@@ -122,6 +131,7 @@ public class Shooter extends SubsystemBase {
         motorLeader.setControl(velocityRequest);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Stops the shooter motors.
      */
@@ -129,6 +139,7 @@ public class Shooter extends SubsystemBase {
         motorLeader.setControl(new NeutralOut());
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * The current RPM of the leader motor.
@@ -139,6 +150,7 @@ public class Shooter extends SubsystemBase {
         return this.motorLeader.getVelocity().getValue().in(RPM);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * Sets the loader motor speed.
