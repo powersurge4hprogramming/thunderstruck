@@ -3,9 +3,10 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class RumbleDynamicCommand {
+public class RumbleDynamicCommand extends Command {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================
