@@ -59,7 +59,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
-     * I think we need to override the super classes
+     * I think we need to override the super class's
      * {@link SequentialCommandGroup#getInterruptionBehavior()}
      */
     @Override
