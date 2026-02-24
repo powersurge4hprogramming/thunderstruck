@@ -4,12 +4,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RumblePulseCommand extends SequentialCommandGroup {
-    public enum VibrationSide {
-        LEFT,
-        RIGHT,
-        BOTH
-    }
-
     private final CommandXboxController controller;
     private final double pulseDurationSeconds;
     private final double interPulseDurationSeconds;
