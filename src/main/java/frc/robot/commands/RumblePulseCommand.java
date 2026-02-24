@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RumblePulseCommand extends SequentialCommandGroup {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final CommandXboxController controller;
     private final double pulseDurationSeconds;
     private final double interPulseDurationSeconds;
@@ -11,7 +14,10 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     private final byte numPulses;
     private final VibrationSide side;
 
-    RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
+    public RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
             final double interPulseDurationSeconds, final double intensity, final byte numPulses,
             final VibrationSide side) {
         this.controller = controller;
@@ -20,5 +26,29 @@ public class RumblePulseCommand extends SequentialCommandGroup {
         this.intensity = intensity;
         this.numPulses = numPulses;
         this.side = side;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>RumblePulseCommand</code>. This particular one is for a
+     * short, single, vibration pulse of the controller.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createShortSinglePulse(controller, 0.5, VibrationSide.RIGHT);</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
+    public static RumblePulseCommand createShortSinglePulse(final CommandXboxController controller,
+            final double intensity, final VibrationSide side) {
+        final byte numPulses = 1;
+        final double pulseDurationSeconds = 0.1;
+        final double interPulseDurationSeconds = 0;
+        return new RumblePulseCommand(controller, pulseDurationSeconds, interPulseDurationSeconds, intensity, numPulses,
+                side);
     }
 }
