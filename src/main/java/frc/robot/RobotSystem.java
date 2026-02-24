@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -48,11 +47,13 @@ public class RobotSystem {
         // Constants
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
-        private static double MaxSpeedScaler = 0.25;
-        private static double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private static final double MaxSpeedScaler = 0.25;
+        private static final double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
-        private static double MaxAngularRateScaler = 0.75;
-        private static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
+        private static final double MaxAngularRateScaler = 0.75;
+        private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
+
+        private static final String EVENT_SHOOT = "shoot";
 
         // =============================================================================================================
         // Sub-Systems
@@ -110,7 +111,7 @@ public class RobotSystem {
         // PathPlanner
         // =============================================================================================================
         private final SendableChooser<Command> autoChooser;
-        private final Map<String, Command> eventMap;
+        private final Map<String, Command> eventsAuto;
 
         // =============================================================================================================
         // Swerve Drive Configurations
@@ -182,8 +183,8 @@ public class RobotSystem {
                 );
 
                 // Event map: For PathPlanner markers (e.g., "shoot" triggers shooter)
-                eventMap = new HashMap<>();
-                eventMap.put("shoot",
+                eventsAuto = new HashMap<>();
+                eventsAuto.put(EVENT_SHOOT,
                                 new LockOnShootAndDrive(shooter, drivetrain, aimCamera, null, null,
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
