@@ -55,4 +55,15 @@ public class RumblePulseCommand extends SequentialCommandGroup {
 
     // -----------------------------------------------------------------------------------------------------------------
     // TODO: Our long pulse command goes here.
+
+    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * I think we need to override the super classes
+     * {@link SequentialCommandGroup#getInterruptionBehavior()}
+     */
+    @Override
+    public InterruptionBehavior getInterruptionBehavior() {
+        return InterruptionBehavior.kCancelSelf;
+    }
 }
