@@ -198,19 +198,7 @@ public class RobotSystem {
         // Public Methods
         // =============================================================================================================
         public Command getAutonomousCommand() {
-                // Simple drive forward auton
-                final var idle = new SwerveRequest.Idle();
-                return Commands.sequence(
-                                // Reset our field centric heading to match the robot
-                                // facing away from our alliance station wall (0 deg).
-                                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-                                // Then slowly drive forward (away from us) for 5 seconds.
-                                drivetrain.applyRequest(() -> fieldDrive.withVelocityX(0.5)
-                                                .withVelocityY(0)
-                                                .withRotationalRate(0))
-                                                .withTimeout(5.0),
-                                // Finally idle for the rest of auton
-                                drivetrain.applyRequest(() -> idle));
+                return autoChooser.getSelected();
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -352,7 +340,9 @@ public class RobotSystem {
                 /*
                  * NOTE:
                  * All this does it point the wheels to whatever direction it is controlled to
-                 * point towards. Not sure of its usefulness. Can either of you think of one?
+                 * point towards. Not sure of its usefulness.
+                 * 
+                 * Point the wheels to the zero position.
                  */
                 return drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
