@@ -23,7 +23,6 @@ think.
 * Figure out how to get rumble working on `Triggers`.
 * <mark>The entire autonomous plan!!!</mark>
     * Should we just handmake the plan? Probably not! Need to figure out how PathPlanner works!!!!
-* Implement `RobotSystem::makeLoaderRunCommand`.
 
 ## What Needs to Be Tested
 * The `LockOnShootAndDrive` **y** binding.
