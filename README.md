@@ -15,6 +15,9 @@ think.
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 
 ## What Needs to Be Done
+* Finish up the optimizations for the autos.
+* Mark all of the events in the autos.
+* Fill the `eventsAuto` map.
 * Implement `Collector::stop` command.
     * <mark>Do we actually need this?</mark>
 
