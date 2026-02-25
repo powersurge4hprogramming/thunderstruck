@@ -1,33 +1,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RumblePulseCommand extends SequentialCommandGroup {
     // =================================================================================================================
-    // Private Data Members
-    // =================================================================================================================
-    private final CommandXboxController controller;
-    private final double pulseDurationSeconds;
-    private final double interPulseDurationSeconds;
-    private final double intensity;
-    private final byte numPulses;
-    private final RumbleType side;
-
-    // =================================================================================================================
     // Public Methods
     // =================================================================================================================
     public RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
             final double interPulseDurationSeconds, final double intensity, final byte numPulses,
             final RumbleType side) {
-        this.controller = controller;
-        this.pulseDurationSeconds = pulseDurationSeconds;
-        this.interPulseDurationSeconds = interPulseDurationSeconds;
-        this.intensity = intensity;
-        this.numPulses = numPulses;
-        this.side = side;
+        for (int i = 0; i < numPulses; i++) {
+            addCommands(
+                    new InstantCommand(() -> controller.setRumble(side, intensity)),
+                    new WaitCommand(pulseDurationSeconds),
+                    new InstantCommand(() -> controller.setRumble(side, 0.0)));
+            if (i < numPulses - 1) {
+                addCommands(new WaitCommand(interPulseDurationSeconds));
+            }
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -55,7 +49,34 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // TODO: Our long pulse command goes here.
+    public static RumblePulseCommand createLongSinglePulse(final CommandXboxController controller,
+            final double intensity, final RumbleType side) {
+        final byte numPulses = 1;
+        final double pulseDurationSeconds = 0.4;
+        final double interPulseDurationSeconds = 0;
+        return new RumblePulseCommand(controller, pulseDurationSeconds, interPulseDurationSeconds, intensity, numPulses,
+                side);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static RumblePulseCommand createShortDoublePulse(final CommandXboxController controller,
+            final double intensity, final RumbleType side) {
+        final byte numPulses = 2;
+        final double pulseDurationSeconds = 0.1;
+        final double interPulseDurationSeconds = 0.3;
+        return new RumblePulseCommand(controller, pulseDurationSeconds, interPulseDurationSeconds, intensity, numPulses,
+                side);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static RumblePulseCommand createLongDoublePulse(final CommandXboxController controller,
+            final double intensity, final RumbleType side) {
+        final byte numPulses = 2;
+        final double pulseDurationSeconds = 0.4;
+        final double interPulseDurationSeconds = 0.5;
+        return new RumblePulseCommand(controller, pulseDurationSeconds, interPulseDurationSeconds, intensity, numPulses,
+                side);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static WaitCommand createShortWaitCommand() {
