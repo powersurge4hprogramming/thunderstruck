@@ -136,4 +136,11 @@ public class LockOnShootAndDrive extends Command {
                                 .withVelocityY(ySupplier.getAsDouble())
                                 .withTargetDirection(new Rotation2d(turretYaw)));
         }
+
+        // -------------------------------------------------------------------------------------------------------------
+        @Override
+        public void end(boolean interrupted) {
+                shooter.setLoaderSpeed(0);
+                shooter.setRPM(0);
+        }
 }
