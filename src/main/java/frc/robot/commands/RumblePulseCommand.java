@@ -49,6 +49,20 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>RumblePulseCommand</code>. This particular one is for a
+     * long, single, vibration pulse of the controller.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createShortSinglePulse(controller, 0.5, RumbleType.kRightRumble);</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
     public static RumblePulseCommand createLongSinglePulse(final CommandXboxController controller,
             final double intensity, final RumbleType side) {
         final byte numPulses = 1;
@@ -59,6 +73,20 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>RumblePulseCommand</code>. This particular one is for a
+     * short, double, vibration pulse of the controller.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createShortDoublePulse(controller, 0.5, RumbleType.kRightRumble);</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
     public static RumblePulseCommand createShortDoublePulse(final CommandXboxController controller,
             final double intensity, final RumbleType side) {
         final byte numPulses = 2;
@@ -69,6 +97,20 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>RumblePulseCommand</code>. This particular one is for a
+     * long, double, vibration pulse of the controller.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createLongDoublePulse(controller, 0.5, RumbleType.kRightRumble);</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
     public static RumblePulseCommand createLongDoublePulse(final CommandXboxController controller,
             final double intensity, final RumbleType side) {
         final byte numPulses = 2;
@@ -79,11 +121,39 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>WaitCommand</code>. This particular one is for a
+     * short wait command.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createShortWaitCommand();</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
     public static WaitCommand createShortWaitCommand() {
         return new WaitCommand(0.1);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * {@summary}
+     * This method is a <b>factory</b> method: it's sole purpose is to create a
+     * pre-configured <code>WaitCommand</code>. This particular one is for a
+     * long wait command.
+     * 
+     * @apiNote Usage example:
+     *          <code>RumblePulseCommand.createLongWaitCommand();</code>
+     * 
+     * @param controller The controller to vibrate.
+     * @param intensity  The intensity of the vibration from 0 to 1.
+     * @param side       The side at which to vibrate the controller.
+     * @return The pre-configured vibration command with the given parameters.
+     */
     public static WaitCommand createLongWaitCommand() {
         return new WaitCommand(0.2);
     }
