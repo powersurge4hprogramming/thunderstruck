@@ -24,18 +24,23 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.LockOnShootAndDrive;
+import frc.robot.commands.RumbleDynamicCommand;
+import frc.robot.commands.RumblePulseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
@@ -333,7 +338,8 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeBrakeCommand() {
-                return drivetrain.applyRequest(() -> brake);
+                return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
+                                RumblePulseCommand.createLongSinglePulse(controller, 0.5, RumbleType.kBothRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -345,9 +351,11 @@ public class RobotSystem {
                  * 
                  * Point the wheels to the zero position.
                  */
-                return drivetrain.applyRequest(
+                final Command zeroWheels = drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(0, 0)));
+                return new ParallelCommandGroup(zeroWheels,
+                                RumblePulseCommand.createShortSinglePulse(controller, 1, RumbleType.kLeftRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -369,12 +377,13 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
                         final BooleanSupplier loaderVelocityScalar) {
-                return shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar);
+                return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar),
+                                new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeWeaponSwapCommand() {
-                return new InstantCommand(() -> {
+                final Command weaponSwap = new InstantCommand(() -> {
                         if (checkAimbotStatus == true) {
                                 if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
                                         getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
@@ -390,17 +399,23 @@ public class RobotSystem {
                                 checkAimbotStatus = true;
                         }
                 });
+
+                return new ParallelCommandGroup(weaponSwap,
+                                RumblePulseCommand.createShortSinglePulse(controller, 1, RumbleType.kRightRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar) {
-                return Collector.run(collectorScalar);
+                return new ParallelCommandGroup(Collector.run(collectorScalar),
+                                new RumbleDynamicCommand(controller, collectorScalar, RumbleType.kLeftRumble));
+
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeResetFieldOrientationCommand() {
                 // Reset the field-centric heading on left bumper press.
-                return drivetrain.runOnce(drivetrain::seedFieldCentric);
+                return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
+                                RumblePulseCommand.createLongDoublePulse(controller, 1, RumbleType.kBothRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -463,11 +478,18 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeClimberUpCommand() {
-                return climber.upward();
+                return new ParallelCommandGroup(climber.upward(),
+                                RumblePulseCommand.createShortDoublePulse(controller, 1, RumbleType.kLeftRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeClimberDownCommand() {
-                return climber.downward();
+                return new ParallelCommandGroup(climber.downward(),
+                                new SequentialCommandGroup(
+                                                RumblePulseCommand.createShortDoublePulse(controller, 1,
+                                                                RumbleType.kRightRumble),
+                                                RumblePulseCommand.createShortWaitCommand(),
+                                                RumblePulseCommand.createShortSinglePulse(controller, 1,
+                                                                RumbleType.kRightRumble)));
         }
 }
