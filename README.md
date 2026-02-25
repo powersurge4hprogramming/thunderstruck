@@ -15,16 +15,15 @@ think.
         [this chat](https://grok.com/share/c2hhcmQtMg_bed28fc3-0692-43fb-815a-ccc28d2ea236)</mark>
 
 ## What Needs to Be Done
-* Implement `Shooter::setRPM`.
-* Give data to the `Shooter::manualShootBall` command.
-* Implement `Shooter::manualShootBall` command.
 * Implement `Collector::stop` command.
     * <mark>Do we actually need this?</mark>
-* Figure out how to get rumble working on `Triggers`.
-* <mark>The entire autonomous plan!!!</mark>
-    * Should we just handmake the plan? Probably not! Need to figure out how PathPlanner works!!!!
 
 ## What Needs to Be Tested
+* The `Shooter::setRPM`.
+* Give data to the `Shooter::manualShootBall` command.
+* The `Shooter::manualShootBall` command.
+* The various rumble commands.
+* <mark>The entire autonomous plans!!!</mark>
 * The `LockOnShootAndDrive` **y** binding.
 * The `AimCamera::getHubRelativeLocation` function.
 * The `LockOnShootAndDrive::execute` function.
