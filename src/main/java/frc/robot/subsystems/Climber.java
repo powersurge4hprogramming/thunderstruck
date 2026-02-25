@@ -13,7 +13,7 @@ public class Climber extends SubsystemBase {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================
-    private final double SPEED_SCALAR = 0.5;
+    private final static double SPEED_SCALAR = 0.5;
 
     private final DigitalInput leftArmLimit;
     private final DigitalInput rightArmLimit;
