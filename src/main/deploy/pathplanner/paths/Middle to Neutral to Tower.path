@@ -126,7 +126,7 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.8985074626865663,
+      "minWaypointRelativePos": 1.9,
       "maxWaypointRelativePos": 3.164179104477616,
       "constraints": {
         "maxVelocity": 1.75,
@@ -173,7 +173,32 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "shoot",
+      "waypointRelativePos": 0.13,
+      "endWaypointRelativePos": 1.19,
+      "command": null
+    },
+    {
+      "name": "collect",
+      "waypointRelativePos": 1.9,
+      "endWaypointRelativePos": 3.16,
+      "command": null
+    },
+    {
+      "name": "shoot",
+      "waypointRelativePos": 3.65,
+      "endWaypointRelativePos": 4.0,
+      "command": null
+    },
+    {
+      "name": "climb",
+      "waypointRelativePos": 4.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

@@ -154,7 +154,20 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "collect",
+      "waypointRelativePos": 1.42,
+      "endWaypointRelativePos": 3.0,
+      "command": null
+    },
+    {
+      "name": "shoot",
+      "waypointRelativePos": 3.98,
+      "endWaypointRelativePos": 4.8,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

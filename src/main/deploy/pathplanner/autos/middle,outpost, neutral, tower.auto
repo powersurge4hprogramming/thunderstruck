@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "middle to outpost"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 2.5
@@ -13,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "outpost to neutral to tower"
           }
         }
       ]

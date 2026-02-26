@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "middle to outpost"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 7.0

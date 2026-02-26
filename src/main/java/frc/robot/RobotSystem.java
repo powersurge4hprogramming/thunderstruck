@@ -59,6 +59,8 @@ public class RobotSystem {
         private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
 
         private static final String EVENT_SHOOT = "shoot";
+        private static final String EVENT_COLLECT = "collect";
+        private static final String EVENT_CLIMB = "climb";
 
         // =============================================================================================================
         // Sub-Systems
@@ -66,7 +68,7 @@ public class RobotSystem {
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
         private final AimCamera aimCamera = new AimCamera();
-        private final Collector Collector = new Collector();
+        private final Collector collector = new Collector();
         private final Climber climber = new Climber();
 
         // =============================================================================================================
@@ -194,6 +196,9 @@ public class RobotSystem {
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
 
+                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
+
+                eventsAuto.put(EVENT_CLIMB, climber.upward());
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -414,7 +419,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar) {
-                return new ParallelCommandGroup(Collector.run(collectorScalar),
+                return new ParallelCommandGroup(collector.run(collectorScalar),
                                 new RumbleDynamicCommand(controller, collectorScalar, RumbleType.kLeftRumble));
 
         }

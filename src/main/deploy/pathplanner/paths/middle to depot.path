@@ -36,7 +36,7 @@
         "y": 5.731
       },
       "prevControl": {
-        "x": 0.4340316901408449,
+        "x": 0.434031690140845,
         "y": 7.12024295774648
       },
       "nextControl": null,
@@ -90,7 +90,20 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "shoot",
+      "waypointRelativePos": 0.23,
+      "endWaypointRelativePos": 0.58,
+      "command": null
+    },
+    {
+      "name": "collect",
+      "waypointRelativePos": 1.48,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
