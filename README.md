@@ -20,6 +20,10 @@ think.
 ## What Needs to Be Done
 * Implement `Collector::stop` command.
     * <mark>Do we actually need this?</mark>
+* Implement a command to lock onto the post--left or right--in teleop and then autorotate you to line you up and then
+    run the climb. This is so that, in the heat of competition, the driver doesn't have to maneuver it precisely and
+    panic.
+* Implement the `Hopper::unclasp` command.
 
 ## What Needs to Be Tested
 * the `eventsAuto` map.
