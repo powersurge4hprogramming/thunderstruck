@@ -56,6 +56,15 @@ public class CANBus {
 
         /**
          * {@summary}
+         * The IDs for the {@link frc.robot.subsystems.Hopper Hopper}.
+         */
+        public static final class HOPPER {
+            // TODO: Need a real value here.
+            public static final byte MOTOR = 0;
+        }
+
+        /**
+         * {@summary}
          * The ID for the
          * {@link edu.wpi.first.wpilibj.PowerDistribution.PowerDistribution
          * PowerDistribution} module.
