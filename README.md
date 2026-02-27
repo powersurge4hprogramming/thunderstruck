@@ -23,7 +23,6 @@ think.
 * Implement a command to lock onto the post--left or right--in teleop and then autorotate you to line you up and then
     run the climb. This is so that, in the heat of competition, the driver doesn't have to maneuver it precisely and
     panic.
-* Add to all of the profiles the hopper run command.
 
 ## What Needs to Be Tested
 * Implement the `Hopper::unclasp` command.
