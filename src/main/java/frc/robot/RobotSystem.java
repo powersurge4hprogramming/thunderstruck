@@ -233,6 +233,8 @@ public class RobotSystem {
         private void setDefaultBindings() {
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+                controller.back().onTrue(commands[PROFILE_DECREASE]);
+                controller.start().onTrue(commands[PROFILE_INCREASE]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -517,7 +519,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        public Command makeHopperRunCommand() {
+        private Command makeHopperRunCommand() {
                 final double intensity = 0.25;
                 return new ParallelCommandGroup(new SequentialCommandGroup(
                                 hopper.unclasp(),
