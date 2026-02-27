@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -43,6 +44,7 @@ import frc.robot.commands.RumbleDynamicCommand;
 import frc.robot.commands.RumblePulseCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hopper;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Climber;
@@ -70,6 +72,7 @@ public class RobotSystem {
         private final AimCamera aimCamera = new AimCamera();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
+        private final Hopper hopper = new Hopper();
 
         // =============================================================================================================
         // Commands
@@ -91,6 +94,7 @@ public class RobotSystem {
         private static final byte PROFILE_DECREASE = 14;
         private static final byte CLIMBER_UP_INDEX = 15;
         private static final byte CLIMBER_DOWN_INDEX = 16;
+        private static final byte HOPPER_RUN_INDEX = 17;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -109,6 +113,7 @@ public class RobotSystem {
                         makeProfileDecreaseCommand(),
                         makeClimberUpCommand(),
                         makeClimberDownCommand(),
+                        makeHopperRunCommand(),
         };
 
         private final Runnable[] profileArray = new Runnable[4];
@@ -509,5 +514,16 @@ public class RobotSystem {
                                                 RumblePulseCommand.createShortWaitCommand(),
                                                 RumblePulseCommand.createShortSinglePulse(controller, intensity,
                                                                 RumbleType.kRightRumble)));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        public Command makeHopperRunCommand() {
+                final double intensity = 0.25;
+                return new ParallelCommandGroup(new SequentialCommandGroup(
+                                hopper.unclasp(),
+                                new WaitCommand(0.5),
+                                hopper.stop()),
+                                RumblePulseCommand.createLongDoublePulse(controller, intensity,
+                                                RumbleType.kBothRumble));
         }
 }
