@@ -98,6 +98,12 @@
       "command": null
     },
     {
+      "name": "hopper",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "collect",
       "waypointRelativePos": 1.55,
       "endWaypointRelativePos": 2.0,

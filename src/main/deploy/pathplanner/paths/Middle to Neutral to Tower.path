@@ -175,6 +175,12 @@
   ],
   "eventMarkers": [
     {
+      "name": "hopper",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "shoot",
       "waypointRelativePos": 0.13,
       "endWaypointRelativePos": 1.19,

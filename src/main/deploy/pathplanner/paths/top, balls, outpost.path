@@ -156,6 +156,12 @@
   ],
   "eventMarkers": [
     {
+      "name": "hopper",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "collect",
       "waypointRelativePos": 1.42,
       "endWaypointRelativePos": 3.0,
