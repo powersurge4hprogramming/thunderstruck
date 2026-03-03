@@ -88,7 +88,7 @@
         "y": 5.682625918971495
       },
       "nextControl": {
-        "x": 1.586213529472541,
+        "x": 1.5862135294725412,
         "y": 4.671644809528889
       },
       "isLocked": false,
@@ -218,7 +218,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "autos",
