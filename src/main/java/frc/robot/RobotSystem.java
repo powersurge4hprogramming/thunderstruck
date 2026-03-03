@@ -179,7 +179,7 @@ public class RobotSystem {
                                 drivetrain::getPose, // Fused pose supplier (vision-corrected)
                                 drivetrain::resetPose, // Pose resetter
                                 drivetrain::getChassisSpeeds, // ChassisSpeeds supplier (from CTRE state)
-                                (speeds) -> drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric()
+                                (speeds) -> drivetrain.applyRequest(() -> fieldDrive
                                                 .withVelocityX(speeds.vxMetersPerSecond)
                                                 .withVelocityX(speeds.vyMetersPerSecond)
                                                 .withRotationalRate(speeds.omegaRadiansPerSecond)),
