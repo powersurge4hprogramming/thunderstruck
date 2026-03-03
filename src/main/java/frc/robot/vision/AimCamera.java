@@ -29,7 +29,20 @@ public class AimCamera {
     // =================================================================================================================
     private final static byte HUB_CENTER_TAG = 9;
     private final static byte HUB_OFF_CENTER_RIGHT_TAG = 10;
+    private final static byte TOWER_LEFT_TAG = 15;
+    private final static byte TOWER_RIGHT_TAG = 16;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
+            // x
+            Distance.ofBaseUnits(5, Inches),
+            // y
+            Distance.ofBaseUnits(0, Inches),
+            // z
+            Distance.ofBaseUnits(-12, Inches),
+            new Rotation3d(
+                    Angle.ofBaseUnits(0, Degrees),
+                    Angle.ofBaseUnits(0, Degrees),
+                    Angle.ofBaseUnits(0, Degrees)));
+    private final static Transform3d CLIMBER_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofBaseUnits(5, Inches),
             // y
@@ -115,6 +128,44 @@ public class AimCamera {
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
         return hub;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Transform3d getTowerRelativeRightLocation() {
+        Transform3d tower = null;
+
+        for (final PhotonPipelineResult result : results) {
+            for (final PhotonTrackedTarget target : result.getTargets()) {
+                if (target.fiducialId != TOWER_RIGHT_TAG)
+                    continue;
+                tower = target.getBestCameraToTarget();
+                break;
+            }
+        }
+
+        if (tower != null)
+            tower.plus(CLIMBER_TO_CAMERA_OFFSET);
+
+        return tower;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Transform3d getTowerRelativeLeftLocation() {
+        Transform3d tower = null;
+
+        for (final PhotonPipelineResult result : results) {
+            for (final PhotonTrackedTarget target : result.getTargets()) {
+                if (target.fiducialId != TOWER_LEFT_TAG)
+                    continue;
+                tower = target.getBestCameraToTarget();
+                break;
+            }
+        }
+
+        if (tower != null)
+            tower.plus(CLIMBER_TO_CAMERA_OFFSET);
+
+        return tower;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
