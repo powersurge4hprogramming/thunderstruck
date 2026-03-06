@@ -33,6 +33,8 @@ public class ApproachLeft extends Command {
                 .withDeadband(maxSpeed * 0.1).withRotationalDeadband(maxAngularRate * 0.1)
                 // Use open-loop control for drive motors
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+        addRequirements(this.drivetrain);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

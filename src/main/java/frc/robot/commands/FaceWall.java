@@ -15,15 +15,18 @@ public class FaceWall extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
 
-    public FaceWall(final double maxSpeed, final double maxAngularRate, final CommandSwerveDrivetrain drivetrain) {
+    FaceWall(final double maxSpeed, final double maxAngularRate, final CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.fieldFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
                 // Add a 10% deadband
                 .withDeadband(maxSpeed * 0.1)
                 // Use open-loop control for drive motors
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+        addRequirements(this.drivetrain);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void execute() {
         // Face the wall.
