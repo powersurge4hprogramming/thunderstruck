@@ -12,7 +12,7 @@ import frc.robot.vision.AimCamera;
 
 public class LockOnClimb extends SequentialCommandGroup {
     // =================================================================================================================
-    // Public Methods
+    // Private Data Members
     // =================================================================================================================
     private boolean approachedFromLeft;
 

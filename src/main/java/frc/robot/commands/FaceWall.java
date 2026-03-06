@@ -12,9 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class FaceWall extends Command {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final CommandSwerveDrivetrain drivetrain;
     private final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
 
+    // =================================================================================================================
+    // Package Protected Contructor
+    // =================================================================================================================
     FaceWall(final double maxSpeed, final double maxAngularRate, final CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.fieldFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
@@ -26,7 +32,9 @@ public class FaceWall extends Command {
         addRequirements(this.drivetrain);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     @Override
     public void execute() {
         // Face the wall.

@@ -8,10 +8,16 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 
 public class ApproachRight extends Command {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final CommandSwerveDrivetrain drivetrain;
     private final AimCamera aimCamera;
     private final SwerveRequest.FieldCentric fieldDrive;
 
+    // =================================================================================================================
+    // Package Protected Contructor
+    // =================================================================================================================
     ApproachRight(final CommandSwerveDrivetrain drivetrain, final AimCamera aimCamera, final double maxSpeed,
             final double maxAngularRate) {
         this.aimCamera = aimCamera;
@@ -24,4 +30,8 @@ public class ApproachRight extends Command {
 
         addRequirements(this.drivetrain);
     }
+
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
 }

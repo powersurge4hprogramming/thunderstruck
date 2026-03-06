@@ -20,10 +20,16 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 
 public class ApproachLeft extends Command {
+    // =================================================================================================================
+    // Private Data Members
+    // =================================================================================================================
     private final CommandSwerveDrivetrain drivetrain;
     private final AimCamera aimCamera;
     private final SwerveRequest.FieldCentric fieldDrive;
 
+    // =================================================================================================================
+    // Package Protected Contructor
+    // =================================================================================================================
     ApproachLeft(final CommandSwerveDrivetrain drivetrain, final AimCamera aimCamera, final double maxSpeed,
             final double maxAngularRate) {
         this.aimCamera = aimCamera;
@@ -37,7 +43,9 @@ public class ApproachLeft extends Command {
         addRequirements(this.drivetrain);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     @Override
     public void execute() {
         final Transform3d leftTag = aimCamera.getTowerRelativeLeftLocation();
