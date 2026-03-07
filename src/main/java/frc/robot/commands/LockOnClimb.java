@@ -30,7 +30,7 @@ public class LockOnClimb extends SequentialCommandGroup {
 
         addCommands(
                 whatApproachPosition,
-                new FaceWall(maxSpeed, maxAngularRate, drivetrain),
+                new FaceWallForward(maxSpeed, maxAngularRate, drivetrain),
                 new ConditionalCommand(
                         new ApproachLeft(drivetrain, aimCamera, maxSpeed, maxAngularRate),
                         new ApproachRight(drivetrain, aimCamera, maxSpeed, maxAngularRate),
