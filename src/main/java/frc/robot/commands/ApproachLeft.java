@@ -64,11 +64,9 @@ public class ApproachLeft extends Command {
         final boolean isNearLeftPost = yFromPost.isNear(Inches.of(16.125), Inches.of(0.16));
 
         if (!isNearLeftPost) {
-            fieldDrive.withVelocityY(speed.vyMetersPerSecond);
-            fieldDrive.withVelocityX(0);
+            driveLeft();
         } else {
-            fieldDrive.withVelocityY(0);
-            fieldDrive.withVelocityX(speed.vyMetersPerSecond);
+            driveForward();
         }
     }
 
@@ -84,6 +82,20 @@ public class ApproachLeft extends Command {
     @Override
     public void end(boolean interrupted) {
         drivetrain.setControl(new SwerveRequest.Idle());
+    }
+
+    // =================================================================================================================
+    // Private Methods
+    // =================================================================================================================
+    private void driveLeft() {
+        fieldDrive.withVelocityY(speed.vyMetersPerSecond);
+        fieldDrive.withVelocityX(0);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private void driveForward() {
+        fieldDrive.withVelocityY(0);
+        fieldDrive.withVelocityX(speed.vyMetersPerSecond);
     }
 
 }
