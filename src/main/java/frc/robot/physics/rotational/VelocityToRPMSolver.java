@@ -80,7 +80,7 @@ import java.util.function.DoubleSupplier;
  */
 public class VelocityToRPMSolver {
     // Measured/tunable constants
-    private static final double WHEEL_RADIUS_M = 0.05; // Wheel radius (m)
+    private static final double WHEEL_RADIUS_M = 0.0508; // Wheel radius (m)
     private static final double EXIT_VELOCITY_EFFICIENCY = 0.95; // Efficiency factor (dimensionless)
     private static final double READY_TOLERANCE_RPM = 50.0; // Tolerance for readiness (RPM)
     private static final double MIN_READY_TIME_S = 0.1; // Min time error < tolerance for readiness (s)
@@ -88,8 +88,8 @@ public class VelocityToRPMSolver {
     // Motor datasheet constants (updated for Kraken X60 approx values; confirm CTRE
     // docs)
     private static final double V_NOM = 12.0; // Nominal voltage (V)
-    private static final double KV_RPM_PER_V = 567.0; // Motor kV (RPM per V)
-    private static final double G_GEAR_RATIO = 1.5; // Gear ratio (motor turns : wheel turn)
+    private static final double KV_RPM_PER_V = 500.0; // Motor kV (RPM per V)
+    private static final double G_GEAR_RATIO = 1.0; // Gear ratio (motor turns : wheel turn)
 
     // Precomputed coefficients
     private final double KV_RAD_PER_V = KV_RPM_PER_V * Math.PI / 30.0; // rad/s per V
