@@ -26,6 +26,9 @@ public class ApproachLeft extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private final AimCamera aimCamera;
     private final SwerveRequest.FieldCentric fieldDrive;
+    private final ChassisSpeeds speed;
+    private Distance xFromPost;
+    private Distance yFromPost;
 
     // =================================================================================================================
     // Package Protected Contructor
@@ -39,6 +42,13 @@ public class ApproachLeft extends Command {
                 .withDeadband(maxSpeed * 0.1).withRotationalDeadband(maxAngularRate * 0.1)
                 // Use open-loop control for drive motors
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+        speed = new ChassisSpeeds(
+                LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
+                LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
+                AngularVelocity.ofBaseUnits(0, AngularVelocityUnit.combine(Degrees, Second)));
+
+        this.xFromPost = null;
+        this.yFromPost = null;
 
         addRequirements(this.drivetrain);
     }
@@ -49,19 +59,31 @@ public class ApproachLeft extends Command {
     @Override
     public void execute() {
         final Transform3d leftTag = aimCamera.getTowerRelativeLeftLocation();
-        final Distance leftPostFromLeftTag = Inches.of(16.125);
-        final boolean isNearLeftPost = leftTag.getMeasureY().isNear(leftPostFromLeftTag, Inches.of(0.16));
+        yFromPost = leftTag.getMeasureY();
+        xFromPost = leftTag.getMeasureX();
+        final boolean isNearLeftPost = yFromPost.isNear(Inches.of(16.125), Inches.of(0.16));
+
         if (!isNearLeftPost) {
-            final ChassisSpeeds speed = new ChassisSpeeds(
-                    LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
-                    LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
-                    AngularVelocity.ofBaseUnits(0, AngularVelocityUnit.combine(Degrees, Second)));
-            fieldDrive.withVelocityX(speed.vyMetersPerSecond);
+            fieldDrive.withVelocityY(speed.vyMetersPerSecond);
+            fieldDrive.withVelocityX(0);
         } else {
-            // Ok, I am now in front of the left post. Let's do this!
-            // Note how far away in the x direction you are from the left
-            final Distance xFromPost = leftTag.getMeasureX();
-            // Rotate 180 degrees to face the climber at the post.
+            fieldDrive.withVelocityY(0);
+            fieldDrive.withVelocityX(speed.vyMetersPerSecond);
         }
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean isFinished() {
+        final boolean isNearLeftPost = yFromPost.isNear(Inches.of(16.125), Inches.of(0.16));
+        final boolean isNearPostForward = xFromPost.isNear(Inches.of(0), Inches.of(0.16));
+        return isNearLeftPost && isNearPostForward;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.setControl(new SwerveRequest.Idle());
+    }
+
 }
