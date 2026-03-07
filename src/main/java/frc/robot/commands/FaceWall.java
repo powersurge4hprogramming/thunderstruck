@@ -60,4 +60,10 @@ public class FaceWall extends Command {
                 return current.minus(new Rotation3d(towerHeading)).getAngle() == 0;
         }
 
+        // -------------------------------------------------------------------------------------------------------------
+        @Override
+        public void end(boolean interrupted) {
+                drivetrain.setControl(new SwerveRequest.Idle());
+        }
+
 }
