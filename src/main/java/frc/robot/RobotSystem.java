@@ -252,15 +252,15 @@ public class RobotSystem {
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.rightBumper().onTrue(commands[HOPPER_RUN_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
-                controller.x().onTrue(commands[WEAPON_SWAP_INDEX]);
+                controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 controller.povUp().onTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().onTrue(commands[CLIMBER_DOWN_INDEX]);
                 controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
+                controller.b().onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
@@ -284,7 +284,7 @@ public class RobotSystem {
                 controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 controller.povLeft().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.leftBumper().onTrue(commands[HOPPER_RUN_INDEX]);
+                controller.x().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
                 controller.rightBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.b().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.povDown().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
@@ -307,6 +307,7 @@ public class RobotSystem {
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 controller.rightBumper().onTrue(commands[HOPPER_RUN_INDEX]);
+                controller.b().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -323,9 +324,9 @@ public class RobotSystem {
                 controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.rightBumper().onTrue(commands[HOPPER_RUN_INDEX]);
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                controller.b().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
