@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
         this.motorFollower = new TalonFX(CANBus.ID.SHOOTER.FOLLOWER, CANBus.BUS.CANIVORE);
         this.loader = new SparkMax(CANBus.ID.SHOOTER.LOADER, SparkMax.MotorType.kBrushless);
 
-        this.motorFollower.setControl(new Follower(this.motorLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+        this.motorFollower.setControl(new Follower(this.motorLeader.getDeviceID(), MotorAlignmentValue.Opposed));
         this.velocityRequest = new VelocityVoltage(0).withSlot(0);
 
         configureMotors();
