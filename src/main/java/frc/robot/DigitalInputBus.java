@@ -7,7 +7,7 @@ package frc.robot;
  */
 public class DigitalInputBus {
     public static final class CLIMBER {
-        public static final byte LEFT_ARM_LIMIT_SWITCH = 0;
-        public static final byte RIGHT_ARM_LIMIT_SWITCH = 0;
+        public static final byte LEFT_ARM_LIMIT_SWITCH = 8;
+        public static final byte RIGHT_ARM_LIMIT_SWITCH = 9;
     }
 }
