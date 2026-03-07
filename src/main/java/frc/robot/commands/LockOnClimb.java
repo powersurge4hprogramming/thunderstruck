@@ -35,7 +35,7 @@ public class LockOnClimb extends SequentialCommandGroup {
                         new ApproachLeft(drivetrain, aimCamera, maxSpeed, maxAngularRate),
                         new ApproachRight(drivetrain, aimCamera, maxSpeed, maxAngularRate),
                         () -> approachedFromLeft),
-                // Rotate 180 degrees to face the climber at the post.
+                new FaceWallRear(maxSpeed, maxAngularRate, drivetrain),
                 new Ascend(climber),
                 new WaitCommand(2),
                 new Descend(climber));
