@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
+import frc.robot.commands.rumble.RumbleIntensity;
 import frc.robot.commands.rumble.RumblePulseCommand;
 import frc.robot.commands.shoot.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
@@ -360,9 +361,8 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeBrakeCommand() {
-                final double intensity = 0.5;
                 return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
-                                RumblePulseCommand.createLongSinglePulse(controller, intensity,
+                                RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
                                                 RumbleType.kBothRumble));
         }
 
@@ -378,9 +378,8 @@ public class RobotSystem {
                 final Command zeroWheels = drivetrain.applyRequest(
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(0, 0)));
-                final double intensity = 1;
                 return new ParallelCommandGroup(zeroWheels,
-                                RumblePulseCommand.createShortSinglePulse(controller, intensity,
+                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
                                                 RumbleType.kLeftRumble));
         }
 
@@ -428,9 +427,8 @@ public class RobotSystem {
                         }
                 });
 
-                final double intensity = 1;
                 return new ParallelCommandGroup(weaponSwap,
-                                RumblePulseCommand.createShortSinglePulse(controller, intensity,
+                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.SUPER_HEAVY,
                                                 RumbleType.kRightRumble));
         }
 
@@ -444,9 +442,8 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeResetFieldOrientationCommand() {
                 // Reset the field-centric heading on left bumper press.
-                final double intensity = 1;
                 return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
-                                RumblePulseCommand.createLongDoublePulse(controller, intensity,
+                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM_HEAVY,
                                                 RumbleType.kBothRumble));
         }
 
@@ -510,32 +507,32 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeClimberUpCommand() {
-                final double intensity = 1;
+
                 return new ParallelCommandGroup(climber.upward(),
-                                RumblePulseCommand.createShortDoublePulse(controller, intensity,
+                                RumblePulseCommand.createShortDoublePulse(controller, RumbleIntensity.MEDIUM,
                                                 RumbleType.kLeftRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeClimberDownCommand() {
-                final double intensity = 1;
                 return new ParallelCommandGroup(climber.downward(),
                                 new SequentialCommandGroup(
-                                                RumblePulseCommand.createShortDoublePulse(controller, intensity,
+                                                RumblePulseCommand.createShortDoublePulse(controller,
+                                                                RumbleIntensity.MEDIUM,
                                                                 RumbleType.kRightRumble),
                                                 RumblePulseCommand.createShortWaitCommand(),
-                                                RumblePulseCommand.createShortSinglePulse(controller, intensity,
+                                                RumblePulseCommand.createShortSinglePulse(controller,
+                                                                RumbleIntensity.MEDIUM,
                                                                 RumbleType.kRightRumble)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeHopperRunCommand() {
-                final double intensity = 0.25;
                 return new ParallelCommandGroup(new SequentialCommandGroup(
                                 hopper.unclasp(),
                                 new WaitCommand(0.5),
                                 hopper.stop()),
-                                RumblePulseCommand.createLongDoublePulse(controller, intensity,
+                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.LIGHT,
                                                 RumbleType.kBothRumble));
         }
 }
