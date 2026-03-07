@@ -26,8 +26,8 @@ public class LockOnClimb extends SequentialCommandGroup {
                             return leftTag.getY() > 0;
                         }),
                 new FaceWallRear(maxSpeed, maxAngularRate, drivetrain),
-                new Ascend(climber),
+                climber.upward(),
                 new WaitCommand(2),
-                new Descend(climber));
+                climber.downward());
     }
 }
