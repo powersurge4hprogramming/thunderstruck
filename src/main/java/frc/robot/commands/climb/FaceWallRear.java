@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.climb;
 
 import java.util.Optional;
 

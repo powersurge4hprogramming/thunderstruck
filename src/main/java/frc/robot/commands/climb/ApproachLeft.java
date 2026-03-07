@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.climb;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 
-public class ApproachRight extends Command {
+public class ApproachLeft extends Command {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================
@@ -33,7 +33,7 @@ public class ApproachRight extends Command {
     // =================================================================================================================
     // Package Protected Contructor
     // =================================================================================================================
-    ApproachRight(final CommandSwerveDrivetrain drivetrain, final AimCamera aimCamera, final double maxSpeed,
+    ApproachLeft(final CommandSwerveDrivetrain drivetrain, final AimCamera aimCamera, final double maxSpeed,
             final double maxAngularRate) {
         this.aimCamera = aimCamera;
         this.drivetrain = drivetrain;
@@ -44,7 +44,7 @@ public class ApproachRight extends Command {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
         speed = new ChassisSpeeds(
                 LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
-                LinearVelocity.ofBaseUnits(-0.25, LinearVelocityUnit.combine(Meter, Second)),
+                LinearVelocity.ofBaseUnits(0.25, LinearVelocityUnit.combine(Meter, Second)),
                 AngularVelocity.ofBaseUnits(0, AngularVelocityUnit.combine(Degrees, Second)));
 
         this.xFromPost = null;
@@ -61,10 +61,10 @@ public class ApproachRight extends Command {
         final Transform3d leftTag = aimCamera.getTowerRelativeLeftLocation();
         yFromPost = leftTag.getMeasureY();
         xFromPost = leftTag.getMeasureX();
-        final boolean isNearRightPost = yFromPost.isNear(Inches.of(-16.125), Inches.of(0.16));
+        final boolean isNearLeftPost = yFromPost.isNear(Inches.of(16.125), Inches.of(0.16));
 
-        if (!isNearRightPost) {
-            driveRight();
+        if (!isNearLeftPost) {
+            driveLeft();
         } else {
             driveForward();
         }
@@ -73,9 +73,9 @@ public class ApproachRight extends Command {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean isFinished() {
-        final boolean isNearRightPost = yFromPost.isNear(Inches.of(-16.125), Inches.of(0.16));
+        final boolean isNearLeftPost = yFromPost.isNear(Inches.of(16.125), Inches.of(0.16));
         final boolean isNearPostForward = xFromPost.isNear(Inches.of(0), Inches.of(0.16));
-        return isNearRightPost && isNearPostForward;
+        return isNearLeftPost && isNearPostForward;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ public class ApproachRight extends Command {
     // =================================================================================================================
     // Private Methods
     // =================================================================================================================
-    private void driveRight() {
+    private void driveLeft() {
         fieldDrive.withVelocityY(speed.vyMetersPerSecond);
         fieldDrive.withVelocityX(0);
     }
