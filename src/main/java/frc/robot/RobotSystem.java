@@ -133,6 +133,11 @@ public class RobotSystem {
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+        final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric()
+                        // add a 10% deadband
+                        .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+                        // Use open-loop control for drive motors
+                        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -179,9 +184,9 @@ public class RobotSystem {
                                 drivetrain::getPose, // Fused pose supplier (vision-corrected)
                                 drivetrain::resetPose, // Pose resetter
                                 drivetrain::getChassisSpeeds, // ChassisSpeeds supplier (from CTRE state)
-                                (speeds) -> drivetrain.applyRequest(() -> fieldDrive
+                                (speeds) -> drivetrain.applyRequest(() -> robotDrive
                                                 .withVelocityX(speeds.vxMetersPerSecond)
-                                                .withVelocityX(speeds.vyMetersPerSecond)
+                                                .withVelocityY(speeds.vyMetersPerSecond)
                                                 .withRotationalRate(speeds.omegaRadiansPerSecond)),
                                 new PPHolonomicDriveController(
                                                 // Translation PID (P=1.0 start; tune higher for aggression)
