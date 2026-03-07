@@ -4,7 +4,7 @@ package frc.robot;
  * {@summary}
  * This holds all of the static constant values on the CANBus that we are using.
  */
-public class CANBus {
+public final class CANBus {
     // =================================================================================================================
     // Buses
     // =================================================================================================================
