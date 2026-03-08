@@ -87,7 +87,8 @@ public class Shooter extends SubsystemBase {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
-                    double targetRPM = motorRPMScalar.getAsDouble() * MAX_SHOOTER_RPM;
+                    // double targetRPM = motorRPMScalar.getAsDouble() * MAX_SHOOTER_RPM;
+                    double targetRPM = 0.5 * MAX_SHOOTER_RPM;
                     setRPM(targetRPM);
 
                 },

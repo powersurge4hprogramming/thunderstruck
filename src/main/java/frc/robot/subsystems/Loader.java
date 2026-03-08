@@ -21,7 +21,7 @@ public class Loader extends SubsystemBase {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
-                    final double loaderMotorSpeed = 0.8;
+                    final double loaderMotorSpeed = 0.5;
                     setLoaderSpeed(loaderMotorSpeed);
                 },
                 // Cleanup when the command ends (button released)
