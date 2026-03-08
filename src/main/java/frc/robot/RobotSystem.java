@@ -406,7 +406,7 @@ public class RobotSystem {
                 return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar),
                                 new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble),
                                 new RumbleDynamicCommand(controller,
-                                                () -> loaderVelocityScalar.getAsBoolean() ? 0.25 : 0,
+                                                () -> loaderVelocityScalar.getAsBoolean() ? 0.5 : 0,
                                                 RumbleType.kLeftRumble));
         }
 
