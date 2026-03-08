@@ -12,6 +12,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.NeutralOut;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -27,6 +30,8 @@ public class Shooter extends SubsystemBase {
     private final TalonFX motorFollower;
     private final VelocityVoltage velocityRequest;
 
+    private final NetworkTableEntry leaderRpmEntry;
+
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
@@ -38,6 +43,9 @@ public class Shooter extends SubsystemBase {
         this.velocityRequest = new VelocityVoltage(0).withSlot(0);
 
         configureMotors();
+
+        NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable("Shooter");
+        this.leaderRpmEntry = shooterTable.getEntry("LeaderRPM");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -91,6 +99,7 @@ public class Shooter extends SubsystemBase {
                     double targetRPM = 0.5 * MAX_SHOOTER_RPM;
                     setRPM(targetRPM);
 
+                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble());
                 },
                 // Cleanup when the command ends (button released)
                 () -> {
