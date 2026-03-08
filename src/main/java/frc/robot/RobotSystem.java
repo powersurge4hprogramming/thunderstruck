@@ -164,6 +164,7 @@ public class RobotSystem {
         // The Constructor
         // =============================================================================================================
         public RobotSystem() {
+                drivetrain.setAimCamera(aimCamera);
                 profileArray[0] = this::defaultBindingsProfile;
                 profileArray[1] = this::leftClawBindingsProfile;
                 profileArray[2] = this::doubleClawBindingsProfile;
