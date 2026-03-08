@@ -97,6 +97,7 @@ public class RobotSystem {
         private static final byte CLIMBER_UP_INDEX = 15;
         private static final byte CLIMBER_DOWN_INDEX = 16;
         private static final byte HOPPER_RUN_INDEX = 17;
+        private static final byte LOADER_RUN_INDEX = 18;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -116,6 +117,7 @@ public class RobotSystem {
                         makeClimberUpCommand(),
                         makeClimberDownCommand(),
                         makeHopperRunCommand(),
+                        makeManualLoaderCommand(),
         };
 
         private final Runnable[] profileArray = new Runnable[4];
@@ -251,12 +253,11 @@ public class RobotSystem {
                 Command collectorRun = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
 
-                Trigger loaderTrigger = controller.a().and(() -> checkAimbotStatus == false);
-                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                () -> loaderTrigger.getAsBoolean());
+                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
+                controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[LOADER_RUN_INDEX]);
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
@@ -281,8 +282,7 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command collectorRun = makeCollectorRunCommand(() -> controller.getRightTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
-                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
-                                () -> controller.povLeft().getAsBoolean());
+                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootLeft;
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -300,8 +300,7 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command CollectorVarDouble = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
-                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                () -> controller.x().getAsBoolean());
+                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootDouble;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -320,8 +319,7 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command CollectorVarRight = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
-                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                () -> controller.x().getAsBoolean());
+                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootRight;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -404,13 +402,16 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
-                        final BooleanSupplier loaderVelocityScalar) {
-                return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar),
-                                new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble),
-                                new RumbleDynamicCommand(controller,
-                                                () -> loaderVelocityScalar.getAsBoolean() ? 0.25 : 0,
-                                                RumbleType.kLeftRumble));
+        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar) {
+                return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar),
+                                new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeManualLoaderCommand() {
+                return new ParallelCommandGroup(
+                                shooter.manualLoaderRun(),
+                                new RumbleDynamicCommand(controller, () -> 0.25, RumbleType.kLeftRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------

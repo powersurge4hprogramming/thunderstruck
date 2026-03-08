@@ -88,24 +88,31 @@ public class Shooter extends SubsystemBase {
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
-    public Command manualShootBall(final DoubleSupplier motorRPMScalar, final BooleanSupplier loaderMotorOnOff) {
-        final double loaderMotorSpeed = 0.8;
+    public Command manualShootBall(final DoubleSupplier motorRPMScalar) {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
                     double targetRPM = motorRPMScalar.getAsDouble() * MAX_SHOOTER_RPM;
                     setRPM(targetRPM);
 
-                    if (loaderMotorOnOff.getAsBoolean()) {
-                        setLoaderSpeed(loaderMotorSpeed);
-                    } else {
-                        setLoaderSpeed(0.0);
-                    }
                 },
                 // Cleanup when the command ends (button released)
                 () -> {
                     stopShooter();
-                    setLoaderSpeed(0.0);
+                });
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Command manualLoaderRun() {
+        return this.runEnd(
+                // Run continuously while the command is active
+                () -> {
+                    final double loaderMotorSpeed = 0.8;
+                    setLoaderSpeed(loaderMotorSpeed);
+                },
+                // Cleanup when the command ends (button released)
+                () -> {
+                    setLoaderSpeed(0);
                 });
     }
 
