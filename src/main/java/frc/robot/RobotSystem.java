@@ -68,6 +68,12 @@ public class RobotSystem {
         private static final String EVENT_CLIMB = "climb";
 
         // =============================================================================================================
+        // Driver Inputs
+        // =============================================================================================================
+        private final CommandXboxController controller = new CommandXboxController(USB.CONTROLLER.DRIVER);
+        private boolean checkAimbotStatus = false;
+
+        // =============================================================================================================
         // Sub-Systems
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -158,12 +164,6 @@ public class RobotSystem {
         // Logging
         // =============================================================================================================
         private final Telemetry logger = new Telemetry(MaxSpeed);
-
-        // =============================================================================================================
-        // Driver Inputs
-        // =============================================================================================================
-        private final CommandXboxController controller = new CommandXboxController(USB.CONTROLLER.DRIVER);
-        private boolean checkAimbotStatus = false;
 
         // =============================================================================================================
         // The Constructor
@@ -414,7 +414,8 @@ public class RobotSystem {
         private Command makeManualLoaderCommand() {
                 return new ParallelCommandGroup(
                                 loader.manualLoaderRun(),
-                                new RumbleDynamicCommand(controller, () -> 0.25, RumbleType.kLeftRumble));
+                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM,
+                                                RumbleType.kLeftRumble));
         }
 
         // -------------------------------------------------------------------------------------------------------------
