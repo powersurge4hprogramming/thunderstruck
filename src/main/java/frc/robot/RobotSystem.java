@@ -252,7 +252,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
-                Command collectorRun = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
 
                 Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis());
@@ -282,7 +282,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void leftClawBindingsProfile() {
                 setDefaultBindings();
-                Command collectorRun = makeCollectorRunCommand(() -> controller.getRightTriggerAxis());
+                Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
                 Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootLeft;
@@ -300,7 +300,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void doubleClawBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVarDouble = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
                 Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootDouble;
@@ -319,7 +319,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void rightClawBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVarRight = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
+                Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
                 Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis());
                 commands[MANUAL_SHOOT_INDEX] = manShootRight;
