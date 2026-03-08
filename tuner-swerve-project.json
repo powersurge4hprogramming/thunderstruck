@@ -6,57 +6,8 @@
       "ModuleName": "Front Left",
       "ModuleId": 0,
       "Encoder": {
-        "Id": 10,
-        "Name": "FL Cancoder (Device ID 10)",
-        "Model": "CANCoder",
-        "CANbus": "650BEE8A4C324353202020591F2717FF",
-        "CANbusFriendly": "canivore",
-        "SelectedMotorType": null
-      },
-      "SteerMotor": {
-        "Id": 9,
-        "Name": "FL Steer (Device ID 9)",
-        "Model": "Talon FX vers. F",
-        "CANbus": "650BEE8A4C324353202020591F2717FF",
-        "CANbusFriendly": "canivore",
-        "SelectedMotorType": {
-          "Name": "WCP Kraken x44",
-          "FreeSpeedRps": 125.5,
-          "SlipCurrentLimit": 120,
-          "StatorCurrentLimit": 60
-        }
-      },
-      "DriveMotor": {
-        "Id": 8,
-        "Name": "FL Drive (Device ID 8)",
-        "Model": "Talon FX vers. C",
-        "CANbus": "650BEE8A4C324353202020591F2717FF",
-        "CANbusFriendly": "canivore",
-        "SelectedMotorType": {
-          "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7,
-          "SlipCurrentLimit": 120,
-          "StatorCurrentLimit": 60
-        }
-      },
-      "IsEncoderInverted": false,
-      "IsSteerInverted": false,
-      "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.041259765625,
-      "DriveMotorSelectionState": 1,
-      "SteerMotorSelectionState": 1,
-      "SteerEncoderSelectionState": 1,
-      "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 9,
-      "ValidatedDriveId": 8,
-      "ValidatedEncoderId": 10
-    },
-    {
-      "ModuleName": "Front Right",
-      "ModuleId": 1,
-      "Encoder": {
         "Id": 13,
-        "Name": "FR CANCoder (Device ID 13)",
+        "Name": "FL CANCoder (Device ID 13)",
         "Model": "CANCoder",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -64,7 +15,7 @@
       },
       "SteerMotor": {
         "Id": 12,
-        "Name": " FR Steer (Device ID 12)",
+        "Name": " FL Steer (Device ID 12)",
         "Model": "Talon FX vers. F",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -77,7 +28,7 @@
       },
       "DriveMotor": {
         "Id": 11,
-        "Name": "FR Drive (Device ID 11)",
+        "Name": "FL Drive (Device ID 11)",
         "Model": "Talon FX vers. C",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -91,7 +42,7 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.07421875,
+      "EncoderOffset": -0.073974609375,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
@@ -101,19 +52,19 @@
       "ValidatedEncoderId": 13
     },
     {
-      "ModuleName": "Back Left",
-      "ModuleId": 2,
+      "ModuleName": "Front Right",
+      "ModuleId": 1,
       "Encoder": {
-        "Id": 7,
-        "Name": "BL CANCoder (Device ID 7)",
+        "Id": 10,
+        "Name": "FR Cancoder (Device ID 10)",
         "Model": "CANCoder",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
         "SelectedMotorType": null
       },
       "SteerMotor": {
-        "Id": 6,
-        "Name": "BL Steer (Device ID 6)",
+        "Id": 9,
+        "Name": "FR Steer (Device ID 9)",
         "Model": "Talon FX vers. F",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -125,8 +76,8 @@
         }
       },
       "DriveMotor": {
-        "Id": 5,
-        "Name": "BL Drive (Device ID 5)",
+        "Id": 8,
+        "Name": "FR Drive (Device ID 8)",
         "Model": "Talon FX vers. C",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -140,21 +91,21 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": 0.04150390625,
+      "EncoderOffset": -0.035400390625,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 6,
-      "ValidatedDriveId": 5,
-      "ValidatedEncoderId": 7
+      "ValidatedSteerId": 9,
+      "ValidatedDriveId": 8,
+      "ValidatedEncoderId": 10
     },
     {
-      "ModuleName": "Back Right",
-      "ModuleId": 3,
+      "ModuleName": "Back Left",
+      "ModuleId": 2,
       "Encoder": {
         "Id": 16,
-        "Name": "BR CANCoder (Device ID 16)",
+        "Name": "BL CANCoder (Device ID 16)",
         "Model": "CANCoder",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -162,7 +113,7 @@
       },
       "SteerMotor": {
         "Id": 15,
-        "Name": "BR Steer (Device ID 15)",
+        "Name": "BL Steer (Device ID 15)",
         "Model": "Talon FX vers. F",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -175,7 +126,7 @@
       },
       "DriveMotor": {
         "Id": 14,
-        "Name": "BR Drive (Device ID 14)",
+        "Name": "BL Drive (Device ID 14)",
         "Model": "Talon FX vers. C",
         "CANbus": "650BEE8A4C324353202020591F2717FF",
         "CANbusFriendly": "canivore",
@@ -189,7 +140,7 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": 0.216552734375,
+      "EncoderOffset": 0.216064453125,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
@@ -197,6 +148,55 @@
       "ValidatedSteerId": 15,
       "ValidatedDriveId": 14,
       "ValidatedEncoderId": 16
+    },
+    {
+      "ModuleName": "Back Right",
+      "ModuleId": 3,
+      "Encoder": {
+        "Id": 7,
+        "Name": "BR CANCoder (Device ID 7)",
+        "Model": "CANCoder",
+        "CANbus": "650BEE8A4C324353202020591F2717FF",
+        "CANbusFriendly": "canivore",
+        "SelectedMotorType": null
+      },
+      "SteerMotor": {
+        "Id": 6,
+        "Name": "BR Steer (Device ID 6)",
+        "Model": "Talon FX vers. F",
+        "CANbus": "650BEE8A4C324353202020591F2717FF",
+        "CANbusFriendly": "canivore",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x44",
+          "FreeSpeedRps": 125.5,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "DriveMotor": {
+        "Id": 5,
+        "Name": "BR Drive (Device ID 5)",
+        "Model": "Talon FX vers. C",
+        "CANbus": "650BEE8A4C324353202020591F2717FF",
+        "CANbusFriendly": "canivore",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x60",
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "IsEncoderInverted": false,
+      "IsSteerInverted": false,
+      "SelectedEncoderType": "CANcoder",
+      "EncoderOffset": 0.034912109375,
+      "DriveMotorSelectionState": 1,
+      "SteerMotorSelectionState": 1,
+      "SteerEncoderSelectionState": 1,
+      "IsModuleValidationComplete": true,
+      "ValidatedSteerId": 6,
+      "ValidatedDriveId": 5,
+      "ValidatedEncoderId": 7
     }
   ],
   "SwerveOptions": {
@@ -212,8 +212,8 @@
     "VerticalTrackSizeInches": 17.25,
     "HorizontalTrackSizeInches": 17.25,
     "WheelRadiusInches": 4.0,
-    "IsLeftSideInverted": true,
-    "IsRightSideInverted": false,
+    "IsLeftSideInverted": false,
+    "IsRightSideInverted": true,
     "SwerveModuleType": 7,
     "SwerveModuleConfiguration": {
       "ModuleBrand": 7,
