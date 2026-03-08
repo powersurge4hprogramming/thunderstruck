@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
@@ -249,8 +250,10 @@ public class RobotSystem {
                 setDefaultBindings();
                 Command collectorRun = makeCollectorRunCommand(() -> controller.getLeftTriggerAxis());
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
+
+                Trigger loaderTrigger = controller.a().and(() -> checkAimbotStatus == false);
                 Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                () -> controller.a().getAsBoolean());
+                                () -> loaderTrigger.getAsBoolean());
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
@@ -406,7 +409,7 @@ public class RobotSystem {
                 return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar, loaderVelocityScalar),
                                 new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble),
                                 new RumbleDynamicCommand(controller,
-                                                () -> loaderVelocityScalar.getAsBoolean() ? 0.5 : 0,
+                                                () -> loaderVelocityScalar.getAsBoolean() ? 0.25 : 0,
                                                 RumbleType.kLeftRumble));
         }
 
