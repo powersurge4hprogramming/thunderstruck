@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.RPM;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.controls.Follower;
@@ -12,8 +11,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.NeutralOut;
-
-import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +25,6 @@ public class Shooter extends SubsystemBase {
 
     private final TalonFX motorLeader;
     private final TalonFX motorFollower;
-    private final TalonFX loader;
     private final VelocityVoltage velocityRequest;
 
     // =================================================================================================================
@@ -37,7 +33,6 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         this.motorLeader = new TalonFX(CANBus.ID.SHOOTER.LEADER, CANBus.BUS.CANIVORE);
         this.motorFollower = new TalonFX(CANBus.ID.SHOOTER.FOLLOWER, CANBus.BUS.CANIVORE);
-        this.loader = new TalonFX(CANBus.ID.SHOOTER.LOADER, CANBus.BUS.RIO);
 
         this.motorFollower.setControl(new Follower(this.motorLeader.getDeviceID(), MotorAlignmentValue.Opposed));
         this.velocityRequest = new VelocityVoltage(0).withSlot(0);
@@ -103,20 +98,6 @@ public class Shooter extends SubsystemBase {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public Command manualLoaderRun() {
-        return this.runEnd(
-                // Run continuously while the command is active
-                () -> {
-                    final double loaderMotorSpeed = 0.8;
-                    setLoaderSpeed(loaderMotorSpeed);
-                },
-                // Cleanup when the command ends (button released)
-                () -> {
-                    setLoaderSpeed(0);
-                });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
      * This method sets the Shooter's motors to an exact RPM.
@@ -157,15 +138,4 @@ public class Shooter extends SubsystemBase {
         return this.motorLeader.getVelocity().getValue().in(RPM);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * {@summary}
-     * Sets the loader motor speed.
-     *
-     * @param speed The output to the loader motor from -1.0 to 1.0.
-     *              Positive values feed the note into the shooter.
-     */
-    public void setLoaderSpeed(final double speed) {
-        this.loader.set(speed);
-    }
 }

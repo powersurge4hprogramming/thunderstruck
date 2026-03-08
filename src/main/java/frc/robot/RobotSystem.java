@@ -47,6 +47,7 @@ import frc.robot.commands.shoot.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Loader;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Climber;
@@ -71,6 +72,7 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
+        private final Loader loader = new Loader();
         private final AimCamera aimCamera = new AimCamera();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
@@ -207,7 +209,7 @@ public class RobotSystem {
                 // Event map: For PathPlanner markers (e.g., "shoot" triggers shooter)
                 eventsAuto = new HashMap<>();
                 eventsAuto.put(EVENT_SHOOT,
-                                new LockOnShootAndDrive(shooter, drivetrain, aimCamera, null, null,
+                                new LockOnShootAndDrive(shooter, drivetrain, loader, aimCamera, null, null,
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
 
@@ -390,6 +392,7 @@ public class RobotSystem {
                 return new LockOnShootAndDrive(
                                 shooter,
                                 drivetrain,
+                                loader,
                                 aimCamera,
                                 () -> -controller.getLeftX() * MaxSpeed,
                                 () -> -controller.getLeftY() * MaxSpeed,
@@ -410,7 +413,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualLoaderCommand() {
                 return new ParallelCommandGroup(
-                                shooter.manualLoaderRun(),
+                                loader.manualLoaderRun(),
                                 new RumbleDynamicCommand(controller, () -> 0.25, RumbleType.kLeftRumble));
         }
 

@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Loader;
 import frc.robot.subsystems.Shooter;
 import frc.robot.vision.AimCamera;
 
@@ -29,6 +30,7 @@ public class LockOnShootAndDrive extends Command {
         // Sub-Systems
         // =============================================================================================================
         private final Shooter shooter;
+        private final Loader loader;
         private final CommandSwerveDrivetrain drive;
 
         // =============================================================================================================
@@ -57,10 +59,11 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Public Methods
         // =============================================================================================================
-        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive,
+        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final Loader loader,
                         final AimCamera aimCamera, final DoubleSupplier xMove, final DoubleSupplier yMove,
                         final DoubleSupplier batteryVoltageSupplier, final double MaxSpeed) {
                 this.shooter = shooter;
+                this.loader = loader;
                 this.drive = drive;
                 this.aimCamera = aimCamera;
                 this.xSupplier = xMove;
@@ -115,9 +118,9 @@ public class LockOnShootAndDrive extends Command {
                  */
                 shooter.setRPM(motorRPM);
                 if (isShooterReady) {
-                        shooter.setLoaderSpeed(0.8);
+                        loader.setLoaderSpeed(0.8);
                 } else {
-                        shooter.setLoaderSpeed(0);
+                        loader.setLoaderSpeed(0);
                 }
 
                 /*
@@ -140,7 +143,7 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void end(boolean interrupted) {
-                shooter.setLoaderSpeed(0);
+                loader.setLoaderSpeed(0);
                 shooter.setRPM(0);
         }
 }
