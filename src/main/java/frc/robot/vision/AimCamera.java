@@ -66,6 +66,7 @@ public class AimCamera {
                     Angle.ofBaseUnits(0, Degrees)));
 
     public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout
+            // TODO: make this selectable in shuffleboard.
             .loadField(AprilTagFields.k2026RebuiltWelded);
     public static final Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.01);
 
