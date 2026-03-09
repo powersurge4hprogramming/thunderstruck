@@ -26,8 +26,13 @@ public class LockOnClimb extends SequentialCommandGroup {
                             return leftTag.getY() > 0;
                         }),
                 new FaceWallRear(maxSpeed, maxAngularRate, drivetrain),
+                // Reach to the bar.
                 climber.upward(),
+                // Grab and raise the body by pulling downward.
+                climber.downward(),
+                // Hold the bar.
                 new WaitCommand(2),
-                climber.downward());
+                // Extend the arm to lower the body.
+                climber.upward());
     }
 }
