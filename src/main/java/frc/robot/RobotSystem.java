@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
+import frc.robot.commands.climb.LockOnClimb;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
 import frc.robot.commands.rumble.RumbleIntensity;
 import frc.robot.commands.rumble.RumblePulseCommand;
@@ -125,7 +126,9 @@ public class RobotSystem {
                         makeBrakeCommand(),
                         makeWheelsPointCommand(),
                         makeLockOnShootAndDriveCommand(),
+                        /* LockOnShootAndDrive */
                         null, // A command with an input driver set by the profile.
+                        /* ManualShoot */
                         null, // A command with an input driver set by the profile.
                         makeResetFieldOrientationCommand(),
                         makeSysIdDynamicForwardCommand(),
@@ -219,10 +222,10 @@ public class RobotSystem {
                                 new LockOnShootAndDrive(shooter, drivetrain, loader, aimCamera, null, null,
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
+                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 0.5));
+                eventsAuto.put(EVENT_CLIMB, new LockOnClimb(climber, drivetrain, aimCamera, MaxSpeed, MaxAngularRate));
 
-                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
-
-                eventsAuto.put(EVENT_CLIMB, climber.upward());
+                // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
                 ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
                 autoTab.add("Auto Chooser", autoChooser).withWidget("ComboBox Chooser");
