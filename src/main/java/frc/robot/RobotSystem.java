@@ -89,6 +89,12 @@ public class RobotSystem {
         private final Hopper hopper = new Hopper();
 
         // =============================================================================================================
+        // Modules
+        // =============================================================================================================
+        private final PowerDistribution powerDistribution = new PowerDistribution(CANBus.ID.POWER_DISTRIBUTION,
+                        ModuleType.kRev);
+
+        // =============================================================================================================
         // Commands
         // =============================================================================================================
         private static final byte NORMAL_DRIVE_INDEX = 0;
@@ -157,12 +163,6 @@ public class RobotSystem {
 
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-        // =============================================================================================================
-        // Modules
-        // =============================================================================================================
-        private final PowerDistribution powerDistribution = new PowerDistribution(CANBus.ID.POWER_DISTRIBUTION,
-                        ModuleType.kRev);
 
         // =============================================================================================================
         // Logging
