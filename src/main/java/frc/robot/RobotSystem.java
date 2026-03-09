@@ -27,6 +27,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -221,7 +224,8 @@ public class RobotSystem {
 
                 eventsAuto.put(EVENT_CLIMB, climber.upward());
                 autoChooser = AutoBuilder.buildAutoChooser();
-                SmartDashboard.putData("Auto Chooser", autoChooser);
+                ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
+                autoTab.add("Auto Chooser", autoChooser).withWidget("ComboBox Chooser");
 
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
