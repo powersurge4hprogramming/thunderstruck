@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
@@ -101,6 +102,18 @@ public class RobotSystem {
         // =============================================================================================================
         // Commands
         // =============================================================================================================
+        private static final byte BRAKE_RUMBLE_INDEX = 0;
+        private static final byte WHEEL_POINT_RUMBLE_INDEX = 1;
+        private static final byte MANUAL_SHOOT_RUMBLE_INDEX = 2;
+        private static final byte COLLECTOR_RUN_RUMBLE_INDEX = 3;
+        private static final byte RESET_FIELD_ORIENTATION_RUMBLE_INDEX = 4;
+        private static final byte WEAPON_SWAP_RUMBLE_INDEX = 5;
+        private static final byte CLIMBER_UP_RUMBLE_INDEX = 6;
+        private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
+        private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
+        private static final byte LOADER_RUN_RUMBLE_INDEX = 9;
+        private final Supplier<RumbleType>[] rumbles = new Supplier[LOADER_RUN_RUMBLE_INDEX + 1];
+
         private static final byte NORMAL_DRIVE_INDEX = 0;
         private static final byte IDLE_INDEX = 1;
         private static final byte BRAKE_INDEX = 2;
@@ -123,25 +136,25 @@ public class RobotSystem {
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
-                        makeBrakeCommand(),
-                        makeWheelsPointCommand(),
+                        makeBrakeCommand(rumbles[BRAKE_RUMBLE_INDEX]),
+                        makeWheelsPointCommand(rumbles[WHEEL_POINT_RUMBLE_INDEX]),
                         makeLockOnShootAndDriveCommand(),
-                        /* LockOnShootAndDrive */
-                        null, // A command with an input driver set by the profile.
                         /* ManualShoot */
                         null, // A command with an input driver set by the profile.
-                        makeResetFieldOrientationCommand(),
+                        /* Collector.run() */
+                        null, // A command with an input driver set by the profile.
+                        makeResetFieldOrientationCommand(rumbles[RESET_FIELD_ORIENTATION_RUMBLE_INDEX]),
                         makeSysIdDynamicForwardCommand(),
                         makeSysIdDynamicReverseCommand(),
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
-                        makeWeaponSwapCommand(),
+                        makeWeaponSwapCommand(rumbles[WEAPON_SWAP_RUMBLE_INDEX]),
                         makeProfileIncreaseCommand(),
                         makeProfileDecreaseCommand(),
-                        makeClimberUpCommand(),
-                        makeClimberDownCommand(),
-                        makeHopperRunCommand(),
-                        makeManualLoaderCommand(),
+                        makeClimberUpCommand(rumbles[CLIMBER_UP_RUMBLE_INDEX]),
+                        makeClimberDownCommand(rumbles[CLIMBER_DOWN_RUMBLE_INDEX]),
+                        makeHopperRunCommand(rumbles[HOPPER_RUN_RUMBLE_INDEX]),
+                        makeManualLoaderCommand(rumbles[LOADER_RUN_RUMBLE_INDEX]),
         };
 
         private final Runnable[] profileArray = new Runnable[4];
@@ -263,14 +276,28 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void defaultBindingsProfile() {
                 setDefaultBindings();
-                Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
+                rumbles[COLLECTOR_RUN_RUMBLE_INDEX] = () -> RumbleType.kLeftRumble;
+                rumbles[MANUAL_SHOOT_RUMBLE_INDEX] = () -> RumbleType.kRightRumble;
+                rumbles[BRAKE_RUMBLE_INDEX] = () -> RumbleType.kBothRumble;
+                rumbles[LOADER_RUN_RUMBLE_INDEX] = () -> RumbleType.kLeftRumble;
+                rumbles[WHEEL_POINT_RUMBLE_INDEX] = () -> RumbleType.kLeftRumble;
+                rumbles[WEAPON_SWAP_RUMBLE_INDEX] = () -> RumbleType.kRightRumble;
+                rumbles[RESET_FIELD_ORIENTATION_RUMBLE_INDEX] = () -> RumbleType.kBothRumble;
+                rumbles[CLIMBER_UP_RUMBLE_INDEX] = () -> RumbleType.kLeftRumble;
+                rumbles[CLIMBER_DOWN_RUMBLE_INDEX] = () -> RumbleType.kRightRumble;
+                rumbles[HOPPER_RUN_RUMBLE_INDEX] = () -> RumbleType.kBothRumble;
+
+                Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                                rumbles[COLLECTOR_RUN_RUMBLE_INDEX]);
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
 
-                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis());
+                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                rumbles[MANUAL_SHOOT_RUMBLE_INDEX]);
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[LOADER_RUN_INDEX]);
+                // TODO: Which one is right?
                 controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
@@ -278,6 +305,7 @@ public class RobotSystem {
                 controller.povUp().onTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().onTrue(commands[CLIMBER_DOWN_INDEX]);
                 controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                // TODO: Which one is right?
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.b().onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
@@ -293,9 +321,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void leftClawBindingsProfile() {
                 setDefaultBindings();
-                Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis());
+                Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
+                                rumbles[COLLECTOR_RUN_RUMBLE_INDEX]);
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
-                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis());
+                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
+                                rumbles[MANUAL_SHOOT_RUMBLE_INDEX]);
                 commands[MANUAL_SHOOT_INDEX] = manShootLeft;
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -311,9 +341,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void doubleClawBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
+                Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                                rumbles[COLLECTOR_RUN_RUMBLE_INDEX]);
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
-                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis());
+                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                rumbles[MANUAL_SHOOT_RUMBLE_INDEX]);
                 commands[MANUAL_SHOOT_INDEX] = manShootDouble;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -330,9 +362,11 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void rightClawBindingsProfile() {
                 setDefaultBindings();
-                Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis());
+                Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                                rumbles[COLLECTOR_RUN_RUMBLE_INDEX]);
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
-                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis());
+                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                rumbles[MANUAL_SHOOT_RUMBLE_INDEX]);
                 commands[MANUAL_SHOOT_INDEX] = manShootRight;
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -375,14 +409,14 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeBrakeCommand() {
+        private Command makeBrakeCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
                                 RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
-                                                RumbleType.kBothRumble));
+                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeWheelsPointCommand() {
+        private Command makeWheelsPointCommand(final Supplier<RumbleType> side) {
                 /*
                  * NOTE:
                  * All this does it point the wheels to whatever direction it is controlled to
@@ -395,7 +429,7 @@ public class RobotSystem {
                                                 new Rotation2d(0, 0)));
                 return new ParallelCommandGroup(zeroWheels,
                                 RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
-                                                RumbleType.kLeftRumble));
+                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -416,21 +450,21 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar) {
+        private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
+                        final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar),
-                                new RumbleDynamicCommand(controller, ballVelocityScalar, RumbleType.kRightRumble));
+                                new RumbleDynamicCommand(controller, ballVelocityScalar, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualLoaderCommand() {
+        private Command makeManualLoaderCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(
                                 loader.manualLoaderRun(),
-                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM,
-                                                RumbleType.kLeftRumble));
+                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeWeaponSwapCommand() {
+        private Command makeWeaponSwapCommand(final Supplier<RumbleType> side) {
                 final Command weaponSwap = new InstantCommand(() -> {
                         if (checkAimbotStatus == true) {
                                 if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
@@ -450,22 +484,22 @@ public class RobotSystem {
 
                 return new ParallelCommandGroup(weaponSwap,
                                 RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.SUPER_HEAVY,
-                                                RumbleType.kRightRumble));
+                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar) {
+        private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar, final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(collector.run(collectorScalar),
-                                new RumbleDynamicCommand(controller, collectorScalar, RumbleType.kLeftRumble));
+                                new RumbleDynamicCommand(controller, collectorScalar, side));
 
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeResetFieldOrientationCommand() {
+        private Command makeResetFieldOrientationCommand(final Supplier<RumbleType> side) {
                 // Reset the field-centric heading on left bumper press.
                 return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
                                 RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM_HEAVY,
-                                                RumbleType.kBothRumble));
+                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -527,33 +561,32 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeClimberUpCommand() {
-
+        private Command makeClimberUpCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(climber.upward(),
                                 RumblePulseCommand.createShortDoublePulse(controller, RumbleIntensity.MEDIUM,
-                                                RumbleType.kLeftRumble));
+                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeClimberDownCommand() {
+        private Command makeClimberDownCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(climber.downward(),
                                 new SequentialCommandGroup(
                                                 RumblePulseCommand.createShortDoublePulse(controller,
                                                                 RumbleIntensity.MEDIUM,
-                                                                RumbleType.kRightRumble),
+                                                                side),
                                                 RumblePulseCommand.createShortWaitCommand(),
                                                 RumblePulseCommand.createShortSinglePulse(controller,
                                                                 RumbleIntensity.MEDIUM,
-                                                                RumbleType.kRightRumble)));
+                                                                side)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeHopperRunCommand() {
+        private Command makeHopperRunCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(new SequentialCommandGroup(
                                 hopper.unclasp(),
                                 new WaitCommand(0.5),
                                 hopper.stop()),
                                 RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.LIGHT,
-                                                RumbleType.kBothRumble));
+                                                side));
         }
 }
