@@ -110,6 +110,8 @@ public class RobotSystem {
         private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
         private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
         private static final byte LOADER_RUN_RUMBLE_INDEX = 9;
+        private static final byte CONTROLLER_BACK_RUMBLE_INDEX = 10;
+        private static final byte CONTROLLER_FORWARD_RUMBLE_INDEX = 11;
         private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(LOADER_RUN_RUMBLE_INDEX + 1);
 
         private static final byte NORMAL_DRIVE_INDEX = 0;
@@ -283,7 +285,7 @@ public class RobotSystem {
                 rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
                 rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
+                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
 
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
@@ -295,15 +297,12 @@ public class RobotSystem {
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[LOADER_RUN_INDEX]);
-                // TODO: Which one is right?
-                controller.b().whileTrue(commands[WHEEL_POINT_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 controller.povUp().onTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().onTrue(commands[CLIMBER_DOWN_INDEX]);
                 controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                // TODO: Which one is right?
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.b().onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
@@ -319,6 +318,18 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void leftClawBindingsProfile() {
                 setDefaultBindings();
+
+                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
@@ -339,6 +350,17 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void doubleClawBindingsProfile() {
                 setDefaultBindings();
+                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+
                 Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
@@ -360,6 +382,17 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void rightClawBindingsProfile() {
                 setDefaultBindings();
+                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+
                 Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
                 commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
@@ -584,7 +617,7 @@ public class RobotSystem {
                                 hopper.unclasp(),
                                 new WaitCommand(0.5),
                                 hopper.stop()),
-                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.LIGHT,
+                                RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.LIGHT,
                                                 side));
         }
 }
