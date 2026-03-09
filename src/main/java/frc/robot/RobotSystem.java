@@ -74,12 +74,16 @@ public class RobotSystem {
         private boolean checkAimbotStatus = false;
 
         // =============================================================================================================
+        // Systems
+        // =============================================================================================================
+        private final AimCamera aimCamera = new AimCamera();
+
+        // =============================================================================================================
         // Sub-Systems
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
         private final Loader loader = new Loader();
-        private final AimCamera aimCamera = new AimCamera();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
         private final Hopper hopper = new Hopper();
