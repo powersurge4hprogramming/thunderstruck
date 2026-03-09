@@ -1,6 +1,7 @@
 package frc.robot.commands.rumble;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,13 +13,13 @@ public class RumbleDynamicCommand extends Command {
     // =================================================================================================================
     private final CommandXboxController controller;
     private final DoubleSupplier intensity;
-    private final RumbleType side;
+    private final Supplier<RumbleType> side;
 
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
     public RumbleDynamicCommand(final CommandXboxController controller, final DoubleSupplier intensitySupplier,
-            final RumbleType side) {
+            final Supplier<RumbleType> side) {
         this.controller = controller;
         intensity = intensitySupplier;
         this.side = side;
@@ -27,18 +28,18 @@ public class RumbleDynamicCommand extends Command {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void initialize() {
-        controller.setRumble(side, intensity.getAsDouble());
+        controller.setRumble(side.get(), intensity.getAsDouble());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void execute() {
-        controller.setRumble(side, intensity.getAsDouble());
+        controller.setRumble(side.get(), intensity.getAsDouble());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void end(boolean interrupted) {
-        controller.setRumble(side, 0.0);
+        controller.setRumble(side.get(), 0.0);
     }
 }

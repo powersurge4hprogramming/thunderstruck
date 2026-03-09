@@ -1,5 +1,7 @@
 package frc.robot.commands.rumble;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -12,12 +14,12 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     // =================================================================================================================
     public RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
             final double interPulseDurationSeconds, final double intensity, final byte numPulses,
-            final RumbleType side) {
+            final Supplier<RumbleType> side) {
         for (int i = 0; i < numPulses; i++) {
             addCommands(
-                    new InstantCommand(() -> controller.setRumble(side, intensity)),
+                    new InstantCommand(() -> controller.setRumble(side.get(), intensity)),
                     new WaitCommand(pulseDurationSeconds),
-                    new InstantCommand(() -> controller.setRumble(side, 0.0)));
+                    new InstantCommand(() -> controller.setRumble(side.get(), 0.0)));
             if (i < numPulses - 1) {
                 addCommands(new WaitCommand(interPulseDurationSeconds));
             }
@@ -40,7 +42,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * @return The pre-configured vibration command with the given parameters.
      */
     public static RumblePulseCommand createShortSinglePulse(final CommandXboxController controller,
-            final double intensity, final RumbleType side) {
+            final double intensity, final Supplier<RumbleType> side) {
         final byte numPulses = 1;
         final double pulseDurationSeconds = 0.1;
         final double interPulseDurationSeconds = 0;
@@ -64,7 +66,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * @return The pre-configured vibration command with the given parameters.
      */
     public static RumblePulseCommand createLongSinglePulse(final CommandXboxController controller,
-            final double intensity, final RumbleType side) {
+            final double intensity, final Supplier<RumbleType> side) {
         final byte numPulses = 1;
         final double pulseDurationSeconds = 0.4;
         final double interPulseDurationSeconds = 0;
@@ -88,7 +90,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * @return The pre-configured vibration command with the given parameters.
      */
     public static RumblePulseCommand createShortDoublePulse(final CommandXboxController controller,
-            final double intensity, final RumbleType side) {
+            final double intensity, final Supplier<RumbleType> side) {
         final byte numPulses = 2;
         final double pulseDurationSeconds = 0.1;
         final double interPulseDurationSeconds = 0.3;
@@ -112,7 +114,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
      * @return The pre-configured vibration command with the given parameters.
      */
     public static RumblePulseCommand createLongDoublePulse(final CommandXboxController controller,
-            final double intensity, final RumbleType side) {
+            final double intensity, final Supplier<RumbleType> side) {
         final byte numPulses = 2;
         final double pulseDurationSeconds = 0.4;
         final double interPulseDurationSeconds = 0.5;
