@@ -102,6 +102,7 @@ public class RobotSystem {
         // =============================================================================================================
         private static final byte PROFILES_TOTAL = 4;
 
+        // -------------------------------------------------------------------------------------------------------------
         private static final byte BRAKE_RUMBLE_INDEX = 0;
         private static final byte WHEEL_POINT_RUMBLE_INDEX = 1;
         private static final byte MANUAL_SHOOT_RUMBLE_INDEX = 2;
