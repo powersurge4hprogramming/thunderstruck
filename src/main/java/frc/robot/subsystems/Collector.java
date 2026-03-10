@@ -31,22 +31,14 @@ public class Collector extends SubsystemBase {
      * @return The {@link Command} to perform the action.
      */
     public Command run(final DoubleSupplier motorRpmScalar) {
-        return this.run(() -> {
-            double mrs = motorRpmScalar.getAsDouble();
-            krakenX60.set(mrs);
-        }).handleInterrupt(() -> {
-            krakenX60.set(0);
-        });
+        return this.runEnd(
+                () -> {
+                    double mrs = motorRpmScalar.getAsDouble();
+                    krakenX60.set(mrs);
+                },
+                () -> {
+                    krakenX60.set(0);
+                });
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * {@summary}
-     * Stop the collector.
-     * 
-     * @return The {@link Command} to perform the action.
-     */
-    public Command stop() {
-        throw new RuntimeException("Not implemented yet.");
-    }
 }
