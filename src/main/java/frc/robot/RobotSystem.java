@@ -114,6 +114,7 @@ public class RobotSystem {
         private static final byte PROFILE_FORWARD_RUMBLE_INDEX = 11;
         private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(PROFILE_FORWARD_RUMBLE_INDEX + 1);
 
+        // -------------------------------------------------------------------------------------------------------------
         private static final byte NORMAL_DRIVE_INDEX = 0;
         private static final byte IDLE_INDEX = 1;
         private static final byte BRAKE_INDEX = 2;
@@ -158,7 +159,7 @@ public class RobotSystem {
         };
 
         private final Runnable[] profileArray = new Runnable[4];
-        private static int currentIndex = 0;
+        private static int currentProfileIndex = 0;
 
         // =============================================================================================================
         // PathPlanner
@@ -540,10 +541,10 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
                 return new InstantCommand(() -> {
-                        if (currentIndex == profileArray.length + 1) {
-                                currentIndex = -1;
+                        if (currentProfileIndex == profileArray.length + 1) {
+                                currentProfileIndex = -1;
                         }
-                        currentIndex = currentIndex + 1;
+                        currentProfileIndex = currentProfileIndex + 1;
                         for (int i = 0; i < commands.length; i++) {
                                 if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
                                         continue;
@@ -551,7 +552,7 @@ public class RobotSystem {
                                 getCommandScheduler().cancel(commands[i]);
                         }
                         getCommandScheduler().getActiveButtonLoop().clear();
-                        final Runnable profile = profileArray[currentIndex];
+                        final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
                 });
         }
@@ -559,10 +560,10 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
                 return new InstantCommand(() -> {
-                        if (currentIndex == 0) {
-                                currentIndex = profileArray.length;
+                        if (currentProfileIndex == 0) {
+                                currentProfileIndex = profileArray.length;
                         }
-                        currentIndex = currentIndex - 1;
+                        currentProfileIndex = currentProfileIndex - 1;
                         for (int i = 0; i < commands.length; i++) {
                                 if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
                                         continue;
@@ -570,7 +571,7 @@ public class RobotSystem {
                                 getCommandScheduler().cancel(commands[i]);
                         }
                         getCommandScheduler().getActiveButtonLoop().clear();
-                        final Runnable profile = profileArray[currentIndex];
+                        final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
                 });
         }
