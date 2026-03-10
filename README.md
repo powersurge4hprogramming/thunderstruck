@@ -5,6 +5,9 @@ do, to communicate remotely to each other, and allow for any of my review to hap
 ## What's Done
 * Finish up the optimizations for the autos.
 * Mark all of the events in the autos.
+* The `Shooter::manualShootBall` command.
+* The `Shooter::setRPM`.
+* The `Collector::run` command.
 
 ### Robot.java
 I think **autonomous** and **teleop** will work here automatically. CTRE's generation software really hooked us up I
@@ -20,42 +23,18 @@ think.
 ## What Needs to Be Done
 * Implement `Collector::stop` command.
     * <mark>Do we actually need this?</mark>
-* Implement a command to lock onto the post--left or right--in teleop and then autorotate you to line you up and then
-    run the climb. This is so that, in the heat of competition, the driver doesn't have to maneuver it precisely and
-    panic.
 
 ## What Needs to Be Tested
-* Implement the `Hopper::unclasp` command.
+* The `LockOnClimb` command.
+* The `Hopper::unclasp` command.
 * the `eventsAuto` map.
-* The `Shooter::setRPM`.
 * Give data to the `Shooter::manualShootBall` command.
-* The `Shooter::manualShootBall` command.
 * The various rumble commands.
 * <mark>The entire autonomous plans!!!</mark>
-* The `LockOnShootAndDrive` **y** binding.
+* The ***weapon swap*** binding.
 * The `AimCamera::getHubRelativeLocation` function.
 * The `LockOnShootAndDrive::execute` function.
-* The `Collector::run` command.
 * The `Climber::upward` command.
 * The `Climber::downward` command.
 
 ## Mentor Mike's Notes to Himself
-`SwerveRequest.FieldCentricFacingAngle`
-
-`SwerveRequest.FieldCentric`
-
-`SwerveRequest.RobotCentric`
-
-The `Collector` should definitely run on the roborio can bus. The climber probably will too. Not sure yet though on that
-one.
-
-// 1. Clear the Commands so there are no ghost commands.
-CommandScheduler.getInstance().cancelAll();
-// 2. Clear the bindings
-// This removes all Trigger/Button listeners from the active loop.
-CommandScheduler.getInstance().getActiveButtonLoop().clear();
-
-How to keep the profile swap going?
-**Got it**! All of our Commands will go inside of an array, and then when we map, we grab them by reference and add them
-onto a `Trigger`. That way, we can cancel selectively by iterating over the array, cancelling as we go, and skipping
-over the cycleing commands.
