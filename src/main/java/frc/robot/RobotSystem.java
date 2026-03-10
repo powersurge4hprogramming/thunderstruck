@@ -112,7 +112,9 @@ public class RobotSystem {
         private static final byte FEEDER_RUN_RUMBLE_INDEX = 9;
         private static final byte PROFILE_BACK_RUMBLE_INDEX = 10;
         private static final byte PROFILE_FORWARD_RUMBLE_INDEX = 11;
-        private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(PROFILE_FORWARD_RUMBLE_INDEX + 1);
+        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX = 12;
+        private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(
+                        LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX + 1);
 
         // -------------------------------------------------------------------------------------------------------------
         private static final byte NORMAL_DRIVE_INDEX = 0;
@@ -139,7 +141,7 @@ public class RobotSystem {
                         makeIdleCommand(),
                         makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX)),
                         makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX)),
-                        makeLockOnShootAndDriveCommand(),
+                        makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX)),
                         /* ManualShoot */
                         null, // A command with an input driver set by the profile.
                         /* Collector.run() */
@@ -286,6 +288,7 @@ public class RobotSystem {
                 rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
@@ -328,6 +331,7 @@ public class RobotSystem {
                 rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
@@ -361,6 +365,7 @@ public class RobotSystem {
                 rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
                 Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
@@ -395,6 +400,7 @@ public class RobotSystem {
                 rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
                 Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
@@ -468,7 +474,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeLockOnShootAndDriveCommand() {
+        private Command makeLockOnShootAndDriveCommand(final Supplier<RumbleType> side) {
                 return new LockOnShootAndDrive(
                                 shooter,
                                 drivetrain,
@@ -484,7 +490,7 @@ public class RobotSystem {
                                                         commands[MANUAL_SHOOT_INDEX]),
                                                         RumblePulseCommand.createLongDoublePulse(controller,
                                                                         RumbleIntensity.SUPER_HEAVY,
-                                                                        () -> RumbleType.kBothRumble));
+                                                                        side));
                                 });
         }
 
