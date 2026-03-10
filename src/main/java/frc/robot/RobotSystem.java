@@ -100,6 +100,8 @@ public class RobotSystem {
         // =============================================================================================================
         // Commands
         // =============================================================================================================
+        private static final byte PROFILES_TOTAL = 4;
+
         private static final byte BRAKE_RUMBLE_INDEX = 0;
         private static final byte WHEEL_POINT_RUMBLE_INDEX = 1;
         private static final byte MANUAL_SHOOT_RUMBLE_INDEX = 2;
@@ -115,6 +117,7 @@ public class RobotSystem {
         private static final byte LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX = 12;
         private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(
                         LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX + 1);
+        private final RumblePulseCommand profileChangeRumbles[] = new RumblePulseCommand[PROFILES_TOTAL];
 
         // -------------------------------------------------------------------------------------------------------------
         private static final byte NORMAL_DRIVE_INDEX = 0;
@@ -160,7 +163,7 @@ public class RobotSystem {
                         makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX)),
         };
 
-        private final Runnable[] profileArray = new Runnable[4];
+        private final Runnable[] profileArray = new Runnable[PROFILES_TOTAL];
         private static int currentProfileIndex = 0;
 
         // =============================================================================================================
@@ -269,6 +272,9 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void setDefaultBindings() {
+                // TODO: implement a for-loop assigning to profileChangeRumbles the respective
+                // new RumblePulseCommand with the index (synonomous with num pulses) plus 1.
+
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
                 controller.back().onTrue(commands[PROFILE_DECREASE]);
@@ -549,7 +555,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand(final Supplier<RumbleType> side) {
-                return new InstantCommand(() -> {
+                Command profileIncrease = new InstantCommand(() -> {
                         if (currentProfileIndex == profileArray.length + 1) {
                                 currentProfileIndex = -1;
                         }
@@ -564,11 +570,15 @@ public class RobotSystem {
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
                 });
+                Supplier<Command> profileRumble = () -> profileChangeRumbles[currentProfileIndex];
+
+                // TODO: I don't think this is gonna work. It's more complicated than I thought.
+                return new SequentialCommandGroup(profileIncrease, profileRumble.get());
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand(final Supplier<RumbleType> side) {
-                return new InstantCommand(() -> {
+                Command profileDecrease = new InstantCommand(() -> {
                         if (currentProfileIndex == 0) {
                                 currentProfileIndex = profileArray.length;
                         }
@@ -583,6 +593,10 @@ public class RobotSystem {
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
                 });
+                Supplier<Command> profileRumble = () -> profileChangeRumbles[currentProfileIndex];
+
+                // TODO: I don't think this is gonna work. It's more complicated than I thought.
+                return new SequentialCommandGroup(profileDecrease, profileRumble.get());
         }
 
         // -------------------------------------------------------------------------------------------------------------
