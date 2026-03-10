@@ -110,9 +110,9 @@ public class RobotSystem {
         private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
         private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
         private static final byte LOADER_RUN_RUMBLE_INDEX = 9;
-        private static final byte CONTROLLER_BACK_RUMBLE_INDEX = 10;
-        private static final byte CONTROLLER_FORWARD_RUMBLE_INDEX = 11;
-        private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(LOADER_RUN_RUMBLE_INDEX + 1);
+        private static final byte PROFILE_BACK_RUMBLE_INDEX = 10;
+        private static final byte PROFILE_FORWARD_RUMBLE_INDEX = 11;
+        private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(PROFILE_FORWARD_RUMBLE_INDEX + 1);
 
         private static final byte NORMAL_DRIVE_INDEX = 0;
         private static final byte IDLE_INDEX = 1;
@@ -290,7 +290,6 @@ public class RobotSystem {
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
-
                 Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
@@ -336,6 +335,7 @@ public class RobotSystem {
                 Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
                 commands[MANUAL_SHOOT_INDEX] = manShootLeft;
+
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -350,6 +350,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void doubleClawBindingsProfile() {
                 setDefaultBindings();
+
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
@@ -367,6 +368,7 @@ public class RobotSystem {
                 Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
                 commands[MANUAL_SHOOT_INDEX] = manShootDouble;
+
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
@@ -382,6 +384,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private void rightClawBindingsProfile() {
                 setDefaultBindings();
+
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
@@ -399,6 +402,7 @@ public class RobotSystem {
                 Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
                 commands[MANUAL_SHOOT_INDEX] = manShootRight;
+
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
                 controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
