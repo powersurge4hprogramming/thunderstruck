@@ -480,7 +480,11 @@ public class RobotSystem {
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
                                         checkAimbotStatus = true;
-                                        getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                        getCommandScheduler().schedule(new ParallelCommandGroup(
+                                                        commands[MANUAL_SHOOT_INDEX]),
+                                                        RumblePulseCommand.createLongDoublePulse(controller,
+                                                                        RumbleIntensity.SUPER_HEAVY,
+                                                                        () -> RumbleType.kBothRumble));
                                 });
         }
 
