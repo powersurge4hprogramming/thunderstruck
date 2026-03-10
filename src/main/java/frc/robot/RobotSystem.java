@@ -273,8 +273,11 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void setDefaultBindings() {
-                // TODO: implement a for-loop assigning to profileChangeRumbles the respective
-                // new RumblePulseCommand with the index (synonomous with num pulses) plus 1.
+                for (int i = 0; i < PROFILES_TOTAL; i++) {
+                        RumblePulseCommand profileRumble = new RumblePulseCommand(controller, 0.3, 0.5,
+                                        RumbleIntensity.SUPER_HEAVY, (byte) (i + 1), () -> RumbleType.kBothRumble);
+                        profileChangeRumbles[i] = profileRumble;
+                }
 
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
