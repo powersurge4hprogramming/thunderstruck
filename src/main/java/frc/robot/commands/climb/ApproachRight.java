@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.AimCamera;
 
-public class ApproachRight extends Command {
+class ApproachRight extends Command {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================

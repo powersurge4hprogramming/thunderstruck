@@ -3,7 +3,7 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
-public class Descend extends Command {
+class Descend extends Command {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================

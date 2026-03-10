@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-public class FaceWallForward extends Command {
+class FaceWallForward extends Command {
         // =============================================================================================================
         // Private Data Members
         // =============================================================================================================
