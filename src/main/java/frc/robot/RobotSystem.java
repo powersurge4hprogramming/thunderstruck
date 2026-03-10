@@ -150,8 +150,8 @@ public class RobotSystem {
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
                         makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX)),
-                        makeProfileIncreaseCommand(),
-                        makeProfileDecreaseCommand(),
+                        makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX)),
+                        makeProfileDecreaseCommand(rumbles.get(PROFILE_BACK_RUMBLE_INDEX)),
                         makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
                         makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
                         makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX)),
@@ -180,7 +180,6 @@ public class RobotSystem {
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
         final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -539,7 +538,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileIncreaseCommand() {
+        private Command makeProfileIncreaseCommand(final Supplier<RumbleType> side) {
                 return new InstantCommand(() -> {
                         if (currentProfileIndex == profileArray.length + 1) {
                                 currentProfileIndex = -1;
@@ -558,7 +557,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileDecreaseCommand() {
+        private Command makeProfileDecreaseCommand(final Supplier<RumbleType> side) {
                 return new InstantCommand(() -> {
                         if (currentProfileIndex == 0) {
                                 currentProfileIndex = profileArray.length;
