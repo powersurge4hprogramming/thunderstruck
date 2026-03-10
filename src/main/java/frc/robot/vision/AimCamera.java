@@ -30,6 +30,7 @@ public class AimCamera {
     private final static byte HUB_CENTER_TAG = 9;
     private final static byte HUB_OFF_CENTER_RIGHT_TAG = 10;
     private final static byte TOWER_LEFT_TAG = 15;
+    // TODO: This needs real measurements.
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofBaseUnits(5, Inches),
@@ -41,6 +42,7 @@ public class AimCamera {
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees)));
+    // TODO: This needs real measurements.
     private final static Transform3d CLIMBER_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofBaseUnits(5, Inches),
@@ -52,6 +54,7 @@ public class AimCamera {
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees)));
+    // TODO: This needs real measurements.
     private static final Transform3d ROBOT_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofBaseUnits(5, Inches),
