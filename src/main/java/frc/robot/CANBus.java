@@ -32,7 +32,14 @@ public final class CANBus {
         public static final class SHOOTER {
             public static final byte LEADER = 19;
             public static final byte FOLLOWER = 18;
-            public static final byte LOADER = 2;
+        }
+
+        /**
+         * {@summary}
+         * The IDs for the {@link frc.robot.subsystems.Feeder Feeder}.
+         */
+        public static final class FEEDER {
+            public static final byte MOTOR = 2;
         }
 
         /**

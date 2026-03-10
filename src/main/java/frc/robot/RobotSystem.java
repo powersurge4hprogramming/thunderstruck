@@ -109,7 +109,7 @@ public class RobotSystem {
         private static final byte CLIMBER_UP_RUMBLE_INDEX = 6;
         private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
         private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
-        private static final byte LOADER_RUN_RUMBLE_INDEX = 9;
+        private static final byte FEEDER_RUN_RUMBLE_INDEX = 9;
         private static final byte PROFILE_BACK_RUMBLE_INDEX = 10;
         private static final byte PROFILE_FORWARD_RUMBLE_INDEX = 11;
         private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(PROFILE_FORWARD_RUMBLE_INDEX + 1);
@@ -133,7 +133,7 @@ public class RobotSystem {
         private static final byte CLIMBER_UP_INDEX = 15;
         private static final byte CLIMBER_DOWN_INDEX = 16;
         private static final byte HOPPER_RUN_INDEX = 17;
-        private static final byte LOADER_RUN_INDEX = 18;
+        private static final byte FEEDER_RUN_INDEX = 18;
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
@@ -155,7 +155,7 @@ public class RobotSystem {
                         makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
                         makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
                         makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX)),
-                        makeManualLoaderCommand(rumbles.get(LOADER_RUN_RUMBLE_INDEX)),
+                        makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX)),
         };
 
         private final Runnable[] profileArray = new Runnable[4];
@@ -279,7 +279,7 @@ public class RobotSystem {
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
@@ -295,7 +295,7 @@ public class RobotSystem {
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
 
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[LOADER_RUN_INDEX]);
+                controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[FEEDER_RUN_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
@@ -321,7 +321,7 @@ public class RobotSystem {
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
+                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
@@ -354,7 +354,7 @@ public class RobotSystem {
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
@@ -388,7 +388,7 @@ public class RobotSystem {
                 rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOADER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
+                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
                 rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
@@ -492,9 +492,9 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeManualLoaderCommand(final Supplier<RumbleType> side) {
+        private Command makeManualFeederCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(
-                                loader.manualLoaderRun(),
+                                loader.manualFeederRun(),
                                 new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
         }
 

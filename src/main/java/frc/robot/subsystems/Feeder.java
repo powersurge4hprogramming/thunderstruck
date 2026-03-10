@@ -12,12 +12,21 @@ public class Feeder extends SubsystemBase {
     // =================================================================================================================
     private final TalonFX loader;
 
+    // =================================================================================================================
+    // Public Methods
+    // =================================================================================================================
     public Feeder() {
-        this.loader = new TalonFX(CANBus.ID.SHOOTER.LOADER, CANBus.BUS.RIO);
+        this.loader = new TalonFX(CANBus.ID.FEEDER.MOTOR, CANBus.BUS.RIO);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public Command manualLoaderRun() {
+    /**
+     * This function creates a single {@link Command} to feed the ball at a
+     * particular instant.
+     * 
+     * @return The {@link Command} at which to feed the ball to the shooter.
+     */
+    public Command manualFeederRun() {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
@@ -37,6 +46,9 @@ public class Feeder extends SubsystemBase {
      *
      * @param speed The output to the loader motor from -1.0 to 1.0.
      *              Positive values feed the note into the shooter.
+     * 
+     * @apiNote
+     *          Only use this if you know what you are doing.
      */
     public void setLoaderSpeed(final double speed) {
         this.loader.set(speed);
