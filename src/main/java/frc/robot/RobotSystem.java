@@ -50,7 +50,7 @@ import frc.robot.commands.shoot.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Loader;
+import frc.robot.subsystems.Feeder;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Climber;
@@ -86,7 +86,7 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
-        private final Loader loader = new Loader();
+        private final Feeder loader = new Feeder();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
         private final Hopper hopper = new Hopper();

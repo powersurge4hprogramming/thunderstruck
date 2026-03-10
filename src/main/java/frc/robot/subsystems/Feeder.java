@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CANBus;
 
-public class Loader extends SubsystemBase {
+public class Feeder extends SubsystemBase {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================
     private final TalonFX loader;
 
-    public Loader() {
+    public Feeder() {
         this.loader = new TalonFX(CANBus.ID.SHOOTER.LOADER, CANBus.BUS.RIO);
     }
 

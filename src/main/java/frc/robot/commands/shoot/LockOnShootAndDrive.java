@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Loader;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 import frc.robot.vision.AimCamera;
 
@@ -30,7 +30,7 @@ public class LockOnShootAndDrive extends Command {
         // Sub-Systems
         // =============================================================================================================
         private final Shooter shooter;
-        private final Loader loader;
+        private final Feeder loader;
         private final CommandSwerveDrivetrain drive;
 
         // =============================================================================================================
@@ -59,7 +59,7 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Public Methods
         // =============================================================================================================
-        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final Loader loader,
+        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final Feeder loader,
                         final AimCamera aimCamera, final DoubleSupplier xMove, final DoubleSupplier yMove,
                         final DoubleSupplier batteryVoltageSupplier, final double MaxSpeed) {
                 this.shooter = shooter;
