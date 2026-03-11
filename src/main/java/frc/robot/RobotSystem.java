@@ -582,7 +582,7 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
-                Command profileIncrease = new InstantCommand(() -> {
+                return new InstantCommand(() -> {
                         if (currentProfileIndex == profileArray.length + 1) {
                                 currentProfileIndex = -1;
                         }
@@ -596,16 +596,14 @@ public class RobotSystem {
                         getCommandScheduler().getActiveButtonLoop().clear();
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
-                });
-                Supplier<Command> profileRumble = () -> profileChangeRumbles[currentProfileIndex];
 
-                // TODO: I don't think this is gonna work. It's more complicated than I thought.
-                return new SequentialCommandGroup(profileIncrease, profileRumble.get());
+                        getCommandScheduler().schedule(profileChangeRumbles[currentProfileIndex]);
+                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
-                Command profileDecrease = new InstantCommand(() -> {
+                return new InstantCommand(() -> {
                         if (currentProfileIndex == 0) {
                                 currentProfileIndex = profileArray.length;
                         }
@@ -619,11 +617,9 @@ public class RobotSystem {
                         getCommandScheduler().getActiveButtonLoop().clear();
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
-                });
-                Supplier<Command> profileRumble = () -> profileChangeRumbles[currentProfileIndex];
 
-                // TODO: I don't think this is gonna work. It's more complicated than I thought.
-                return new SequentialCommandGroup(profileDecrease, profileRumble.get());
+                        getCommandScheduler().schedule(profileChangeRumbles[currentProfileIndex]);
+                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
