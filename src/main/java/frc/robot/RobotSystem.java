@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,11 +114,10 @@ public class RobotSystem {
         private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
         private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
         private static final byte FEEDER_RUN_RUMBLE_INDEX = 9;
-        private static final byte PROFILE_BACK_RUMBLE_INDEX = 10;
-        private static final byte PROFILE_FORWARD_RUMBLE_INDEX = 11;
-        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX = 12;
+        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX = 10;
         private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(
-                        LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX + 1);
+                        Collections.nCopies(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX + 1, null));
+
         private final RumblePulseCommand profileChangeRumbles[] = new RumblePulseCommand[PROFILES_TOTAL];
 
         // -------------------------------------------------------------------------------------------------------------
@@ -129,10 +129,12 @@ public class RobotSystem {
         private static final byte MANUAL_SHOOT_INDEX = 5;
         private static final byte COLLECTOR_RUN_INDEX = 6;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 7;
-        private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 8;
-        private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 9;
-        private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
-        private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
+        /*
+         * private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 8;
+         * private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 9;
+         * private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
+         * private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
+         */
         private static final byte WEAPON_SWAP_INDEX = 12;
         private static final byte PROFILE_INCREASE = 13;
         private static final byte PROFILE_DECREASE = 14;
@@ -156,12 +158,12 @@ public class RobotSystem {
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
                         null, // makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX)),
-                        null, // makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX)),
-                        makeProfileDecreaseCommand(rumbles.get(PROFILE_BACK_RUMBLE_INDEX)),
-                        makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
-                        makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
-                        makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX)),
-                        makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX)),
+                        null, // makeProfileIncreaseCommand(),
+                        null, // makeProfileDecreaseCommand(),
+                        null, // makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
+                        null, // makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
+                        null, // makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX)),
+                        null,// makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX)),
         };
 
         private final Runnable[] profileArray = new Runnable[PROFILES_TOTAL];
@@ -273,11 +275,16 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void setDefaultBindings() {
+                final double pulseDurationSeconds = 0.3;
+                final double interPulseDurationSeconds = 0.5;
                 for (int i = 0; i < PROFILES_TOTAL; i++) {
-                        RumblePulseCommand profileRumble = new RumblePulseCommand(controller, 0.3, 0.5,
-                                        RumbleIntensity.SUPER_HEAVY, (byte) (i + 1), () -> RumbleType.kBothRumble);
+                        RumblePulseCommand profileRumble = new RumblePulseCommand(controller, pulseDurationSeconds,
+                                        interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY, (byte) (i + 1),
+                                        () -> RumbleType.kBothRumble);
                         profileChangeRumbles[i] = profileRumble;
                 }
+                commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
+                commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
 
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
@@ -300,30 +307,23 @@ public class RobotSystem {
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
-                Command brakeCommand = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                commands[BRAKE_INDEX] = brakeCommand;
-                Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-                commands[COLLECTOR_RUN_INDEX] = collectorRun;
-                Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                commands[MANUAL_SHOOT_INDEX] = manShoot;
-                Command wheelPointCommand = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
-                commands[WHEEL_POINT_INDEX] = wheelPointCommand;
-                Command lockOnShootCommand = makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = lockOnShootCommand;
-                Command resetOrientationCommand = makeResetFieldOrientationCommand(rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                commands [RESET_FIELD_ORIENTATION_INDEX] = resetOrientationCommand;
-                Command weaponSwapCommand = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                commands[WEAPON_SWAP_INDEX] = weaponSwapCommand;
-                Command profileUpCommand = makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX));
-                commands[PROFILE_INCREASE] = profileUpCommand;
-                Command profileDownCommand = makeProfileDecreaseCommand(rumbles.get(PROFILE_BACK_RUMBLE_INDEX))
-                commands[PROFILE_DECREASE] = profileDownCommand;
-                Command
-                commands[] =
-                Command
-                commands[] =
+                // New ones.
+                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
+                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
+                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[FEEDER_RUN_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
@@ -335,13 +335,19 @@ public class RobotSystem {
                 controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
                 controller.b().onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
+                 * CONFLICTING WITH THE PROFILE COMMANDS!
+                 * 
                  * Run SysId routines when holding back/start and X/Y. Note that each routine
                  * should be run exactly once in a single log.
+                 * controller.back().and(controller.y()).whileTrue(commands[
+                 * SYSID_DYNAMIC_FORWARD_INDEX]);
+                 * controller.back().and(controller.x()).whileTrue(commands[
+                 * SYSID_DYNAMIC_REVERSE_INDEX]);
+                 * controller.start().and(controller.y()).whileTrue(commands[
+                 * SYSID_QUASISTATIC_FORWARD_INDEX]);
+                 * controller.start().and(controller.x()).whileTrue(commands[
+                 * SYSID_QUASISTATIC_REVERSE_INDEX]);
                  */
-                controller.back().and(controller.y()).whileTrue(commands[SYSID_DYNAMIC_FORWARD_INDEX]);
-                controller.back().and(controller.x()).whileTrue(commands[SYSID_DYNAMIC_REVERSE_INDEX]);
-                controller.start().and(controller.y()).whileTrue(commands[SYSID_QUASISTATIC_FORWARD_INDEX]);
-                controller.start().and(controller.x()).whileTrue(commands[SYSID_QUASISTATIC_REVERSE_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -575,7 +581,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileIncreaseCommand(final Supplier<RumbleType> side) {
+        private Command makeProfileIncreaseCommand() {
                 Command profileIncrease = new InstantCommand(() -> {
                         if (currentProfileIndex == profileArray.length + 1) {
                                 currentProfileIndex = -1;
@@ -598,7 +604,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileDecreaseCommand(final Supplier<RumbleType> side) {
+        private Command makeProfileDecreaseCommand() {
                 Command profileDecrease = new InstantCommand(() -> {
                         if (currentProfileIndex == 0) {
                                 currentProfileIndex = profileArray.length;
