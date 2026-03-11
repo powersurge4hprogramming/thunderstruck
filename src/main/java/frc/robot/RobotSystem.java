@@ -143,20 +143,20 @@ public class RobotSystem {
         private final Command[] commands = {
                         makeNormalDriveCommand(),
                         makeIdleCommand(),
-                        makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX)),
-                        makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX)),
-                        makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX)),
+                        null, // makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX)),
+                        null, // makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX)),
+                        null, // makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX)),
                         /* ManualShoot */
                         null, // A command with an input driver set by the profile.
                         /* Collector.run() */
                         null, // A command with an input driver set by the profile.
-                        makeResetFieldOrientationCommand(rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX)),
+                        null, // makeResetFieldOrientationCommand(rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX)),
                         makeSysIdDynamicForwardCommand(),
                         makeSysIdDynamicReverseCommand(),
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
-                        makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX)),
-                        makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX)),
+                        null, // makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX)),
+                        null, // makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX)),
                         makeProfileDecreaseCommand(rumbles.get(PROFILE_BACK_RUMBLE_INDEX)),
                         makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
                         makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
@@ -300,13 +300,30 @@ public class RobotSystem {
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
+                Command brakeCommand = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
+                commands[BRAKE_INDEX] = brakeCommand;
                 Command collectorRun = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
                 commands[COLLECTOR_RUN_INDEX] = collectorRun;
                 Command manShoot = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
                 commands[MANUAL_SHOOT_INDEX] = manShoot;
-
+                Command wheelPointCommand = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[WHEEL_POINT_INDEX] = wheelPointCommand;
+                Command lockOnShootCommand = makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = lockOnShootCommand;
+                Command resetOrientationCommand = makeResetFieldOrientationCommand(rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
+                commands [RESET_FIELD_ORIENTATION_INDEX] = resetOrientationCommand;
+                Command weaponSwapCommand = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
+                commands[WEAPON_SWAP_INDEX] = weaponSwapCommand;
+                Command profileUpCommand = makeProfileIncreaseCommand(rumbles.get(PROFILE_FORWARD_RUMBLE_INDEX));
+                commands[PROFILE_INCREASE] = profileUpCommand;
+                Command profileDownCommand = makeProfileDecreaseCommand(rumbles.get(PROFILE_BACK_RUMBLE_INDEX))
+                commands[PROFILE_DECREASE] = profileDownCommand;
+                Command
+                commands[] =
+                Command
+                commands[] =
                 controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[FEEDER_RUN_INDEX]);
                 controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
