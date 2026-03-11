@@ -367,12 +367,24 @@ public class RobotSystem {
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
-                Command collectorRun = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-                commands[COLLECTOR_RUN_INDEX] = collectorRun;
-                Command manShootLeft = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
+                ;
+
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                commands[MANUAL_SHOOT_INDEX] = manShootLeft;
+
+                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
+                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
+                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
 
                 controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -401,12 +413,23 @@ public class RobotSystem {
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
 
-                Command CollectorVarDouble = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
+                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
+                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-                commands[COLLECTOR_RUN_INDEX] = CollectorVarDouble;
-                Command manShootDouble = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                commands[MANUAL_SHOOT_INDEX] = manShootDouble;
 
                 controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
                 controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -435,6 +458,18 @@ public class RobotSystem {
                 rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
                 rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
+
+                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
+                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
+                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
 
                 Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
