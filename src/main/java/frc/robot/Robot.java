@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.HootAutoReplay;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -15,19 +13,12 @@ public class Robot extends TimedRobot {
     // Grabbed from this.autonomousInit().
     private Command autonomousCommand;
 
-    /* log and replay timestamp and joystick data */
-    // TODO: This seems like it'll unecessarily eat up resources.
-    private final HootAutoReplay timeAndJoystickReplay = new HootAutoReplay()
-            .withTimestampReplay()
-            .withJoystickReplay();
-
     public Robot() {
         robotContainer = new RobotSystem();
     }
 
     @Override
     public void robotPeriodic() {
-        timeAndJoystickReplay.update();
         this.robotContainer.updatePhotonCameraFrames();
         this.robotContainer.getCommandScheduler().run();
     }
