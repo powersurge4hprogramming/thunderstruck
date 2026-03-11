@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -629,7 +630,9 @@ public class RobotSystem {
                                 }
                                 getCommandScheduler().cancel(commands[i]);
                         }
+                        getCommandScheduler().disable();
                         getCommandScheduler().getActiveButtonLoop().clear();
+                        getCommandScheduler().enable();
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
 
@@ -650,7 +653,9 @@ public class RobotSystem {
                                 }
                                 getCommandScheduler().cancel(commands[i]);
                         }
+                        getCommandScheduler().disable();
                         getCommandScheduler().getActiveButtonLoop().clear();
+                        getCommandScheduler().enable();
                         final Runnable profile = profileArray[currentProfileIndex];
                         profile.run();
 
