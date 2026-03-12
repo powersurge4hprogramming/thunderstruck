@@ -275,22 +275,21 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void setDefaultBindings() {
-                // final double pulseDurationSeconds = 0.3;
-                // final double interPulseDurationSeconds = 0.5;
-                // for (int i = 0; i < PROFILES_TOTAL; i++) {
-                // RumblePulseCommand profileRumble = new RumblePulseCommand(controller,
-                // pulseDurationSeconds,
-                // interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY, (byte) (i + 1),
-                // () -> RumbleType.kBothRumble);
-                // profileChangeRumbles[i] = profileRumble;
-                // }
-                // commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
-                // commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
+                final double pulseDurationSeconds = 0.3;
+                final double interPulseDurationSeconds = 0.5;
+                for (int i = 0; i < PROFILES_TOTAL; i++) {
+                        RumblePulseCommand profileRumble = new RumblePulseCommand(controller, pulseDurationSeconds,
+                                        interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY, (byte) (i + 1),
+                                        () -> RumbleType.kBothRumble);
+                        profileChangeRumbles[i] = profileRumble;
+                }
+                commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
+                commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
 
-                // controller.back().onTrue(commands[PROFILE_DECREASE]);
-                // controller.start().onTrue(commands[PROFILE_INCREASE]);
                 drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
                 RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+                controller.back().onTrue(commands[PROFILE_DECREASE]);
+                controller.start().onTrue(commands[PROFILE_INCREASE]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
