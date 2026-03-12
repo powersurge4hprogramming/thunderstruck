@@ -8,7 +8,6 @@ import static edu.wpi.first.units.Units.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
@@ -104,75 +102,68 @@ public class RobotSystem {
         // =============================================================================================================
         // Commands
         // =============================================================================================================
-        private static final byte PROFILES_TOTAL = 4;
-
-        // -------------------------------------------------------------------------------------------------------------
-        private static final byte BRAKE_RUMBLE_INDEX = 0;
-        private static final byte WHEEL_POINT_RUMBLE_INDEX = 1;
-        private static final byte MANUAL_SHOOT_RUMBLE_INDEX = 2;
-        private static final byte COLLECTOR_RUN_RUMBLE_INDEX = 3;
-        private static final byte RESET_FIELD_ORIENTATION_RUMBLE_INDEX = 4;
-        private static final byte WEAPON_SWAP_RUMBLE_INDEX = 5;
-        private static final byte CLIMBER_UP_RUMBLE_INDEX = 6;
-        private static final byte CLIMBER_DOWN_RUMBLE_INDEX = 7;
-        private static final byte HOPPER_RUN_RUMBLE_INDEX = 8;
-        private static final byte FEEDER_RUN_RUMBLE_INDEX = 9;
-        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX = 10;
-        private final List<Supplier<RumbleType>> rumbles = new ArrayList<>(
-                        Collections.nCopies(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX + 1, null));
-
-        private final RumblePulseCommand profileChangeRumbles[] = new RumblePulseCommand[PROFILES_TOTAL];
-
-        // -------------------------------------------------------------------------------------------------------------
-        private static final byte NORMAL_DRIVE_INDEX = 0;
-        private static final byte IDLE_INDEX = 1;
-        private static final byte BRAKE_INDEX = 2;
-        private static final byte WHEEL_POINT_INDEX = 3;
-        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INDEX = 4;
-        private static final byte MANUAL_SHOOT_INDEX = 5;
-        private static final byte COLLECTOR_RUN_INDEX = 6;
-        private static final byte RESET_FIELD_ORIENTATION_INDEX = 7;
-        /*
-         * private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 8;
-         * private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 9;
-         * private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 10;
-         * private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 11;
+        private static final byte BRAKE_INDEX = 0;
+        private static final byte WHEEL_POINT_INDEX = 1;
+        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INDEX = 2;
+        private static final byte MANUAL_SHOOT_INDEX = 3;
+        private static final byte COLLECTOR_RUN_INDEX = 4;
+        private static final byte RESET_FIELD_ORIENTATION_INDEX = 5;
+        @SuppressWarnings("unused")
+        private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 6;
+        @SuppressWarnings("unused")
+        private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 7;
+        @SuppressWarnings("unused")
+        private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 8;
+        @SuppressWarnings("unused")
+        private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 9;
+        private static final byte WEAPON_SWAP_INDEX = 10;
+        private static final byte CLIMBER_UP_INDEX = 11;
+        private static final byte CLIMBER_DOWN_INDEX = 12;
+        private static final byte HOPPER_RUN_INDEX = 13;
+        private static final byte FEEDER_RUN_INDEX = 14;
+        /**
+         * {@summary}
+         * The purpose of this array is for cancelling the commands that are in it when
+         * a profile is switched.
          */
-        private static final byte WEAPON_SWAP_INDEX = 12;
-        private static final byte PROFILE_INCREASE = 13;
-        private static final byte PROFILE_DECREASE = 14;
-        private static final byte CLIMBER_UP_INDEX = 15;
-        private static final byte CLIMBER_DOWN_INDEX = 16;
-        private static final byte HOPPER_RUN_INDEX = 17;
-        private static final byte FEEDER_RUN_INDEX = 18;
         private final Command[] commands = {
-                        makeNormalDriveCommand(),
-                        makeIdleCommand(),
-                        null, // makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX)),
-                        null, // makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX)),
-                        null, // makeLockOnShootAndDriveCommand(rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX)),
+                        /* Brake */
+                        null,
+                        /* Wheels Point */
+                        null,
+                        /* Lock on Shoot and Drive */
+                        null,
                         /* ManualShoot */
-                        null, // A command with an input driver set by the profile.
+                        null,
                         /* Collector.run() */
-                        null, // A command with an input driver set by the profile.
-                        null, // makeResetFieldOrientationCommand(rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX)),
+                        null,
+                        /* Reset Field Orientation */
+                        null,
+                        /*
+                         * TODO: I don't think these need to be saved here for cancelling.
+                         * 
+                         * They can just be mapped in normal mode and not have to be worried about being
+                         * cancelled because in reality they won't be running in a profile switched
+                         * scenario.
+                         */
                         makeSysIdDynamicForwardCommand(),
                         makeSysIdDynamicReverseCommand(),
                         makeSysIdQuasistaticForwardCommand(),
                         makeSysIdQuasistaticReverseCommand(),
-                        null, // makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX)),
-                        null, // makeProfileIncreaseCommand(),
-                        null, // makeProfileDecreaseCommand(),
-                        null, // makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX)),
-                        null, // makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX)),
-                        null, // makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX)),
-                        null,// makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX)),
+                        /* Weapon Swap */
+                        null,
+                        /* Climber Up */
+                        null,
+                        /* Climber Down */
+                        null,
+                        /* Hopper Run */
+                        null,
+                        /* Manual Feeder */
+                        null,
         };
-
-        private final Runnable[] profileArray = new Runnable[PROFILES_TOTAL];
         private static int currentProfileIndex = 0;
-        private final List<Consumer<EventLoop>> profileSetupters;
-        private final List<EventLoop> profileLoops;
+        private final List<Consumer<EventLoop>> profiles;
+        private final List<EventLoop> profileEventLoops;
 
         // =============================================================================================================
         // PathPlanner
@@ -206,183 +197,28 @@ public class RobotSystem {
         // =============================================================================================================
         public RobotSystem() {
                 drivetrain.setAimCamera(aimCamera);
-                setDefaultBindings();
-                this.profileSetupters = List.of(
-                                loop -> {
-                                        final double pulseDurationSeconds = 0.3;
-                                        final double interPulseDurationSeconds = 0.5;
-                                        for (int i = 0; i < PROFILES_TOTAL; i++) {
-                                                RumblePulseCommand profileRumble = new RumblePulseCommand(controller,
-                                                                pulseDurationSeconds,
-                                                                interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY,
-                                                                (byte) (i + 1),
-                                                                () -> RumbleType.kBothRumble);
-                                                profileChangeRumbles[i] = profileRumble;
-                                        }
-                                        commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
-                                        commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
 
-                                        rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-                                        rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-                                        rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX,
-                                                        () -> RumbleType.kBothRumble);
-                                        commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(
-                                                        () -> -controller.getLeftTriggerAxis(),
-                                                        rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-                                        commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(
-                                                        () -> controller.getRightTriggerAxis(),
-                                                        rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                                        // New ones.
-                                        commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                                        commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(
-                                                        rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
-                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                                        rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
-                                        commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                                        rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                                        commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(
-                                                        rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                                        commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(
-                                                        rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                                        commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(
-                                                        rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                                        commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(
-                                                        rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                                        commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(
-                                                        rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
-
-                                        new Trigger(loop, () -> controller.back().getAsBoolean())
-                                                        .onTrue(commands[PROFILE_DECREASE]);
-                                        new Trigger(loop, () -> controller.start().getAsBoolean())
-                                                        .onTrue(commands[PROFILE_INCREASE]);
-                                        drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                                        RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
-                                        new Trigger(loop, () -> controller.leftBumper().getAsBoolean())
-                                                        .whileTrue(commands[BRAKE_INDEX]);
-                                        new Trigger(loop, () -> controller.a().getAsBoolean())
-                                                        .and(() -> checkAimbotStatus == false)
-                                                        .whileTrue(commands[FEEDER_RUN_INDEX]);
-                                        new Trigger(loop, () -> controller.x().getAsBoolean())
-                                                        .toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                                        new Trigger(loop, () -> controller.leftTrigger().getAsBoolean())
-                                                        .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                                        new Trigger(loop, () -> controller.y().getAsBoolean())
-                                                        .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                                        new Trigger(loop, () -> controller.povUp().getAsBoolean())
-                                                        .onTrue(commands[CLIMBER_UP_INDEX]);
-                                        new Trigger(loop, () -> controller.povDown().getAsBoolean())
-                                                        .onTrue(commands[CLIMBER_DOWN_INDEX]);
-                                        new Trigger(loop, () -> controller.rightTrigger().getAsBoolean())
-                                                        .and(() -> checkAimbotStatus == false)
-                                                        .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                                        new Trigger(loop, () -> controller.povLeft().getAsBoolean())
-                                                        .onTrue(commands[WHEEL_POINT_INDEX]);
-                                        new Trigger(loop, () -> controller.b().getAsBoolean())
-                                                        .onTrue(commands[HOPPER_RUN_INDEX]);
-                                },
-                                loop -> {
-                                        final double pulseDurationSeconds = 0.3;
-                                        final double interPulseDurationSeconds = 0.5;
-                                        for (int i = 0; i < PROFILES_TOTAL; i++) {
-                                                RumblePulseCommand profileRumble = new RumblePulseCommand(controller,
-                                                                pulseDurationSeconds,
-                                                                interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY,
-                                                                (byte) (i + 1),
-                                                                () -> RumbleType.kBothRumble);
-                                                profileChangeRumbles[i] = profileRumble;
-                                        }
-                                        commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
-                                        commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
-
-                                        rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                                        rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                                        rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX,
-                                                        () -> RumbleType.kBothRumble);
-
-                                        commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(
-                                                        () -> -controller.getRightTriggerAxis(),
-                                                        rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-
-                                        commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(
-                                                        () -> controller.getLeftTriggerAxis(),
-                                                        rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-
-                                        commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                                        commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(
-                                                        rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
-                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                                        rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
-                                        commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                                        rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                                        commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(
-                                                        rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                                        commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(
-                                                        rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                                        commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(
-                                                        rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                                        commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(
-                                                        rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                                        commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(
-                                                        rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
-
-                                        new Trigger(loop, () -> controller.back().getAsBoolean())
-                                                        .onTrue(commands[PROFILE_DECREASE]);
-                                        new Trigger(loop, () -> controller.start().getAsBoolean())
-                                                        .onTrue(commands[PROFILE_INCREASE]);
-                                        drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                                        RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
-                                        new Trigger(loop, () -> controller.rightTrigger().getAsBoolean())
-                                                        .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                                        new Trigger(loop, () -> controller.y().getAsBoolean())
-                                                        .whileTrue(commands[CLIMBER_UP_INDEX]);
-                                        new Trigger(loop, () -> controller.a().getAsBoolean())
-                                                        .whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                                        new Trigger(loop, () -> controller.leftTrigger().getAsBoolean())
-                                                        .and(() -> checkAimbotStatus == false)
-                                                        .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                                        new Trigger(loop, () -> controller.povLeft().getAsBoolean())
-                                                        .onTrue(commands[WEAPON_SWAP_INDEX]);
-                                        new Trigger(loop, () -> controller.x().getAsBoolean())
-                                                        .toggleOnTrue(commands[HOPPER_RUN_INDEX]);
-                                        new Trigger(loop, () -> controller.rightBumper().getAsBoolean())
-                                                        .whileTrue(commands[BRAKE_INDEX]);
-                                        new Trigger(loop, () -> controller.b().getAsBoolean())
-                                                        .onTrue(commands[WHEEL_POINT_INDEX]);
-                                        new Trigger(loop, () -> controller.povDown().getAsBoolean())
-                                                        .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                                });
                 /*
-                 * profileArray[0] = this::defaultBindingsProfile;
-                 * profileArray[1] = this::leftClawBindingsProfile;
-                 * profileArray[2] = this::doubleClawBindingsProfile;
-                 * profileArray[3] = this::rightClawBindingsProfile;
-                 * defaultBindingsProfile();
+                 * IMPORTANT!
+                 * 
+                 * This setDefaultCommand method's behavior is not tied to the event loop and
+                 * can therefore be set outside the profiles. Plus, it never changes.
                  */
+                drivetrain.setDefaultCommand(makeNormalDriveCommand());
 
-                this.profileLoops = new ArrayList<>();
-                for (int i = 0; i < profileSetupters.size(); i++) {
+                this.profiles = List.of(
+                                profile1 -> defaultBindingsProfile(profile1),
+                                profile2 -> leftClawBindingsProfile(profile2),
+                                profile3 -> doubleClawBindingsProfile(profile3),
+                                profile4 -> rightClawBindingsProfile(profile4));
+
+                this.profileEventLoops = new ArrayList<>(profiles.size());
+                for (int i = 0; i < profiles.size(); i++) {
                         EventLoop loop = new EventLoop();
-                        profileSetupters.get(i).accept(loop);
-                        profileLoops.add(loop);
+                        profiles.get(i).accept(loop);
+                        profileEventLoops.add(loop);
                 }
-                getCommandScheduler().setActiveButtonLoop(profileLoops.get(0));
-                currentProfileIndex = 0;
+                getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(0));
 
                 // Robot config: Pull from PathPlanner GUI settings (tune mass ~40-50kg for your
                 // bot, MOI from CAD, module drive ratios from SDS/Krakens)
@@ -451,67 +287,43 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
-        private void setDefaultBindings() {
-                final double pulseDurationSeconds = 0.3;
-                final double interPulseDurationSeconds = 0.5;
-                for (int i = 0; i < PROFILES_TOTAL; i++) {
-                        RumblePulseCommand profileRumble = new RumblePulseCommand(controller,
-                                        pulseDurationSeconds,
-                                        interPulseDurationSeconds, RumbleIntensity.SUPER_HEAVY, (byte) (i + 1),
-                                        () -> RumbleType.kBothRumble);
-                        profileChangeRumbles[i] = profileRumble;
-                }
-                commands[PROFILE_INCREASE] = makeProfileIncreaseCommand();
-                commands[PROFILE_DECREASE] = makeProfileDecreaseCommand();
-
-                controller.back().onTrue(commands[PROFILE_DECREASE]);
-                controller.start().onTrue(commands[PROFILE_INCREASE]);
-                drivetrain.setDefaultCommand(commands[NORMAL_DRIVE_INDEX]);
-                RobotModeTriggers.disabled().whileTrue(commands[IDLE_INDEX]);
+        private void setDefaultBindings(final EventLoop loop) {
+                new Trigger(loop, () -> controller.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand());
+                new Trigger(loop, () -> controller.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand());
+                new Trigger(loop, DriverStation::isDisabled).whileTrue(makeIdleCommand());
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void defaultBindingsProfile() {
-                setDefaultBindings();
-                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
+        private void defaultBindingsProfile(final EventLoop loop) {
+                setDefaultBindings(loop);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
-                                rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kLeftRumble);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                // New ones.
-                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                                () -> RumbleType.kRightRumble);
+                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble);
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kBothRumble);
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
-                controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.a().and(() -> checkAimbotStatus == false).whileTrue(commands[FEEDER_RUN_INDEX]);
-                controller.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                controller.povUp().onTrue(commands[CLIMBER_UP_INDEX]);
-                controller.povDown().onTrue(commands[CLIMBER_DOWN_INDEX]);
-                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
-                controller.b().onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(loop, () -> controller.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .whileTrue(commands[FEEDER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(loop, () -> controller.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(loop, () -> controller.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(loop, () -> controller.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
@@ -529,140 +341,104 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void leftClawBindingsProfile() {
-                setDefaultBindings();
-
-                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
+        private void leftClawBindingsProfile(final EventLoop loop) {
+                setDefaultBindings(loop);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
-                                rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-
+                                () -> RumbleType.kRightRumble);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
-                                rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-
-                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                                () -> RumbleType.kLeftRumble);
+                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kRightRumble);
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kLeftRumble);
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kLeftRumble);
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kRightRumble);
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
-                controller.rightTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.y().whileTrue(commands[CLIMBER_UP_INDEX]);
-                controller.a().whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                controller.leftTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                controller.povLeft().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.x().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
-                controller.rightBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.b().onTrue(commands[WHEEL_POINT_INDEX]);
-                controller.povDown().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                // TODO: This is missing a mapping: 9 of 10.
+                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(loop, () -> controller.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(loop, () -> controller.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(loop, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(loop, () -> controller.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(loop, () -> controller.povDown().getAsBoolean())
+                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void doubleClawBindingsProfile() {
-                setDefaultBindings();
+        private void doubleClawBindingsProfile(final EventLoop loop) {
+                setDefaultBindings(loop);
 
-                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-
-                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble);
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                                () -> RumbleType.kBothRumble);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kRightRumble);
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
-                                rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kLeftRumble);
 
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
+                                () -> RumbleType.kRightRumble);
 
-                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
-                controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.povRight().whileTrue(commands[BRAKE_INDEX]);
-                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
-                controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                controller.rightBumper().onTrue(commands[HOPPER_RUN_INDEX]);
-                controller.b().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(loop, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(loop, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(loop, () -> controller.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(loop, () -> controller.a().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(loop, () -> controller.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void rightClawBindingsProfile() {
-                setDefaultBindings();
+        private void rightClawBindingsProfile(final EventLoop loop) {
+                setDefaultBindings(loop);
 
-                rumbles.set(COLLECTOR_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(MANUAL_SHOOT_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(BRAKE_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(FEEDER_RUN_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(WHEEL_POINT_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(WEAPON_SWAP_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(RESET_FIELD_ORIENTATION_RUMBLE_INDEX, () -> RumbleType.kRightRumble);
-                rumbles.set(CLIMBER_UP_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(CLIMBER_DOWN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(HOPPER_RUN_RUMBLE_INDEX, () -> RumbleType.kLeftRumble);
-                rumbles.set(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX, () -> RumbleType.kBothRumble);
-
-                commands[BRAKE_INDEX] = makeBrakeCommand(rumbles.get(BRAKE_RUMBLE_INDEX));
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(rumbles.get(WHEEL_POINT_RUMBLE_INDEX));
+                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble);
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                rumbles.get(LOCK_ON_SHOOT_AND_DRIVE_INTERRUPT_RUMBLE_INDEX));
+                                () -> RumbleType.kBothRumble);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                rumbles.get(RESET_FIELD_ORIENTATION_RUMBLE_INDEX));
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(rumbles.get(WEAPON_SWAP_RUMBLE_INDEX));
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(rumbles.get(CLIMBER_UP_RUMBLE_INDEX));
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(rumbles.get(CLIMBER_DOWN_RUMBLE_INDEX));
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(rumbles.get(HOPPER_RUN_RUMBLE_INDEX));
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(rumbles.get(FEEDER_RUN_RUMBLE_INDEX));
+                                () -> RumbleType.kRightRumble);
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
+                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
+                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kLeftRumble);
+                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
+                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                                () -> RumbleType.kLeftRumble);
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                                () -> RumbleType.kRightRumble);
 
-                Command CollectorVarRight = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
-                                rumbles.get(COLLECTOR_RUN_RUMBLE_INDEX));
-                commands[COLLECTOR_RUN_INDEX] = CollectorVarRight;
-                Command manShootRight = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
-                                rumbles.get(MANUAL_SHOOT_RUMBLE_INDEX));
-                commands[MANUAL_SHOOT_INDEX] = manShootRight;
-
-                controller.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
-                controller.povUp().whileTrue(commands[CLIMBER_UP_INDEX]);
-                controller.povDown().whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                controller.rightTrigger().and(() -> checkAimbotStatus == false).whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                controller.y().onTrue(commands[WEAPON_SWAP_INDEX]);
-                controller.leftBumper().whileTrue(commands[BRAKE_INDEX]);
-                controller.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
-                controller.a().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                controller.b().toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(loop, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(loop, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(loop, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(loop, () -> controller.a().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(loop, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                // TODO: Missing feeder: this is the tenth mapping.
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -795,63 +571,44 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
                 return new InstantCommand(() -> {
-                        if (currentProfileIndex == profileArray.length + 1) {
-                                currentProfileIndex = -1;
+                        currentProfileIndex += currentProfileIndex;
+                        if (currentProfileIndex == profileEventLoops.size()) {
+                                currentProfileIndex = 0;
                         }
-                        currentProfileIndex = currentProfileIndex + 1;
-                        getCommandScheduler().setActiveButtonLoop(profileLoops.get(currentProfileIndex));
+                        getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(currentProfileIndex));
                         for (int i = 0; i < commands.length; i++) {
-                                if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
-                                        continue;
-                                }
                                 getCommandScheduler().cancel(commands[i]);
                         }
-
-                        getCommandScheduler().schedule(profileChangeRumbles[currentProfileIndex]);
+                        getCommandScheduler().schedule(
+                                        new RumblePulseCommand(controller,
+                                                        0.3,
+                                                        0.5,
+                                                        RumbleIntensity.SUPER_HEAVY,
+                                                        (byte) (currentProfileIndex + 1),
+                                                        () -> RumbleType.kBothRumble));
                 });
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
                 return new InstantCommand(() -> {
-                        if (currentProfileIndex == 0) {
-                                currentProfileIndex = profileArray.length;
+                        currentProfileIndex -= currentProfileIndex;
+                        if (currentProfileIndex <= 0) {
+                                currentProfileIndex = profileEventLoops.size() - 1;
                         }
-                        currentProfileIndex = currentProfileIndex - 1;
+                        getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(currentProfileIndex));
                         for (int i = 0; i < commands.length; i++) {
-                                if (i == PROFILE_DECREASE || i == PROFILE_INCREASE) {
-                                        continue;
-                                }
                                 getCommandScheduler().cancel(commands[i]);
                         }
-                        getCommandScheduler().disable();
-                        getCommandScheduler().getActiveButtonLoop().clear();
-                        getCommandScheduler().enable();
-                        final Runnable profile = profileArray[currentProfileIndex];
-                        profile.run();
 
-                        getCommandScheduler().schedule(profileChangeRumbles[currentProfileIndex]);
+                        getCommandScheduler().schedule(
+                                        new RumblePulseCommand(controller,
+                                                        0.3,
+                                                        0.5,
+                                                        RumbleIntensity.SUPER_HEAVY,
+                                                        (byte) (currentProfileIndex + 1),
+                                                        () -> RumbleType.kBothRumble));
                 });
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdDynamicForwardCommand() {
-                return drivetrain.sysIdDynamic(Direction.kForward);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdDynamicReverseCommand() {
-                return drivetrain.sysIdDynamic(Direction.kReverse);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdQuasistaticForwardCommand() {
-                return drivetrain.sysIdQuasistatic(Direction.kForward);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdQuasistaticReverseCommand() {
-                return drivetrain.sysIdQuasistatic(Direction.kReverse);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -883,4 +640,25 @@ public class RobotSystem {
                                 RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.LIGHT,
                                                 side));
         }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdDynamicForwardCommand() {
+                return drivetrain.sysIdDynamic(Direction.kForward);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdDynamicReverseCommand() {
+                return drivetrain.sysIdDynamic(Direction.kReverse);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdQuasistaticForwardCommand() {
+                return drivetrain.sysIdQuasistatic(Direction.kForward);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeSysIdQuasistaticReverseCommand() {
+                return drivetrain.sysIdQuasistatic(Direction.kReverse);
+        }
+
 }
