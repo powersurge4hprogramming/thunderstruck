@@ -123,8 +123,8 @@ public class RobotSystem {
         private static final byte FEEDER_RUN_INDEX = 14;
         /**
          * {@summary}
-         * The purpose of this array is for cancelling the commands that are in it when
-         * a profile is switched.
+         * The purpose of this array is for cancelling the "active" commands that are in
+         * it when a profile is switched.
          */
         private final Command[] commands = {
                         /* Brake */
