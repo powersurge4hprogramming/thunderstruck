@@ -287,15 +287,15 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
-        private void setDefaultBindings(final EventLoop loop) {
-                new Trigger(loop, () -> controller.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand());
-                new Trigger(loop, () -> controller.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand());
-                new Trigger(loop, DriverStation::isDisabled).whileTrue(makeIdleCommand());
+        private void setDefaultBindings(final EventLoop profile) {
+                new Trigger(profile, () -> controller.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand());
+                new Trigger(profile, () -> controller.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand());
+                new Trigger(profile, DriverStation::isDisabled).whileTrue(makeIdleCommand());
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void defaultBindingsProfile(final EventLoop loop) {
-                setDefaultBindings(loop);
+        private void defaultBindingsProfile(final EventLoop profile) {
+                setDefaultBindings(profile);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
@@ -312,18 +312,21 @@ public class RobotSystem {
                 commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
-                new Trigger(loop, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(loop, () -> controller.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> controller.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[FEEDER_RUN_INDEX]);
-                new Trigger(loop, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(loop, () -> controller.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(loop, () -> controller.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(profile, () -> controller.y().getAsBoolean())
+                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(profile, () -> controller.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> controller.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                                .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(loop, () -> controller.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> controller.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
@@ -341,8 +344,8 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void leftClawBindingsProfile(final EventLoop loop) {
-                setDefaultBindings(loop);
+        private void leftClawBindingsProfile(final EventLoop profile) {
+                setDefaultBindings(profile);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
@@ -360,22 +363,24 @@ public class RobotSystem {
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
                 // TODO: This is missing a mapping: 9 of 10.
-                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(loop, () -> controller.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(loop, () -> controller.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(profile, () -> controller.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> controller.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                                .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(loop, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
-                new Trigger(loop, () -> controller.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(loop, () -> controller.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(loop, () -> controller.povDown().getAsBoolean())
+                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> controller.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> controller.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> controller.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void doubleClawBindingsProfile(final EventLoop loop) {
-                setDefaultBindings(loop);
+        private void doubleClawBindingsProfile(final EventLoop profile) {
+                setDefaultBindings(profile);
 
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
@@ -395,22 +400,25 @@ public class RobotSystem {
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
 
-                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(loop, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(loop, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(profile, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                                .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(loop, () -> controller.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(loop, () -> controller.a().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(loop, () -> controller.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
-                new Trigger(loop, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> controller.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> controller.a().getAsBoolean())
+                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(profile, () -> controller.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void rightClawBindingsProfile(final EventLoop loop) {
-                setDefaultBindings(loop);
+        private void rightClawBindingsProfile(final EventLoop profile) {
+                setDefaultBindings(profile);
 
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
@@ -428,16 +436,19 @@ public class RobotSystem {
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
 
-                new Trigger(loop, () -> controller.leftTrigger().getAsBoolean()).onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(loop, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(loop, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(loop, () -> controller.rightTrigger().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(profile, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                                .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(loop, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(loop, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(loop, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(loop, () -> controller.a().getAsBoolean()).onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(loop, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> controller.a().getAsBoolean())
+                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(profile, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
                 // TODO: Missing feeder: this is the tenth mapping.
         }
 
