@@ -12,6 +12,7 @@ public class RumblePulseCommand extends SequentialCommandGroup {
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
+    // TODO: Don't pass in a Supplier<RumbleType>, but instead pass in a RumbleType.
     public RumblePulseCommand(final CommandXboxController controller, final double pulseDurationSeconds,
             final double interPulseDurationSeconds, final double intensity, final byte numPulses,
             final Supplier<RumbleType> side) {

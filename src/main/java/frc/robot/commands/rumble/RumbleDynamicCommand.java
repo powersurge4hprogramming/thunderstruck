@@ -18,6 +18,7 @@ public class RumbleDynamicCommand extends Command {
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
+    // TODO: Don't pass in a Supplier<RumbleType>, but instead pass in a RumbleType.
     public RumbleDynamicCommand(final CommandXboxController controller, final DoubleSupplier intensitySupplier,
             final Supplier<RumbleType> side) {
         this.controller = controller;
