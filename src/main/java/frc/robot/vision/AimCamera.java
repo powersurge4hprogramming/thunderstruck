@@ -87,8 +87,7 @@ public class AimCamera {
     // Public Parts
     // =================================================================================================================
     public AimCamera() {
-        // TODO: The camera name is incorrect. Gotta fix this.
-        this.camera = new PhotonCamera("photonvision");
+        this.camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         photonPoseEstimator = new PhotonPoseEstimator(fieldLayout, ROBOT_TO_CAMERA_OFFSET);
     }
 
