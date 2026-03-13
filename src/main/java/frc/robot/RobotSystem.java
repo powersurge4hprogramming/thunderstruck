@@ -75,7 +75,8 @@ public class RobotSystem {
         // =============================================================================================================
         // Driver Inputs
         // =============================================================================================================
-        private final CommandXboxController controller = new CommandXboxController(USB.CONTROLLER.DRIVER);
+        private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
+        private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
         private boolean checkAimbotStatus = false;
 
         // =============================================================================================================
@@ -288,8 +289,8 @@ public class RobotSystem {
         // Private Methods
         // =============================================================================================================
         private void setDefaultBindings(final EventLoop profile) {
-                new Trigger(profile, () -> controller.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand());
-                new Trigger(profile, () -> controller.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand());
+                new Trigger(profile, () -> driver.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand());
+                new Trigger(profile, () -> driver.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand());
                 new Trigger(profile, DriverStation::isDisabled).whileTrue(makeIdleCommand());
         }
 
@@ -297,9 +298,9 @@ public class RobotSystem {
         private void defaultBindingsProfile(final EventLoop profile) {
                 setDefaultBindings(profile);
 
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
@@ -312,21 +313,21 @@ public class RobotSystem {
                 commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
-                new Trigger(profile, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> controller.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[FEEDER_RUN_INDEX]);
-                new Trigger(profile, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> controller.y().getAsBoolean())
+                new Trigger(profile, () -> driver.y().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> controller.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> controller.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> driver.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> controller.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
@@ -347,9 +348,9 @@ public class RobotSystem {
         private void leftClawBindingsProfile(final EventLoop profile) {
                 setDefaultBindings(profile);
 
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getRightTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getLeftTriggerAxis(),
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kRightRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
@@ -363,18 +364,18 @@ public class RobotSystem {
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
                 // TODO: This is missing a mapping: 9 of 10.
-                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> controller.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> controller.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> controller.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
-                new Trigger(profile, () -> controller.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> controller.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> controller.povDown().getAsBoolean())
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> driver.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
         }
 
@@ -394,26 +395,26 @@ public class RobotSystem {
                 commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
 
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
 
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
 
-                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> controller.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> controller.a().getAsBoolean())
+                new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> controller.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
-                new Trigger(profile, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> driver.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> driver.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -431,24 +432,24 @@ public class RobotSystem {
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kLeftRumble);
                 commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -controller.getLeftTriggerAxis(),
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> controller.getRightTriggerAxis(),
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble);
 
-                new Trigger(profile, () -> controller.leftTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> controller.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> controller.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
-                new Trigger(profile, () -> controller.rightTrigger().getAsBoolean())
+                new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
+                new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
+                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> controller.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> controller.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> controller.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> controller.a().getAsBoolean())
+                new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> controller.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                new Trigger(profile, () -> driver.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
                 // TODO: Missing feeder: this is the tenth mapping.
         }
 
@@ -464,11 +465,11 @@ public class RobotSystem {
                 // Drivetrain will execute this command periodically
                 return drivetrain.applyRequest(() ->
                 // Drive forward with negative Y (forward)
-                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
+                fieldDrive.withVelocityX(-driver.getLeftY() * MaxSpeed)
                                 // Drive left with negative X (left)
-                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
+                                .withVelocityY(-driver.getLeftX() * MaxSpeed)
                                 // Drive counterclockwise with negative X (left)
-                                .withRotationalRate(-controller.getRightX() * MaxAngularRate));
+                                .withRotationalRate(-driver.getRightX() * MaxAngularRate));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -484,7 +485,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeBrakeCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
-                                RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
+                                RumblePulseCommand.createLongSinglePulse(driver, RumbleIntensity.MEDIUM_LIGHT,
                                                 side));
         }
 
@@ -501,7 +502,7 @@ public class RobotSystem {
                                 () -> point.withModuleDirection(
                                                 new Rotation2d(0, 0)));
                 return new ParallelCommandGroup(zeroWheels,
-                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
+                                RumblePulseCommand.createShortSinglePulse(driver, RumbleIntensity.VERY_LIGHT,
                                                 side));
         }
 
@@ -512,15 +513,15 @@ public class RobotSystem {
                                 drivetrain,
                                 feeder,
                                 aimCamera,
-                                () -> -controller.getLeftX() * MaxSpeed,
-                                () -> -controller.getLeftY() * MaxSpeed,
+                                () -> -driver.getLeftX() * MaxSpeed,
+                                () -> -driver.getLeftY() * MaxSpeed,
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
                                         checkAimbotStatus = true;
                                         getCommandScheduler().schedule(new ParallelCommandGroup(
                                                         commands[MANUAL_SHOOT_INDEX]),
-                                                        RumblePulseCommand.createLongDoublePulse(controller,
+                                                        RumblePulseCommand.createLongDoublePulse(driver,
                                                                         RumbleIntensity.SUPER_HEAVY,
                                                                         side));
                                 });
@@ -530,14 +531,14 @@ public class RobotSystem {
         private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
                         final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar),
-                                new RumbleDynamicCommand(controller, ballVelocityScalar, side));
+                                new RumbleDynamicCommand(driver, ballVelocityScalar, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualFeederCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(
                                 feeder.manualFeederRun(),
-                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
+                                new RumbleDynamicCommand(driver, () -> RumbleIntensity.MEDIUM, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -560,14 +561,14 @@ public class RobotSystem {
                 });
 
                 return new ParallelCommandGroup(weaponSwap,
-                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.SUPER_HEAVY,
+                                RumblePulseCommand.createShortSinglePulse(driver, RumbleIntensity.SUPER_HEAVY,
                                                 side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar, final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(collector.run(collectorScalar),
-                                new RumbleDynamicCommand(controller, collectorScalar, side));
+                                new RumbleDynamicCommand(driver, collectorScalar, side));
 
         }
 
@@ -575,7 +576,7 @@ public class RobotSystem {
         private Command makeResetFieldOrientationCommand(final Supplier<RumbleType> side) {
                 // Reset the field-centric heading on left bumper press.
                 return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
-                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM_HEAVY,
+                                RumblePulseCommand.createLongDoublePulse(driver, RumbleIntensity.MEDIUM_HEAVY,
                                                 side));
         }
 
@@ -591,7 +592,7 @@ public class RobotSystem {
                                 getCommandScheduler().cancel(commands[i]);
                         }
                         getCommandScheduler().schedule(
-                                        new RumblePulseCommand(controller,
+                                        new RumblePulseCommand(driver,
                                                         0.3,
                                                         0.5,
                                                         RumbleIntensity.SUPER_HEAVY,
@@ -613,7 +614,7 @@ public class RobotSystem {
                         }
 
                         getCommandScheduler().schedule(
-                                        new RumblePulseCommand(controller,
+                                        new RumblePulseCommand(driver,
                                                         0.3,
                                                         0.5,
                                                         RumbleIntensity.SUPER_HEAVY,
@@ -625,7 +626,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeClimberUpCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(climber.upward(),
-                                RumblePulseCommand.createShortDoublePulse(controller, RumbleIntensity.MEDIUM,
+                                RumblePulseCommand.createShortDoublePulse(driver, RumbleIntensity.MEDIUM,
                                                 side));
         }
 
@@ -633,11 +634,11 @@ public class RobotSystem {
         private Command makeClimberDownCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(climber.downward(),
                                 new SequentialCommandGroup(
-                                                RumblePulseCommand.createShortDoublePulse(controller,
+                                                RumblePulseCommand.createShortDoublePulse(driver,
                                                                 RumbleIntensity.MEDIUM,
                                                                 side),
                                                 RumblePulseCommand.createShortWaitCommand(),
-                                                RumblePulseCommand.createShortSinglePulse(controller,
+                                                RumblePulseCommand.createShortSinglePulse(driver,
                                                                 RumbleIntensity.MEDIUM,
                                                                 side)));
         }
@@ -648,7 +649,7 @@ public class RobotSystem {
                                 hopper.unclasp(),
                                 new WaitCommand(0.5),
                                 hopper.stop()),
-                                RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.LIGHT,
+                                RumblePulseCommand.createLongSinglePulse(driver, RumbleIntensity.LIGHT,
                                                 side));
         }
 
