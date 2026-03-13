@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,7 +50,6 @@ import frc.robot.commands.rumble.RumblePulseCommand;
 import frc.robot.commands.shoot.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Feeder;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
@@ -92,7 +90,6 @@ public class RobotSystem {
         private final Feeder feeder = new Feeder();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
-        private final Hopper hopper = new Hopper();
 
         // =============================================================================================================
         // Modules
@@ -120,8 +117,7 @@ public class RobotSystem {
         private static final byte WEAPON_SWAP_INDEX = 10;
         private static final byte CLIMBER_UP_INDEX = 11;
         private static final byte CLIMBER_DOWN_INDEX = 12;
-        private static final byte HOPPER_RUN_INDEX = 13;
-        private static final byte FEEDER_RUN_INDEX = 14;
+        private static final byte FEEDER_RUN_INDEX = 13;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -156,8 +152,6 @@ public class RobotSystem {
                         /* Climber Up */
                         null,
                         /* Climber Down */
-                        null,
-                        /* Hopper Run */
                         null,
                         /* Manual Feeder */
                         null,
@@ -310,7 +304,6 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
@@ -327,7 +320,6 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
@@ -360,7 +352,6 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
 
                 // TODO: This is missing a mapping: 9 of 10.
@@ -372,7 +363,6 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
                 new Trigger(profile, () -> driver.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
@@ -392,7 +382,6 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
@@ -413,8 +402,7 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.rightBumper().getAsBoolean()).onTrue(commands[HOPPER_RUN_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
+                // TODO: Are we missing a command?
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -430,7 +418,6 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kLeftRumble);
-                commands[HOPPER_RUN_INDEX] = makeHopperRunCommand(() -> RumbleType.kLeftRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kRightRumble);
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
@@ -449,7 +436,6 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean()).toggleOnTrue(commands[HOPPER_RUN_INDEX]);
                 // TODO: Missing feeder: this is the tenth mapping.
         }
 
@@ -641,16 +627,6 @@ public class RobotSystem {
                                                 RumblePulseCommand.createShortSinglePulse(driver,
                                                                 RumbleIntensity.MEDIUM,
                                                                 side)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeHopperRunCommand(final Supplier<RumbleType> side) {
-                return new ParallelCommandGroup(new SequentialCommandGroup(
-                                hopper.unclasp(),
-                                new WaitCommand(0.5),
-                                hopper.stop()),
-                                RumblePulseCommand.createLongSinglePulse(driver, RumbleIntensity.LIGHT,
-                                                side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
