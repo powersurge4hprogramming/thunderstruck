@@ -88,7 +88,7 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         private final Shooter shooter = new Shooter();
-        private final Feeder loader = new Feeder();
+        private final Feeder feeder = new Feeder();
         private final Collector collector = new Collector();
         private final Climber climber = new Climber();
         private final Hopper hopper = new Hopper();
@@ -253,7 +253,7 @@ public class RobotSystem {
                 // Event map: For PathPlanner markers (e.g., "shoot" triggers shooter)
                 eventsAuto = new HashMap<>();
                 eventsAuto.put(EVENT_SHOOT,
-                                new LockOnShootAndDrive(shooter, drivetrain, loader, aimCamera, null, null,
+                                new LockOnShootAndDrive(shooter, drivetrain, feeder, aimCamera, null, null,
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
                 eventsAuto.put(EVENT_COLLECT, collector.run(() -> 0.5));
@@ -510,7 +510,7 @@ public class RobotSystem {
                 return new LockOnShootAndDrive(
                                 shooter,
                                 drivetrain,
-                                loader,
+                                feeder,
                                 aimCamera,
                                 () -> -controller.getLeftX() * MaxSpeed,
                                 () -> -controller.getLeftY() * MaxSpeed,
@@ -536,7 +536,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeManualFeederCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(
-                                loader.manualFeederRun(),
+                                feeder.manualFeederRun(),
                                 new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
         }
 
