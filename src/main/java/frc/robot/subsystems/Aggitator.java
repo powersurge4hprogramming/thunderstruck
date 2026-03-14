@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -16,10 +14,10 @@ public class Aggitator extends SubsystemBase {
         this.motor = new SparkMax(CANBus.ID.AGGITATOR.MOTOR, MotorType.kBrushed);
     }
 
-    public Command run(final DoubleSupplier motorRpmScalar) {
+    public Command run() {
         return this.runEnd(
                 () -> {
-                    motor.set(motorRpmScalar.getAsDouble());
+                    motor.set(0.33);
                 },
                 () -> {
                     motor.set(0);

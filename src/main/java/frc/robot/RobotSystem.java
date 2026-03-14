@@ -54,6 +54,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Aggitator;
 import frc.robot.subsystems.Climber;
 
 public class RobotSystem {
@@ -90,6 +91,7 @@ public class RobotSystem {
         private final Shooter shooter = new Shooter();
         private final Feeder feeder = new Feeder();
         private final Collector collector = new Collector();
+        private final Aggitator aggitator = new Aggitator();
         private final Climber climber = new Climber();
 
         // =============================================================================================================
@@ -119,6 +121,7 @@ public class RobotSystem {
         private static final byte CLIMBER_UP_INDEX = 11;
         private static final byte CLIMBER_DOWN_INDEX = 12;
         private static final byte FEEDER_RUN_INDEX = 13;
+        private static final byte AGGITATOR_RUN_INDEX = 14;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -155,6 +158,8 @@ public class RobotSystem {
                         /* Climber Down */
                         null,
                         /* Manual Feeder */
+                        null,
+                        /* Aggitator Run */
                         null,
         };
         private static int currentProfileIndex = 0;
@@ -306,6 +311,7 @@ public class RobotSystem {
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
                 commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
+                commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() -> RumbleType.kBothRumble);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
@@ -321,6 +327,7 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).onTrue(commands[AGGITATOR_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
@@ -630,6 +637,12 @@ public class RobotSystem {
                                                 RumblePulseCommand.createShortSinglePulse(driver,
                                                                 RumbleIntensity.MEDIUM,
                                                                 side)));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeAggitorRunCommand(final Supplier<RumbleType> side) {
+                return new ParallelCommandGroup(aggitator.run(),
+                                RumblePulseCommand.createLongSinglePulse(driver, RumbleIntensity.MEDIUM, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
