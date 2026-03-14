@@ -17,7 +17,7 @@ public class Aggitator extends SubsystemBase {
     public Command run() {
         return this.runEnd(
                 () -> {
-                    motor.set(0.33);
+                    motor.set(1);
                 },
                 () -> {
                     motor.set(0);
