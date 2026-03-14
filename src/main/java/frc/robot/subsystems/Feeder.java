@@ -21,16 +21,36 @@ public class Feeder extends SubsystemBase {
 
     // -----------------------------------------------------------------------------------------------------------------
     /**
-     * This function creates a single {@link Command} to feed the ball at a
-     * particular instant.
+     * This function creates a single {@link Command} to feed the ball into the
+     * shooter at a particular instant.
      * 
      * @return The {@link Command} at which to feed the ball to the shooter.
      */
-    public Command manualFeederRun() {
+    public Command manualFeederRunIn() {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
                     final double loaderMotorSpeed = 1;
+                    setFeederSpeed(loaderMotorSpeed);
+                },
+                // Cleanup when the command ends (button released)
+                () -> {
+                    setFeederSpeed(0);
+                });
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * This function creates a single {@link Command} to feed the ball out of the
+     * shooter at a particular instant.
+     * 
+     * @return The {@link Command} at which to feed the ball out of the shooter.
+     */
+    public Command manualFeederRunOut() {
+        return this.runEnd(
+                // Run continuously while the command is active
+                () -> {
+                    final double loaderMotorSpeed = -1;
                     setFeederSpeed(loaderMotorSpeed);
                 },
                 // Cleanup when the command ends (button released)
