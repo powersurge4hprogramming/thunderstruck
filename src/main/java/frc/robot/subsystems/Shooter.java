@@ -104,6 +104,7 @@ public class Shooter extends SubsystemBase {
                 // Cleanup when the command ends (button released)
                 () -> {
                     stopShooter();
+                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble());
                 });
     }
 
