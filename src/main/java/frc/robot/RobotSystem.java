@@ -334,7 +334,8 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[AGGITATOR_RUN_INDEX]);
+                new Trigger(profile, () -> driver.povRight().getAsBoolean())
+                                .toggleOnTrue(commands[AGGITATOR_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
