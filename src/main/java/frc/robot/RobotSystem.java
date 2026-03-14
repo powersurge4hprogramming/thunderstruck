@@ -301,12 +301,12 @@ public class RobotSystem {
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
                 commands[MANUAL_SHOOT_INDEX] = new ParallelCommandGroup(
+                                makeManualShootCommand(() -> driver.getRightTriggerAxis(),
+                                                () -> RumbleType.kRightRumble),
                                 new SequentialCommandGroup(
                                                 new WaitCommand(2),
-                                                makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                                                () -> RumbleType.kRightRumble)),
-                                makeManualFeederCommand(() -> RumbleType.kLeftRumble),
-                                makeAggitorRunCommand(() -> RumbleType.kBothRumble));
+                                                makeManualFeederCommand(() -> RumbleType.kLeftRumble),
+                                                makeAggitorRunCommand(() -> RumbleType.kBothRumble)));
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble);
