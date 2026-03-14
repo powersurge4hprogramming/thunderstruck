@@ -327,7 +327,7 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).onTrue(commands[AGGITATOR_RUN_INDEX]);
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[AGGITATOR_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
