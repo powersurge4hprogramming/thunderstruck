@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
     // =================================================================================================================
     // Private Data Members
     // =================================================================================================================
-    private final double MAX_SHOOTER_RPM = 5_500.0; // <- Tune this after characterization
+    private final double MAX_SHOOTER_RPM = 5_000.0; // <- Tune this after characterization
 
     private final TalonFX motorLeader;
     private final TalonFX motorFollower;
