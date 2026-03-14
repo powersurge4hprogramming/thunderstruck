@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -299,8 +300,13 @@ public class RobotSystem {
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble);
+                commands[MANUAL_SHOOT_INDEX] = new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                                new WaitCommand(2),
+                                                makeManualShootCommand(() -> driver.getRightTriggerAxis(),
+                                                                () -> RumbleType.kRightRumble)),
+                                makeManualFeederCommand(() -> RumbleType.kLeftRumble),
+                                makeAggitorRunCommand(() -> RumbleType.kBothRumble));
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble);
@@ -309,12 +315,12 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
-                commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() -> RumbleType.kBothRumble);
+                // commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() ->
+                // RumbleType.kLeftRumble);
+                // commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() ->
+                // RumbleType.kBothRumble);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
-                                .whileTrue(commands[FEEDER_RUN_INDEX]);
                 new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
                 new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
@@ -326,7 +332,11 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[AGGITATOR_RUN_INDEX]);
+                // new Trigger(profile, () -> driver.a().getAsBoolean()).and(() ->
+                // checkAimbotStatus == false)
+                // .whileTrue(commands[FEEDER_RUN_INDEX]);
+                // new Trigger(profile, () ->
+                // driver.povRight().getAsBoolean()).whileTrue(commands[AGGITATOR_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
                  * 
