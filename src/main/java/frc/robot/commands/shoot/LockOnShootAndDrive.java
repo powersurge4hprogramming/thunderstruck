@@ -1,5 +1,7 @@
 package frc.robot.commands.shoot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -9,7 +11,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -25,7 +26,9 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Constants
         // =============================================================================================================
-        private final double LAUNCH_ANGLE_DEGREES = 55;
+        private final float LAUNCH_ANGLE_DEGREES = 55;
+        private final float TOO_CLOSE_DISTANCE_INCHES = 25;
+        private final float TOO_FAR_DISTANCE_INCHES = 80;
 
         // =============================================================================================================
         // Sub-Systems
@@ -111,12 +114,27 @@ public class LockOnShootAndDrive extends Command {
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
+                if (!shot.isValidShot()) {
+                        if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
+                                drive.setControl(fieldFacingAngle
+                                                .withVelocityX(1)
+                                                .withVelocityY(0));
+                        } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
+                                drive.setControl(fieldFacingAngle
+                                                .withVelocityX(-1)
+                                                .withVelocityY(0));
+                        } else {
+                                // Something catostrophic has occurred.
+                                this.cancel();
+                                return;
+                        }
+                }
                 final double desiredMotorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
                 if (desiredMotorRPM > shooter.getMaxRPM()) {
                         // Drive forward to get closer to the hub.
-                        // TODO: back up if too close to the hub.
                         drive.setControl(fieldFacingAngle
-                                        .withVelocityX(1));
+                                        .withVelocityX(1)
+                                        .withVelocityY(0));
                         return;
                 }
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
