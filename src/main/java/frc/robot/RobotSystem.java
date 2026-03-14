@@ -642,7 +642,7 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeAggitorRunCommand(final Supplier<RumbleType> side) {
                 return new ParallelCommandGroup(aggitator.run(),
-                                RumblePulseCommand.createLongSinglePulse(driver, RumbleIntensity.MEDIUM, side));
+                                RumblePulseCommand.createLongDoublePulse(driver, RumbleIntensity.MEDIUM, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
