@@ -52,6 +52,14 @@ public final class CANBus {
 
         /**
          * {@summary}
+         * The IDs for the {@link frc.robot.subsystems.Collector Collector}.
+         */
+        public static final class AGGITATOR {
+            public static final byte MOTOR = 4;
+        }
+
+        /**
+         * {@summary}
          * The IDs for the {@link frc.robot.subsystems.Climber Climber}.
          */
         public static final class CLIMBER {
