@@ -30,7 +30,7 @@ public class Feeder extends SubsystemBase {
         return this.runEnd(
                 // Run continuously while the command is active
                 () -> {
-                    final double loaderMotorSpeed = 0.5;
+                    final double loaderMotorSpeed = 1;
                     setFeederSpeed(loaderMotorSpeed);
                 },
                 // Cleanup when the command ends (button released)
