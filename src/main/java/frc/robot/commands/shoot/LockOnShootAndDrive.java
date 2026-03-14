@@ -110,7 +110,7 @@ public class LockOnShootAndDrive extends Command {
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
-                final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlyWheelSpeedMPS());
+                final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
 
                 /*
