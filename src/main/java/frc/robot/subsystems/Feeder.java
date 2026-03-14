@@ -31,26 +31,26 @@ public class Feeder extends SubsystemBase {
                 // Run continuously while the command is active
                 () -> {
                     final double loaderMotorSpeed = 0.5;
-                    setLoaderSpeed(loaderMotorSpeed);
+                    setFeederSpeed(loaderMotorSpeed);
                 },
                 // Cleanup when the command ends (button released)
                 () -> {
-                    setLoaderSpeed(0);
+                    setFeederSpeed(0);
                 });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     /**
      * {@summary}
-     * Sets the loader motor speed.
+     * Sets the feeder motor speed.
      *
-     * @param speed The output to the loader motor from -1.0 to 1.0.
-     *              Positive values feed the note into the shooter.
+     * @param speed The output to the feeder motor from -1.0 to 1.0.
+     *              Positive values feed the ball into the shooter.
      * 
      * @apiNote
      *          Only use this if you know what you are doing.
      */
-    public void setLoaderSpeed(final double speed) {
+    public void setFeederSpeed(final double speed) {
         this.loader.set(speed);
     }
 }

@@ -148,4 +148,9 @@ public class Shooter extends SubsystemBase {
         return this.motorLeader.getVelocity().getValue().in(RPM);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public double getMaxRPM() {
+        return MAX_SHOOTER_RPM;
+    }
+
 }

@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -30,7 +31,7 @@ public class LockOnShootAndDrive extends Command {
         // Sub-Systems
         // =============================================================================================================
         private final Shooter shooter;
-        private final Feeder loader;
+        private final Feeder feeder;
         private final CommandSwerveDrivetrain drive;
 
         // =============================================================================================================
@@ -59,11 +60,11 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Public Methods
         // =============================================================================================================
-        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final Feeder loader,
+        public LockOnShootAndDrive(final Shooter shooter, final CommandSwerveDrivetrain drive, final Feeder feeder,
                         final AimCamera aimCamera, final DoubleSupplier xMove, final DoubleSupplier yMove,
                         final DoubleSupplier batteryVoltageSupplier, final double MaxSpeed) {
                 this.shooter = shooter;
-                this.loader = loader;
+                this.feeder = feeder;
                 this.drive = drive;
                 this.aimCamera = aimCamera;
                 this.xSupplier = xMove;
@@ -110,17 +111,24 @@ public class LockOnShootAndDrive extends Command {
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
-                final double motorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
+                final double desiredMotorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
+                if (desiredMotorRPM > shooter.getMaxRPM()) {
+                        // Drive forward to get closer to the hub.
+                        // TODO: back up if too close to the hub.
+                        drive.setControl(fieldFacingAngle
+                                        .withVelocityX(1));
+                        return;
+                }
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
 
                 /*
                  * 2. Command the Shooter
                  */
-                shooter.setRPM(motorRPM);
+                shooter.setRPM(desiredMotorRPM);
                 if (isShooterReady) {
-                        loader.setLoaderSpeed(0.8);
+                        feeder.setFeederSpeed(0.8);
                 } else {
-                        loader.setLoaderSpeed(0);
+                        feeder.setFeederSpeed(0);
                 }
 
                 /*
@@ -143,7 +151,7 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void end(boolean interrupted) {
-                loader.setLoaderSpeed(0);
+                feeder.setFeederSpeed(0);
                 shooter.setRPM(0);
         }
 }
