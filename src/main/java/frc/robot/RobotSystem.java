@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -577,6 +576,9 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
                 return new InstantCommand(() -> {
+                        System.out.println("Profile Increase");
+                        System.out.println("profiles.size() = " + profiles.size());
+                        System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
                         System.out.println("currentProfileInex = " + currentProfileIndex);
                         currentProfileIndex += currentProfileIndex;
                         if (currentProfileIndex == profileEventLoops.size()) {
@@ -599,6 +601,9 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
                 return new InstantCommand(() -> {
+                        System.out.println("Profile Decrease");
+                        System.out.println("profiles.size() = " + profiles.size());
+                        System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
                         System.out.println("currentProfileInex = " + currentProfileIndex);
                         currentProfileIndex -= currentProfileIndex;
                         if (currentProfileIndex <= 0) {
