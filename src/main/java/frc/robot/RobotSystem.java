@@ -580,7 +580,7 @@ public class RobotSystem {
                         System.out.println("profiles.size() = " + profiles.size());
                         System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
                         System.out.println("currentProfileInex = " + currentProfileIndex);
-                        currentProfileIndex += currentProfileIndex;
+                        currentProfileIndex = currentProfileIndex + 1;
                         if (currentProfileIndex == profileEventLoops.size()) {
                                 currentProfileIndex = 0;
                         }
@@ -605,7 +605,7 @@ public class RobotSystem {
                         System.out.println("profiles.size() = " + profiles.size());
                         System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
                         System.out.println("currentProfileInex = " + currentProfileIndex);
-                        currentProfileIndex -= currentProfileIndex;
+                        currentProfileIndex = currentProfileIndex - 1;
                         if (currentProfileIndex <= 0) {
                                 currentProfileIndex = profileEventLoops.size() - 1;
                         }
