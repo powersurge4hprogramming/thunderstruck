@@ -304,7 +304,7 @@ public class RobotSystem {
                                 makeManualShootCommand(() -> driver.getRightTriggerAxis(),
                                                 () -> RumbleType.kRightRumble),
                                 new SequentialCommandGroup(
-                                                new WaitCommand(2),
+                                                new WaitCommand(1),
                                                 makeManualFeederCommand(() -> RumbleType.kLeftRumble),
                                                 makeAggitorRunCommand(() -> RumbleType.kBothRumble)));
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble);
