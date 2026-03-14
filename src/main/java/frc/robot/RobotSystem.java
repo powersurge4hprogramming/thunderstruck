@@ -576,8 +576,9 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileIncreaseCommand() {
+                ShuffleboardTab profileTab = Shuffleboard.getTab("Profile");
+                profileTab.addInteger("Current Profile", () -> currentProfileIndex);
                 return new InstantCommand(() -> {
-                        // SmartDashboard.putNumber("Current Profile", currentProfileIndex);
                         currentProfileIndex += currentProfileIndex;
                         if (currentProfileIndex == profileEventLoops.size()) {
                                 currentProfileIndex = 0;
@@ -598,8 +599,9 @@ public class RobotSystem {
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeProfileDecreaseCommand() {
+                ShuffleboardTab profileTab = Shuffleboard.getTab("Profile");
+                profileTab.addInteger("Current Profile", () -> currentProfileIndex);
                 return new InstantCommand(() -> {
-                        // SmartDashboard.putNumber("Current Profile", currentProfileIndex);
                         currentProfileIndex -= currentProfileIndex;
                         if (currentProfileIndex <= 0) {
                                 currentProfileIndex = profileEventLoops.size() - 1;
