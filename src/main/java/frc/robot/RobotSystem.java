@@ -309,8 +309,10 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble);
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
-                commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() -> RumbleType.kLeftRumble);
-                commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() -> RumbleType.kBothRumble);
+                // commands[FEEDER_RUN_INDEX] = makeManualFeederCommand(() ->
+                // RumbleType.kLeftRumble);
+                // commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() ->
+                // RumbleType.kBothRumble);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)

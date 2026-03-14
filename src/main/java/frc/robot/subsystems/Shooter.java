@@ -31,6 +31,7 @@ public class Shooter extends SubsystemBase {
     private final VelocityVoltage velocityRequest;
 
     private final NetworkTableEntry leaderRpmEntry;
+    private final NetworkTableEntry askedRpm;
 
     // =================================================================================================================
     // Public Methods
@@ -46,6 +47,7 @@ public class Shooter extends SubsystemBase {
 
         NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable("Shooter");
         this.leaderRpmEntry = shooterTable.getEntry("LeaderRPM");
+        this.askedRpm = shooterTable.getEntry("Asked RPM");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -99,12 +101,12 @@ public class Shooter extends SubsystemBase {
                     // double targetRPM = 0.5 * MAX_SHOOTER_RPM;
                     setRPM(targetRPM);
 
-                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble());
+                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble() * 60.0);
                 },
                 // Cleanup when the command ends (button released)
                 () -> {
                     stopShooter();
-                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble());
+                    leaderRpmEntry.setDouble(motorLeader.getVelocity().getValueAsDouble() * 60.0);
                 });
     }
 
@@ -119,6 +121,7 @@ public class Shooter extends SubsystemBase {
      * @param rpm The motor RPM.
      */
     public void setRPM(final double rpm) {
+        askedRpm.setDouble(rpm);
         if (rpm < 100) { // Safety - don't try to spin at tiny speeds
             stopShooter();
             return;
