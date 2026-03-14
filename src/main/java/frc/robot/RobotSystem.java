@@ -122,7 +122,7 @@ public class RobotSystem {
         private static final byte CLIMBER_DOWN_INDEX = 12;
         private static final byte FEEDER_RUN_IN_INDEX = 13;
         private static final byte AGGITATOR_RUN_INDEX = 14;
-        private static final byte FEEDER_RUN_OUT = 15;
+        private static final byte FEEDER_RUN_OUT_INDEX = 15;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -314,7 +314,7 @@ public class RobotSystem {
                 commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble);
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble);
                 commands[FEEDER_RUN_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble);
-                commands[FEEDER_RUN_OUT] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble);
+                commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble);
                 commands[AGGITATOR_RUN_INDEX] = makeAggitorRunCommand(() -> RumbleType.kBothRumble);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
@@ -333,7 +333,7 @@ public class RobotSystem {
                                 .whileTrue(commands[FEEDER_RUN_IN_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
-                                .whileTrue(commands[FEEDER_RUN_OUT]);
+                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[AGGITATOR_RUN_INDEX]);
                 /*
                  * CONFLICTING WITH THE PROFILE COMMANDS!
