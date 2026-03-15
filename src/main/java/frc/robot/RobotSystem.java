@@ -323,10 +323,10 @@ public class RobotSystem {
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
-                                .whileTrue(commands[FEEDER_RUN_IN_INDEX]);
+                                .toggleOnTrue(commands[FEEDER_RUN_IN_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
+                                .toggleOnTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean())
                                 .toggleOnTrue(commands[AGITATOR_RUN_INDEX]);
                 new Trigger(profile, () -> driver.b().getAsBoolean()).and(() -> driver.rightBumper().getAsBoolean())
