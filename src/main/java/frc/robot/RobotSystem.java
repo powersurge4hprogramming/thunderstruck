@@ -320,9 +320,9 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean()).and(() -> driver.rightBumper().getAsBoolean())
+                new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[HOPPER_IN_INDEX]);
+                new Trigger(profile, () -> driver.b().getAsBoolean())
                                 .onTrue(commands[SPEED_CHANGE_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).toggleOnTrue(commands[HOPPER_IN_INDEX]);
 
         }
 
