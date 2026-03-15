@@ -496,7 +496,7 @@ public class RobotSystem {
         private Command makeBrakeCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
                 return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
                                 RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
-                                                side));
+                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -514,7 +514,7 @@ public class RobotSystem {
                                                 new Rotation2d(0, 0)));
                 return new ParallelCommandGroup(zeroWheels,
                                 RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
-                                                side));
+                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -546,7 +546,9 @@ public class RobotSystem {
                                                         commands[MANUAL_SHOOT_INDEX]),
                                                         RumblePulseCommand.createLongDoublePulse(controller,
                                                                         RumbleIntensity.SUPER_HEAVY,
-                                                                        side));
+                                                                        side)
+                                                                        .handleInterrupt(() -> controller
+                                                                                        .setRumble(side.get(), 0)));
                                 });
         }
 
@@ -554,7 +556,8 @@ public class RobotSystem {
         private Command makeManualShootCommand(final DoubleSupplier ballVelocityScalar,
                         final Supplier<RumbleType> side, final CommandXboxController controller) {
                 return new ParallelCommandGroup(shooter.manualShootBall(ballVelocityScalar),
-                                new RumbleDynamicCommand(controller, ballVelocityScalar, side));
+                                new RumbleDynamicCommand(controller, ballVelocityScalar, side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -562,7 +565,8 @@ public class RobotSystem {
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(
                                 feeder.manualFeederRunIn(),
-                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
+                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -570,7 +574,8 @@ public class RobotSystem {
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(
                                 feeder.manualFeederRunOut(),
-                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side));
+                                new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -594,14 +599,16 @@ public class RobotSystem {
 
                 return new ParallelCommandGroup(weaponSwap,
                                 RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.SUPER_HEAVY,
-                                                side));
+                                                side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeCollectorRunCommand(final DoubleSupplier collectorScalar, final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(collector.run(collectorScalar),
-                                new RumbleDynamicCommand(controller, collectorScalar, side));
+                                new RumbleDynamicCommand(controller, collectorScalar, side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
 
         }
 
@@ -611,7 +618,7 @@ public class RobotSystem {
                 // Reset the field-centric heading on left bumper press.
                 return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
                                 RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM_HEAVY,
-                                                side));
+                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -635,7 +642,9 @@ public class RobotSystem {
                                                         0.5,
                                                         RumbleIntensity.SUPER_HEAVY,
                                                         (byte) (currentProfileIndex + 1),
-                                                        () -> RumbleType.kBothRumble));
+                                                        () -> RumbleType.kBothRumble)
+                                                        .handleInterrupt(() -> controller
+                                                                        .setRumble(RumbleType.kBothRumble, 0)));
                 });
         }
 
@@ -661,7 +670,9 @@ public class RobotSystem {
                                                         0.5,
                                                         RumbleIntensity.SUPER_HEAVY,
                                                         (byte) (currentProfileIndex + 1),
-                                                        () -> RumbleType.kBothRumble));
+                                                        () -> RumbleType.kBothRumble)
+                                                        .handleInterrupt(() -> controller
+                                                                        .setRumble(RumbleType.kBothRumble, 0)));
                 });
         }
 
@@ -669,7 +680,7 @@ public class RobotSystem {
         private Command makeClimberUpCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
                 return new ParallelCommandGroup(climber.upward(),
                                 RumblePulseCommand.createShortDoublePulse(controller, RumbleIntensity.MEDIUM,
-                                                side));
+                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -679,18 +690,27 @@ public class RobotSystem {
                                 new SequentialCommandGroup(
                                                 RumblePulseCommand.createShortDoublePulse(controller,
                                                                 RumbleIntensity.MEDIUM,
-                                                                side),
-                                                RumblePulseCommand.createShortWaitCommand(),
+                                                                side)
+                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
+                                                                                0)),
+                                                RumblePulseCommand.createShortWaitCommand()
+                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
+                                                                                0)),
                                                 RumblePulseCommand.createShortSinglePulse(controller,
                                                                 RumbleIntensity.MEDIUM,
-                                                                side)));
+                                                                side)
+                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
+                                                                                0)))
+                                                .handleInterrupt(() -> controller.setRumble(side.get(),
+                                                                0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
         private Command makeAgitatorRunCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(agitator.run(),
-                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM, side));
+                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM, side)
+                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
