@@ -25,7 +25,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -78,7 +77,6 @@ public class RobotSystem {
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
         private boolean checkAimbotStatus = false;
         private double maxSpeedScalar = 1.0;
-        SwerveInputProcessor swerveInputProcessor = new SwerveInputProcessor();
 
         // =============================================================================================================
         // Systems
@@ -444,13 +442,10 @@ public class RobotSystem {
 
                 // Drivetrain will execute this command periodically
                 return drivetrain.applyRequest(() -> {
-                        Translation2d cleanedUpInput = swerveInputProcessor.getProcessedTranslation(controller);
-                        double velocityX = cleanedUpInput.getX();
-                        double velocityY = cleanedUpInput.getY();
                         // Drive forward with negative Y (forward)
-                        return fieldDrive.withVelocityX(velocityX * MaxSpeed * maxSpeedScalar)
+                        return fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed * maxSpeedScalar)
                                         // Drive left with negative X (left)
-                                        .withVelocityY(velocityY * MaxSpeed * maxSpeedScalar)
+                                        .withVelocityY(-controller.getLeftX() * MaxSpeed * maxSpeedScalar)
                                         // Drive counterclockwise with negative X (left)
                                         .withRotationalRate(-controller.getRightX() * MaxAngularRate);
                 });
@@ -499,19 +494,8 @@ public class RobotSystem {
                                 drivetrain,
                                 feeder,
                                 aimCamera,
-                                () -> {
-                                        Translation2d cleanedUpInput = swerveInputProcessor
-                                                        .getProcessedTranslation(controller);
-                                        double velocityX = cleanedUpInput.getX();
-
-                                        return velocityX * MaxSpeed;
-                                },
-                                () -> {
-                                        Translation2d cleanedUpInput = swerveInputProcessor
-                                                        .getProcessedTranslation(controller);
-                                        double velocityY = cleanedUpInput.getY();
-                                        return velocityY * MaxSpeed;
-                                },
+                                () -> -driver.getLeftX() * MaxSpeed,
+                                () -> -driver.getLeftY() * MaxSpeed,
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
