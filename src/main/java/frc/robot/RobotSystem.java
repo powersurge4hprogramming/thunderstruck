@@ -340,7 +340,6 @@ public class RobotSystem {
                 commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble, driver);
                 commands[FEEDER_RUN_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver);
 
-                // TODO: This is missing a mapping: 9 of 10.
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
                 new Trigger(profile, () -> driver.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
@@ -353,6 +352,7 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -388,7 +388,7 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                // TODO: Are we missing a command?
+                new Trigger(profile, () -> driver.x().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -422,7 +422,7 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                // TODO: Missing feeder: this is the tenth mapping.
+                new Trigger(profile, () -> driver.x().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
