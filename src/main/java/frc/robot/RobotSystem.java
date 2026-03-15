@@ -348,11 +348,14 @@ public class RobotSystem {
                                 .and(() -> checkAimbotStatus == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.rightBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
+                new Trigger(profile, () -> driver.x().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
+                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .and(() -> driver.rightBumper().getAsBoolean())
+                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -389,6 +392,9 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 new Trigger(profile, () -> driver.x().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
+                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .and(() -> driver.rightBumper().getAsBoolean())
+                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -423,6 +429,9 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 new Trigger(profile, () -> driver.x().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
+                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                                .and(() -> driver.rightBumper().getAsBoolean())
+                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
