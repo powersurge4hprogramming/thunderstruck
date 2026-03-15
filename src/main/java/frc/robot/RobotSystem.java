@@ -448,9 +448,9 @@ public class RobotSystem {
                         double velocityX = cleanedUpInput.getX();
                         double velocityY = cleanedUpInput.getY();
                         // Drive forward with negative Y (forward)
-                        return fieldDrive.withVelocityX(velocityX * maxSpeedScalar)
+                        return fieldDrive.withVelocityX(velocityX * MaxSpeed * maxSpeedScalar)
                                         // Drive left with negative X (left)
-                                        .withVelocityY(velocityY * maxSpeedScalar)
+                                        .withVelocityY(velocityY * MaxSpeed * maxSpeedScalar)
                                         // Drive counterclockwise with negative X (left)
                                         .withRotationalRate(-controller.getRightX() * MaxAngularRate);
                 });
