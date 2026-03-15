@@ -289,7 +289,10 @@ public class RobotSystem {
                                 () -> RumbleType.kRightRumble, driver);
                 commands[HOPPER_IN_INDEX] = new ParallelCommandGroup(
                                 makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver),
-                                makeAgitatorRunCommand(() -> RumbleType.kRightRumble, driver));
+                                makeAgitatorRunCommand(() -> RumbleType.kRightRumble, driver),
+                                RumblePulseCommand.createShortDoublePulse(driver, RumbleIntensity.MEDIUM,
+                                                () -> RumbleType.kRightRumble)
+                                                .handleInterrupt(() -> driver.setRumble(RumbleType.kRightRumble, 0)));
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble, driver);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
