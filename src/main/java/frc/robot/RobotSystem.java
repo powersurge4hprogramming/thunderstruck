@@ -25,6 +25,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -77,6 +78,7 @@ public class RobotSystem {
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
         private boolean checkAimbotStatus = false;
+        SwerveInputProcessor swerveInputProcessor = new SwerveInputProcessor();
 
         // =============================================================================================================
         // Systems
@@ -465,14 +467,19 @@ public class RobotSystem {
                  * This command will always run on the drivetrain until another command takes
                  * control of it.
                  */
+
                 // Drivetrain will execute this command periodically
-                return drivetrain.applyRequest(() ->
-                // Drive forward with negative Y (forward)
-                fieldDrive.withVelocityX(-controller.getLeftY() * MaxSpeed)
-                                // Drive left with negative X (left)
-                                .withVelocityY(-controller.getLeftX() * MaxSpeed)
-                                // Drive counterclockwise with negative X (left)
-                                .withRotationalRate(-controller.getRightX() * MaxAngularRate));
+                return drivetrain.applyRequest(() -> {
+                        Translation2d cleanedUpInput = swerveInputProcessor.getProcessedTranslation(controller);
+                        double velocityX = cleanedUpInput.getX();
+                        double velocityY = cleanedUpInput.getY();
+                        // Drive forward with negative Y (forward)
+                        return fieldDrive.withVelocityX(velocityX * MaxSpeed)
+                                        // Drive left with negative X (left)
+                                        .withVelocityY(velocityY * MaxSpeed)
+                                        // Drive counterclockwise with negative X (left)
+                                        .withRotationalRate(-controller.getRightX() * MaxAngularRate);
+                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -518,8 +525,19 @@ public class RobotSystem {
                                 drivetrain,
                                 feeder,
                                 aimCamera,
-                                () -> -driver.getLeftX() * MaxSpeed,
-                                () -> -driver.getLeftY() * MaxSpeed,
+                                () -> {
+                                        Translation2d cleanedUpInput = swerveInputProcessor
+                                                        .getProcessedTranslation(controller);
+                                        double velocityX = cleanedUpInput.getX();
+
+                                        return velocityX * MaxSpeed;
+                                },
+                                () -> {
+                                        Translation2d cleanedUpInput = swerveInputProcessor
+                                                        .getProcessedTranslation(controller);
+                                        double velocityY = cleanedUpInput.getY();
+                                        return velocityY * MaxSpeed;
+                                },
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
