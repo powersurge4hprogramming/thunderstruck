@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -142,7 +143,7 @@ public class RobotSystem {
                         null,
                         /* Manual Feeder In */
                         null,
-                        /* Aggitator Run */
+                        /* Agitator Run */
                         null,
                         /* Manual Feeder Out */
                         null,
@@ -285,8 +286,13 @@ public class RobotSystem {
 
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble, driver);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble, driver);
+                commands[MANUAL_SHOOT_INDEX] = new SequentialCommandGroup(
+                                makeManualShootCommand(() -> driver.getRightTriggerAxis(),
+                                                () -> RumbleType.kRightRumble, driver),
+                                new WaitCommand(1.0),
+                                new ParallelCommandGroup(
+                                                makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver),
+                                                makeAgitatorRunCommand(() -> RumbleType.kRightRumble, driver)));
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble, driver);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
@@ -319,6 +325,7 @@ public class RobotSystem {
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean())
                                 .toggleOnTrue(commands[AGITATOR_RUN_INDEX]);
+
         }
 
         // -------------------------------------------------------------------------------------------------------------
