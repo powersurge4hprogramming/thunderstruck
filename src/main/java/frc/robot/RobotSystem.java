@@ -63,8 +63,7 @@ public class RobotSystem {
         // Constants
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
-        private static final double MaxSpeedScaler = 1;
-        private static final double MaxSpeed = MaxSpeedScaler * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private static final double MaxSpeed = 1 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
         private static final double MaxAngularRateScaler = 0.75;
         private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
@@ -79,6 +78,7 @@ public class RobotSystem {
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
         private boolean checkAimbotStatus = false;
+        private double maxSpeedScalar = 1.0;
         SwerveInputProcessor swerveInputProcessor = new SwerveInputProcessor();
 
         // =============================================================================================================
@@ -117,6 +117,7 @@ public class RobotSystem {
         private static final byte FEEDER_RUN_IN_INDEX = 9;
         private static final byte AGITATOR_RUN_INDEX = 10;
         private static final byte FEEDER_RUN_OUT_INDEX = 11;
+        private static final byte SPEED_CHANGE_INDEX = 12;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -146,6 +147,8 @@ public class RobotSystem {
                         /* Agitator Run */
                         null,
                         /* Manual Feeder Out */
+                        null,
+                        /* Speed Changing */
                         null,
         };
         private static int currentProfileIndex = 0;
@@ -305,6 +308,7 @@ public class RobotSystem {
                 commands[FEEDER_RUN_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[AGITATOR_RUN_INDEX] = makeAgitatorRunCommand(() -> RumbleType.kBothRumble, driver);
+                commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kBothRumble, driver);
 
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
@@ -325,7 +329,8 @@ public class RobotSystem {
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean())
                                 .toggleOnTrue(commands[AGITATOR_RUN_INDEX]);
-
+                new Trigger(profile, () -> driver.b().getAsBoolean()).and(() -> driver.rightBumper().getAsBoolean())
+                                .onTrue(commands[SPEED_CHANGE_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -694,6 +699,20 @@ public class RobotSystem {
                 return new ParallelCommandGroup(agitator.run(),
                                 RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM, side)
                                                 .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        private Command makeMaxSpeedChangeCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        if (maxSpeedScalar == 1) {
+                                maxSpeedScalar = 0.33;
+                        } else if (maxSpeedScalar == 0.66) {
+                                maxSpeedScalar = 1;
+                        } else if (maxSpeedScalar == 0.33) {
+                                maxSpeedScalar = 0.66;
+                        }
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
         // -------------------------------------------------------------------------------------------------------------
