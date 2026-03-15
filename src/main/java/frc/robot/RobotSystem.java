@@ -110,20 +110,12 @@ public class RobotSystem {
         private static final byte MANUAL_SHOOT_INDEX = 3;
         private static final byte COLLECTOR_RUN_INDEX = 4;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 5;
-        @SuppressWarnings("unused")
-        private static final byte SYSID_DYNAMIC_FORWARD_INDEX = 6;
-        @SuppressWarnings("unused")
-        private static final byte SYSID_DYNAMIC_REVERSE_INDEX = 7;
-        @SuppressWarnings("unused")
-        private static final byte SYSID_QUASISTATIC_FORWARD_INDEX = 8;
-        @SuppressWarnings("unused")
-        private static final byte SYSID_QUASISTATIC_REVERSE_INDEX = 9;
-        private static final byte WEAPON_SWAP_INDEX = 10;
-        private static final byte CLIMBER_UP_INDEX = 11;
-        private static final byte CLIMBER_DOWN_INDEX = 12;
-        private static final byte FEEDER_RUN_IN_INDEX = 13;
-        private static final byte AGITATOR_RUN_INDEX = 14;
-        private static final byte FEEDER_RUN_OUT_INDEX = 15;
+        private static final byte WEAPON_SWAP_INDEX = 6;
+        private static final byte CLIMBER_UP_INDEX = 7;
+        private static final byte CLIMBER_DOWN_INDEX = 8;
+        private static final byte FEEDER_RUN_IN_INDEX = 9;
+        private static final byte AGITATOR_RUN_INDEX = 10;
+        private static final byte FEEDER_RUN_OUT_INDEX = 11;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -142,17 +134,6 @@ public class RobotSystem {
                         null,
                         /* Reset Field Orientation */
                         null,
-                        /*
-                         * TODO: I don't think these need to be saved here for cancelling.
-                         * 
-                         * They can just be mapped in normal mode and not have to be worried about being
-                         * cancelled because in reality they won't be running in a profile switched
-                         * scenario.
-                         */
-                        makeSysIdDynamicForwardCommand(),
-                        makeSysIdDynamicReverseCommand(),
-                        makeSysIdQuasistaticForwardCommand(),
-                        makeSysIdQuasistaticReverseCommand(),
                         /* Weapon Swap */
                         null,
                         /* Climber Up */
@@ -338,20 +319,6 @@ public class RobotSystem {
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean())
                                 .toggleOnTrue(commands[AGITATOR_RUN_INDEX]);
-                /*
-                 * CONFLICTING WITH THE PROFILE COMMANDS!
-                 * 
-                 * Run SysId routines when holding back/start and X/Y. Note that each routine
-                 * should be run exactly once in a single log.
-                 * controller.back().and(controller.y()).whileTrue(commands[
-                 * SYSID_DYNAMIC_FORWARD_INDEX]);
-                 * controller.back().and(controller.x()).whileTrue(commands[
-                 * SYSID_DYNAMIC_REVERSE_INDEX]);
-                 * controller.start().and(controller.y()).whileTrue(commands[
-                 * SYSID_QUASISTATIC_FORWARD_INDEX]);
-                 * controller.start().and(controller.x()).whileTrue(commands[
-                 * SYSID_QUASISTATIC_REVERSE_INDEX]);
-                 */
         }
 
         // -------------------------------------------------------------------------------------------------------------
