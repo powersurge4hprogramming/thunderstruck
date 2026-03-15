@@ -352,8 +352,8 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).onTrue(commands[FEEDER_RUN_IN_INDEX]);
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).and(() -> checkAimbotStatus == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
