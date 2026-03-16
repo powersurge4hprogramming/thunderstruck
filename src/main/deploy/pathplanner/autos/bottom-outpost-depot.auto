@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start to outpost"
+            "pathName": "start-outpost"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "outpost to climber while shooting"
+            "pathName": "outpost-climber-shooting"
           }
         }
       ]
