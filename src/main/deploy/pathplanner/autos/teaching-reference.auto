@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "teaching.3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New New New Path"
+            "pathName": "teaching.4"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New New New Path"
+            "pathName": "teaching.2"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New New New New Path"
+            "pathName": "teaching.1"
           }
         }
       ]
