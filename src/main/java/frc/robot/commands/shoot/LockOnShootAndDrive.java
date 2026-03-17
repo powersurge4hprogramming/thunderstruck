@@ -112,7 +112,7 @@ public class LockOnShootAndDrive extends Command {
                         return;
                 }
                 System.out.println("Found the target.");
-                System.out.println(String.format("hub dist (x=%d,y=%d),z=%d",
+                System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
                                 hubRelativeTransform.getMeasureX().in(Inches),
                                 hubRelativeTransform.getMeasureY().in(Inches),
                                 hubRelativeTransform.getMeasureZ().in(Inches)));
