@@ -500,14 +500,14 @@ public class RobotSystem {
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
                                         System.out.println("I am wondering if this executes on cancel()?");
-                                        isLockedOn = true;
-                                        getCommandScheduler().schedule(new ParallelCommandGroup(
-                                                        commands[MANUAL_SHOOT_INDEX]),
-                                                        RumblePulseCommand.createShortDoublePulse(controller,
+                                        getCommandScheduler().schedule(RumblePulseCommand
+                                                        .createShortDoublePulse(controller,
                                                                         RumbleIntensity.SUPER_HEAVY,
                                                                         side)
-                                                                        .handleInterrupt(() -> controller
-                                                                                        .setRumble(side.get(), 0)));
+                                                        .handleInterrupt(() -> controller
+                                                                        .setRumble(side.get(), 0)));
+                                        isLockedOn = true;
+                                        getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
                                 });
         }
 
