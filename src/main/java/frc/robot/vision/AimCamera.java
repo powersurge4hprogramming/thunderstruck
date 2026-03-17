@@ -123,7 +123,7 @@ public class AimCamera {
             for (final PhotonTrackedTarget target : result.getTargets()) {
                 System.out.println("Looping through targets.");
                 System.out.println("current id = " + target.fiducialId);
-                if (target.fiducialId != HUB_CENTER_TAG || target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
+                if (target.fiducialId != HUB_CENTER_TAG && target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
                 System.out.println("Found Hub.");
                 hub = target.getBestCameraToTarget();
