@@ -190,9 +190,7 @@ public class RobotSystem {
 
                 this.profiles = List.of(
                                 profile1 -> defaultBindingsProfile(profile1),
-                                profile2 -> leftClawBindingsProfile(profile2),
-                                profile3 -> doubleClawBindingsProfile(profile3),
-                                profile4 -> rightClawBindingsProfile(profile4));
+                                profile2 -> leftClawBindingsProfile(profile2));
 
                 this.profileEventLoops = new ArrayList<>(profiles.size());
                 for (int i = 0; i < profiles.size(); i++) {
@@ -596,7 +594,7 @@ public class RobotSystem {
                         getCommandScheduler().schedule(
                                         new RumblePulseCommand(controller,
                                                         0.3,
-                                                        0.5,
+                                                        0.12,
                                                         RumbleIntensity.SUPER_HEAVY,
                                                         (byte) (currentProfileIndex + 1),
                                                         () -> RumbleType.kBothRumble)
