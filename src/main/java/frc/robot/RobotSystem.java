@@ -75,7 +75,7 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
-        private boolean checkAimbotStatus = false;
+        private boolean isLockedOn = false;
         private double maxSpeedScalar = 1.0;
 
         // =============================================================================================================
@@ -312,10 +312,10 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> checkAimbotStatus == false)
+                                .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> isLockedOn == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[HOPPER_IN_INDEX]);
@@ -347,14 +347,14 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
-                                .and(() -> checkAimbotStatus == false)
+                                .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
                 new Trigger(profile, () -> driver.x().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.povRight().getAsBoolean()).and(() -> isLockedOn == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
@@ -383,14 +383,14 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> checkAimbotStatus == false)
+                                .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> isLockedOn == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
@@ -418,14 +418,14 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
                 new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> checkAimbotStatus == false)
+                                .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
                 new Trigger(profile, () -> driver.a().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> checkAimbotStatus == false)
+                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> isLockedOn == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
@@ -499,7 +499,7 @@ public class RobotSystem {
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
-                                        checkAimbotStatus = true;
+                                        isLockedOn = true;
                                         getCommandScheduler().schedule(new ParallelCommandGroup(
                                                         commands[MANUAL_SHOOT_INDEX]),
                                                         RumblePulseCommand.createShortDoublePulse(controller,
@@ -540,14 +540,14 @@ public class RobotSystem {
         private Command makeWeaponSwapCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
                 final Command weaponSwap = new InstantCommand(() -> {
                         System.out.println("Swapping.");
-                        if (checkAimbotStatus == true) {
+                        if (!isLockedOn) {
                                 System.out.println("Currently manual, swapping to lock on.");
                                 if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
                                         getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
                                 }
                                 System.out.println("Swapping to lock on.");
                                 getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
-                                checkAimbotStatus = false;
+                                isLockedOn = true;
                         } else {
                                 System.out.println("Currently locked on, swapping to manual.");
                                 if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
@@ -556,7 +556,7 @@ public class RobotSystem {
                                 }
                                 System.out.println("Swapping to manual.");
                                 getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
-                                checkAimbotStatus = true;
+                                isLockedOn = false;
                         }
                 });
 
