@@ -37,13 +37,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
-import frc.robot.commands.climb.LockOnClimb;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
 import frc.robot.commands.rumble.RumbleIntensity;
 import frc.robot.commands.rumble.RumblePulseCommand;
@@ -53,7 +51,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Climber;
 
 public class RobotSystem {
         // =============================================================================================================
@@ -67,7 +64,6 @@ public class RobotSystem {
 
         private static final String EVENT_SHOOT = "shoot";
         private static final String EVENT_COLLECT = "collect";
-        private static final String EVENT_CLIMB = "climb";
 
         // =============================================================================================================
         // Driver Inputs
@@ -89,7 +85,6 @@ public class RobotSystem {
         private final Shooter shooter = new Shooter();
         private final Feeder feeder = new Feeder();
         private final Collector collector = new Collector();
-        private final Climber climber = new Climber();
 
         // =============================================================================================================
         // Modules
@@ -107,11 +102,9 @@ public class RobotSystem {
         private static final byte COLLECTOR_RUN_INDEX = 4;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 5;
         private static final byte WEAPON_SWAP_INDEX = 6;
-        private static final byte CLIMBER_UP_INDEX = 7;
-        private static final byte CLIMBER_DOWN_INDEX = 8;
-        private static final byte FEEDER_RUN_OUT_INDEX = 9;
-        private static final byte SPEED_CHANGE_INDEX = 10;
-        private static final byte HOPPER_IN_INDEX = 11;
+        private static final byte FEEDER_RUN_OUT_INDEX = 7;
+        private static final byte SPEED_CHANGE_INDEX = 8;
+        private static final byte HOPPER_IN_INDEX = 9;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -131,10 +124,6 @@ public class RobotSystem {
                         /* Reset Field Orientation */
                         null,
                         /* Weapon Swap */
-                        null,
-                        /* Climber Up */
-                        null,
-                        /* Climber Down */
                         null,
                         /* Manual Feeder Out */
                         null,
@@ -237,7 +226,6 @@ public class RobotSystem {
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
                 eventsAuto.put(EVENT_COLLECT, collector.run(() -> 0.5));
-                eventsAuto.put(EVENT_CLIMB, new LockOnClimb(climber, drivetrain, aimCamera, MaxSpeed, MaxAngularRate));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
@@ -289,8 +277,6 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble, driver);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kBothRumble, driver);
 
@@ -300,8 +286,6 @@ public class RobotSystem {
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
                 new Trigger(profile, () -> driver.y().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.povUp().getAsBoolean()).onTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> driver.povDown().getAsBoolean()).onTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
@@ -330,13 +314,9 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kLeftRumble, driver);
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kRightRumble, driver);
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble, driver);
 
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.y().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
@@ -361,8 +341,6 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kRightRumble, driver);
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kRightRumble, driver);
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble, driver);
 
@@ -371,8 +349,6 @@ public class RobotSystem {
 
                 new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
@@ -397,8 +373,6 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kRightRumble, driver);
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[CLIMBER_UP_INDEX] = makeClimberUpCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[CLIMBER_DOWN_INDEX] = makeClimberDownCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
                                 () -> RumbleType.kLeftRumble, driver);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
@@ -406,8 +380,6 @@ public class RobotSystem {
 
                 new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
                                 .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.povUp().getAsBoolean()).whileTrue(commands[CLIMBER_UP_INDEX]);
-                new Trigger(profile, () -> driver.povDown().getAsBoolean()).whileTrue(commands[CLIMBER_DOWN_INDEX]);
                 new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
@@ -629,35 +601,6 @@ public class RobotSystem {
                                                         .handleInterrupt(() -> controller
                                                                         .setRumble(RumbleType.kBothRumble, 0)));
                 });
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeClimberUpCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
-                return new ParallelCommandGroup(climber.upward(),
-                                RumblePulseCommand.createShortDoublePulse(controller, RumbleIntensity.MEDIUM,
-                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeClimberDownCommand(final Supplier<RumbleType> side,
-                        final CommandXboxController controller) {
-                return new ParallelCommandGroup(climber.downward(),
-                                new SequentialCommandGroup(
-                                                RumblePulseCommand.createShortDoublePulse(controller,
-                                                                RumbleIntensity.MEDIUM,
-                                                                side)
-                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
-                                                                                0)),
-                                                RumblePulseCommand.createShortWaitCommand()
-                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
-                                                                                0)),
-                                                RumblePulseCommand.createShortSinglePulse(controller,
-                                                                RumbleIntensity.MEDIUM,
-                                                                side)
-                                                                .handleInterrupt(() -> controller.setRumble(side.get(),
-                                                                                0)))
-                                                .handleInterrupt(() -> controller.setRumble(side.get(),
-                                                                0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
