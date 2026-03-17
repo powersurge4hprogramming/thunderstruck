@@ -26,7 +26,7 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         // Constants
         // =============================================================================================================
-        private final float LAUNCH_ANGLE_DEGREES = 55;
+        private final float LAUNCH_ANGLE_DEGREES = 80;
         private final float TOO_CLOSE_DISTANCE_INCHES = 25;
         private final float TOO_FAR_DISTANCE_INCHES = 80;
 
