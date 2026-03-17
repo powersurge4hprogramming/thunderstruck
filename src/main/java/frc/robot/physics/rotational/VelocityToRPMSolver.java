@@ -145,7 +145,8 @@ public class VelocityToRPMSolver {
         // Kinematic limit scaled by voltage
         double maxWheelOmega = KV_RAD_PER_V * (vbat / V_NOM) / G_GEAR_RATIO;
         System.out.println("maxWheelOmega = " + (maxWheelOmega * OMEGA_TO_RPM_FACTOR));
-        targetWheelOmega = Math.min(targetWheelOmegaUnclamped, maxWheelOmega);
+        // targetWheelOmega = Math.min(targetWheelOmegaUnclamped, maxWheelOmega);
+        targetWheelOmega = targetWheelOmegaUnclamped;
 
         // Convert to motor RPM
         targetMotorRPM = targetWheelOmega * OMEGA_TO_RPM_FACTOR;
