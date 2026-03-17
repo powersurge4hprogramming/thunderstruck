@@ -165,10 +165,11 @@ public class LockOnShootAndDrive extends Command {
                 final double BACKWARDS_COUNTER_CLOCKWISE = -180;
                 final double turretYaw = MathUtil.inputModulus(shot.getTurretYawDegrees(), BACKWARDS_COUNTER_CLOCKWISE,
                                 BACKWARDS_CLOCKWISE);
+                System.out.println("turretYawModulus" + turretYaw);
                 // Actually drive.
                 drive.setControl(fieldFacingAngle
-                                .withVelocityX(xSupplier.getAsDouble())
-                                .withVelocityY(ySupplier.getAsDouble())
+                                .withVelocityX(ySupplier.getAsDouble())
+                                .withVelocityY(xSupplier.getAsDouble())
                                 .withTargetDirection(new Rotation2d(turretYaw)));
         }
 
