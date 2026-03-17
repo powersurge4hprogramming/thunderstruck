@@ -133,7 +133,7 @@ public class AimCamera {
                     hub.getMeasureY().in(Inches),
                     hub.getMeasureZ().in(Inches)));
         if (hub != null)
-            hub.plus(SHOOTER_TO_CAMERA_OFFSET);
+            hub = hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
         return hub;
     }
