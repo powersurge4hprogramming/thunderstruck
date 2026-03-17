@@ -81,7 +81,7 @@ import java.util.function.DoubleSupplier;
 public class VelocityToRPMSolver {
     // Measured/tunable constants
     private static final double WHEEL_RADIUS_M = 0.0508; // Wheel radius (m)
-    private static final double EXIT_VELOCITY_EFFICIENCY = 0.7; // Efficiency factor (dimensionless)
+    private static final double EXIT_VELOCITY_EFFICIENCY = 0.75; // Efficiency factor (dimensionless)
     private static final double READY_TOLERANCE_RPM = 50.0; // Tolerance for readiness (RPM)
     private static final double MIN_READY_TIME_S = 0.1; // Min time error < tolerance for readiness (s)
 
