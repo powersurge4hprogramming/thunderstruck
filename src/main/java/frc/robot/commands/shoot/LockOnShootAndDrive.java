@@ -112,10 +112,6 @@ public class LockOnShootAndDrive extends Command {
                         return;
                 }
                 System.out.println("Found the target.");
-                System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
-                                hubRelativeTransform.getMeasureX().in(Inches),
-                                hubRelativeTransform.getMeasureY().in(Inches),
-                                hubRelativeTransform.getMeasureZ().in(Inches)));
 
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,

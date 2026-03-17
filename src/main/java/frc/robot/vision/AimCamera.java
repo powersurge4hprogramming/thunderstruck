@@ -127,13 +127,40 @@ public class AimCamera {
             }
         }
 
-        if (hub != null)
-            System.out.println(String.format("hub dist raw (x=%f,y=%f,z=%f)",
+        if (hub != null) {
+            System.out.println(String.format("hub tag (x=%f,y=%f,z=%f)",
                     hub.getMeasureX().in(Inches),
                     hub.getMeasureY().in(Inches),
                     hub.getMeasureZ().in(Inches)));
-        if (hub != null)
+
             hub = hub.plus(SHOOTER_TO_CAMERA_OFFSET);
+
+            System.out.println(String.format("hub shooter (x=%f,y=%f,z=%f)",
+                    hub.getMeasureX().in(Inches),
+                    hub.getMeasureY().in(Inches),
+                    hub.getMeasureZ().in(Inches)));
+            /*
+             * The center of the hub is deeper than the tags in the x direction: account for
+             * that.
+             */
+            final Transform3d tagToHubCenterOffset = new Transform3d(
+                    // x
+                    Distance.ofRelativeUnits(-23.5, Inches),
+                    // y
+                    Distance.ofRelativeUnits(0, Inches),
+                    // z
+                    Distance.ofRelativeUnits(27.5, Inches),
+                    new Rotation3d(
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees)));
+            hub = hub.plus(tagToHubCenterOffset);
+
+            System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
+                    hub.getMeasureX().in(Inches),
+                    hub.getMeasureY().in(Inches),
+                    hub.getMeasureZ().in(Inches)));
+        }
 
         return hub;
     }
