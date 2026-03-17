@@ -499,6 +499,7 @@ public class RobotSystem {
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
+                                        System.out.println("I am wondering if this executes on cancel()?");
                                         isLockedOn = true;
                                         getCommandScheduler().schedule(new ParallelCommandGroup(
                                                         commands[MANUAL_SHOOT_INDEX]),
