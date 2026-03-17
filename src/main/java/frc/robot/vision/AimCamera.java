@@ -126,6 +126,10 @@ public class AimCamera {
             }
         }
 
+        System.out.println(String.format("hub dist raw (x=%f,y=%f,z=%f)",
+                hub.getMeasureX().in(Inches),
+                hub.getMeasureY().in(Inches),
+                hub.getMeasureZ().in(Inches)));
         if (hub != null)
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
