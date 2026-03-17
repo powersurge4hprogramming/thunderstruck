@@ -520,7 +520,7 @@ public class RobotSystem {
                                                         commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
                                 }
                                 System.out.println("Swapping to manual.");
-                                getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                // getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
                                 isLockedOn = false;
                         }
                 });
