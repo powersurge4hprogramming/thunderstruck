@@ -470,6 +470,7 @@ public class RobotSystem {
                                                         .handleInterrupt(() -> controller
                                                                         .setRumble(side.get(), 0)));
                                         isLockedOn = true;
+                                        shooter.setRPM(0);
                                         getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
                                 });
         }
