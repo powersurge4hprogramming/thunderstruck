@@ -176,6 +176,6 @@ public class LockOnShootAndDrive extends Command {
         @Override
         public void end(boolean interrupted) {
                 feeder.setFeederSpeed(0);
-                shooter.setRPM(0);
+                shooter.stopShooter();
         }
 }
