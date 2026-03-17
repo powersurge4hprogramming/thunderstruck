@@ -32,7 +32,7 @@ public class AimCamera {
     private final static byte TOWER_LEFT_TAG = 15;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             // x
-            Distance.ofRelativeUnits(27.5, Inches),
+            Distance.ofRelativeUnits(-27.5, Inches),
             // y
             Distance.ofRelativeUnits(-2, Inches),
             // z
