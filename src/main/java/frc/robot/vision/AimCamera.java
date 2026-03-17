@@ -32,15 +32,15 @@ public class AimCamera {
     private final static byte TOWER_LEFT_TAG = 15;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             // x
-            Distance.ofBaseUnits(27.5, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
             // y
-            Distance.ofBaseUnits(-2, Inches),
+            Distance.ofRelativeUnits(-2, Inches),
             // z
-            Distance.ofBaseUnits(3.70, Inches),
+            Distance.ofRelativeUnits(3.70, Inches),
             new Rotation3d(
-                    Angle.ofBaseUnits(0, Degrees),
-                    Angle.ofBaseUnits(0, Degrees),
-                    Angle.ofBaseUnits(0, Degrees)));
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees)));
     // TODO: This needs real measurements.
     private final static Transform3d CLIMBER_TO_CAMERA_OFFSET = new Transform3d(
             // x
