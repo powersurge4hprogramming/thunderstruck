@@ -88,6 +88,7 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void execute() {
+                System.out.println("Executing lock on.");
                 /*
                  * 1. One physics calculation to rule them all
                  */
@@ -110,19 +111,23 @@ public class LockOnShootAndDrive extends Command {
                         this.cancel();
                         return;
                 }
+                System.out.println("Found the target.");
+                System.out.println(String.format("hub dist (x=%d,y=%d),z=%d", hubRelativeTransform.getMeasureX(),
+                                hubRelativeTransform.getMeasureY(), hubRelativeTransform.getMeasureZ()));
 
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
                 if (!shot.isValidShot()) {
+                        System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(1)
-                                                .withVelocityY(0));
+                                                .withVelocityY(ySupplier.getAsDouble()));
                         } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(-1)
-                                                .withVelocityY(0));
+                                                .withVelocityY(ySupplier.getAsDouble()));
                         } else {
                                 // Something catostrophic has occurred.
                                 this.cancel();
@@ -130,21 +135,23 @@ public class LockOnShootAndDrive extends Command {
                         }
                 }
                 final double desiredMotorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
+                System.out.println("desired rpm = " + desiredMotorRPM);
                 if (desiredMotorRPM > shooter.getMaxRPM()) {
                         // Drive forward to get closer to the hub.
                         drive.setControl(fieldFacingAngle
                                         .withVelocityX(1)
-                                        .withVelocityY(0));
+                                        .withVelocityY(ySupplier.getAsDouble()));
                         return;
                 }
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
+                System.out.println("isShooterReady = " + isShooterReady);
 
                 /*
                  * 2. Command the Shooter
                  */
                 shooter.setRPM(desiredMotorRPM);
                 if (isShooterReady) {
-                        feeder.setFeederSpeed(0.8);
+                        feeder.setFeederSpeed(1);
                 } else {
                         feeder.setFeederSpeed(0);
                 }

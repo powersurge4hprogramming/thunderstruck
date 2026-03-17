@@ -539,17 +539,22 @@ public class RobotSystem {
         // -------------------------------------------------------------------------------------------------------------
         private Command makeWeaponSwapCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
                 final Command weaponSwap = new InstantCommand(() -> {
+                        System.out.println("Swapping.");
                         if (checkAimbotStatus == true) {
+                                System.out.println("Currently manual, swapping to lock on.");
                                 if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
                                         getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
                                 }
+                                System.out.println("Swapping to lock on.");
                                 getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
                                 checkAimbotStatus = false;
                         } else {
+                                System.out.println("Currently locked on, swapping to manual.");
                                 if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
                                         getCommandScheduler().cancel(
                                                         commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
                                 }
+                                System.out.println("Swapping to manual.");
                                 getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
                                 checkAimbotStatus = true;
                         }
