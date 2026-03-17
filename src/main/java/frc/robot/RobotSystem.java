@@ -53,7 +53,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.vision.AimCamera;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Climber;
 
 public class RobotSystem {
@@ -90,7 +89,6 @@ public class RobotSystem {
         private final Shooter shooter = new Shooter();
         private final Feeder feeder = new Feeder();
         private final Collector collector = new Collector();
-        private final Agitator agitator = new Agitator();
         private final Climber climber = new Climber();
 
         // =============================================================================================================
@@ -285,12 +283,7 @@ public class RobotSystem {
                                 () -> RumbleType.kLeftRumble, driver);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble, driver);
-                commands[HOPPER_IN_INDEX] = new ParallelCommandGroup(
-                                makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver),
-                                makeAgitatorRunCommand(() -> RumbleType.kRightRumble, driver),
-                                RumblePulseCommand.createShortDoublePulse(driver, RumbleIntensity.MEDIUM,
-                                                () -> RumbleType.kRightRumble)
-                                                .handleInterrupt(() -> driver.setRumble(RumbleType.kRightRumble, 0)));
+                commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble, driver);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
@@ -667,14 +660,6 @@ public class RobotSystem {
                                                                                 0)))
                                                 .handleInterrupt(() -> controller.setRumble(side.get(),
                                                                 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeAgitatorRunCommand(final Supplier<RumbleType> side,
-                        final CommandXboxController controller) {
-                return new ParallelCommandGroup(agitator.run(),
-                                RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM, side)
-                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
         // -------------------------------------------------------------------------------------------------------------
