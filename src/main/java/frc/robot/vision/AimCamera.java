@@ -116,6 +116,7 @@ public class AimCamera {
      */
     public Transform3d getHubRelativeLocation() {
         Transform3d hub = null;
+        // TODO: 2 hubs, one 9 and 1 ten. prefer 10
 
         for (final PhotonPipelineResult result : results) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
@@ -126,10 +127,11 @@ public class AimCamera {
             }
         }
 
-        System.out.println(String.format("hub dist raw (x=%f,y=%f,z=%f)",
-                hub.getMeasureX().in(Inches),
-                hub.getMeasureY().in(Inches),
-                hub.getMeasureZ().in(Inches)));
+        if (hub != null)
+            System.out.println(String.format("hub dist raw (x=%f,y=%f,z=%f)",
+                    hub.getMeasureX().in(Inches),
+                    hub.getMeasureY().in(Inches),
+                    hub.getMeasureZ().in(Inches)));
         if (hub != null)
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
