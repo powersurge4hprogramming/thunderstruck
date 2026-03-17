@@ -122,11 +122,11 @@ public class LockOnShootAndDrive extends Command {
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(1)
-                                                .withVelocityY(ySupplier.getAsDouble()));
+                                                .withVelocityY(xSupplier.getAsDouble()));
                         } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(-1)
-                                                .withVelocityY(ySupplier.getAsDouble()));
+                                                .withVelocityY(xSupplier.getAsDouble()));
                         } else {
                                 // Something catostrophic has occurred.
                                 this.cancel();
