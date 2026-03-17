@@ -502,7 +502,7 @@ public class RobotSystem {
                                         checkAimbotStatus = true;
                                         getCommandScheduler().schedule(new ParallelCommandGroup(
                                                         commands[MANUAL_SHOOT_INDEX]),
-                                                        RumblePulseCommand.createLongDoublePulse(controller,
+                                                        RumblePulseCommand.createShortDoublePulse(controller,
                                                                         RumbleIntensity.SUPER_HEAVY,
                                                                         side)
                                                                         .handleInterrupt(() -> controller
