@@ -97,7 +97,7 @@ public class AimCamera {
      * @apiNote Don't ever call this function unless you know what you are doing.
      */
     public void updateFrames() {
-        System.out.println("Updating camera frames.");
+        // System.out.println("Updating camera frames.");
         this.results = camera.getAllUnreadResults();
     }
 
