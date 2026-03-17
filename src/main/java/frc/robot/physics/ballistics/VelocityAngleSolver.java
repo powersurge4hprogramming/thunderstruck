@@ -35,9 +35,13 @@ public class VelocityAngleSolver {
     private static final double MASS = 0.216; // kg
     private static final double RADIUS = 0.075; // meters
     private static final double AREA = Math.PI * RADIUS * RADIUS;
-    private static final double AIR_DENSITY = 1.225;
+    /*
+     * The density of humid air at normal temperature and pressure (20 °C, 101.326
+     * kPa, and 50 %RH)
+     */
+    private static final double AIR_DENSITY = 1.199;
     private static final double DRAG_COEFF = 0.47;
-    private static final double LIFT_COEFF = 0.15;
+    private static final double LIFT_COEFF = 0.031;
 
     // =========================================================================
     // SOLVER SETTINGS
