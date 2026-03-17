@@ -33,7 +33,7 @@ public class Collector extends SubsystemBase {
     public Command run(final DoubleSupplier motorRpmScalar) {
         return this.runEnd(
                 () -> {
-                    double mrs = motorRpmScalar.getAsDouble();
+                    double mrs = motorRpmScalar.getAsDouble() * 0.5;
                     krakenX60.set(mrs);
                 },
                 () -> {
