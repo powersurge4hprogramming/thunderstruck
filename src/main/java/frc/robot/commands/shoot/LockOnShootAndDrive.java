@@ -120,6 +120,7 @@ public class LockOnShootAndDrive extends Command {
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
+                System.out.println(shot.toString());
                 if (!shot.isValidShot()) {
                         System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {

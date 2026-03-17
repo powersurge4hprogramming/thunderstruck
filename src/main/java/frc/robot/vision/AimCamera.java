@@ -117,25 +117,18 @@ public class AimCamera {
     public Transform3d getHubRelativeLocation() {
         Transform3d hub = null;
 
-        System.out.println("Finding Hub.");
         for (final PhotonPipelineResult result : results) {
-            System.out.println("Looping through results.");
             for (final PhotonTrackedTarget target : result.getTargets()) {
-                System.out.println("Looping through targets.");
-                System.out.println("current id = " + target.fiducialId);
                 if (target.fiducialId != HUB_CENTER_TAG && target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
                     continue;
-                System.out.println("Found Hub.");
                 hub = target.getBestCameraToTarget();
                 break;
             }
         }
 
-        System.out.println("Adding the shooter offset.");
         if (hub != null)
             hub.plus(SHOOTER_TO_CAMERA_OFFSET);
 
-        System.out.println("Returning hub transform.");
         return hub;
     }
 

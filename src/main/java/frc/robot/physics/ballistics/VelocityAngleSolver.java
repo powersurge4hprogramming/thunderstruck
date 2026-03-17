@@ -118,6 +118,23 @@ public class VelocityAngleSolver {
         public double getSimulationErrorMeters() {
             return simulationErrorMeters;
         }
+
+        @Override
+        public String toString() {
+            return new StringBuilder().append("ShotResult{\n")
+                    .append("\tturretYawDegrees = ")
+                    .append(turretYawDegrees)
+                    .append("\n\thoodPitchDegrees = ")
+                    .append(hoodPitchDegrees)
+                    .append("\n\tflywheelSpeedMPS = ")
+                    .append(flywheelSpeedMPS)
+                    .append("\n\tisValidShot = ")
+                    .append(isValidShot)
+                    .append("\n\tsimulationErrorMeters = ")
+                    .append(simulationErrorMeters)
+                    .append("\n}")
+                    .toString();
+        }
     }
 
     // =========================================================================
