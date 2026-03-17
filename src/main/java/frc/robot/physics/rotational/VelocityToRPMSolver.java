@@ -157,6 +157,7 @@ public class VelocityToRPMSolver {
      * @return True if ready to fire.
      */
     public boolean isReadyToFire() {
+        System.out.println("Is Ready To Fire");
         if (targetMotorRPM <= 0.0) {
             lastReadyTime = -1.0;
             wasReadyLastCall = false;
@@ -165,6 +166,7 @@ public class VelocityToRPMSolver {
 
         double now = System.nanoTime() / 1_000_000_000.0;
         double measuredRPM = measuredMotorRPMSupplier.getAsDouble();
+        System.out.println("measuredRPM = " + measuredRPM);
         double error = Math.abs(measuredRPM - targetMotorRPM);
         boolean currentlyReady = error < READY_TOLERANCE_RPM;
 
