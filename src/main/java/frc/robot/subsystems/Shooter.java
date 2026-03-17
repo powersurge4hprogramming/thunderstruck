@@ -60,8 +60,8 @@ public class Shooter extends SubsystemBase {
 
         // Motor output & safety
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast; // Most teams prefer Coast for shooters
-        // config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // Uncomment if you
-        // want brake
+        // Uncomment if you want brake
+        // config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         // Current limiting (important for Kraken X60)
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
