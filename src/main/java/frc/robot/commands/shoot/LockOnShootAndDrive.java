@@ -107,17 +107,13 @@ public class LockOnShootAndDrive extends Command {
                 final Transform3d hubRelativeTransform = aimCamera.getHubRelativeLocation();
                 if (hubRelativeTransform == null) {
                         /*
-                         * Send the interrupt signal!!!
-                         * 
-                         * The interrupt handler should schedule the manual shooting command and handle
-                         * any needed state.
+                         * NOTE: Not keeping up with frames; or too little frames.
                          */
-                        System.err.println("Cancelling lock on! No target");
-                        drive.setControl(fieldFacingAngle
-                                        .withVelocityX(0)
-                                        .withVelocityY(0));
-                        // this.cancel();
-                        fault = true;
+                        System.err.println("No target");
+                        // drive.setControl(fieldFacingAngle
+                        // .withVelocityX(0)
+                        // .withVelocityY(0));
+                        // fault = true;
                         return;
                 }
 
@@ -132,12 +128,12 @@ public class LockOnShootAndDrive extends Command {
                         System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
-                                                .withVelocityX(LinearVelocity.ofRelativeUnits(0.5, FeetPerSecond))
+                                                .withVelocityX(LinearVelocity.ofRelativeUnits(0.1, FeetPerSecond))
                                                 .withVelocityY(xSupplier.getAsDouble())
                                                 .withTargetDirection(targetHeading));
                         } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
-                                                .withVelocityX(LinearVelocity.ofRelativeUnits(-0.5, FeetPerSecond))
+                                                .withVelocityX(LinearVelocity.ofRelativeUnits(-0.1, FeetPerSecond))
                                                 .withVelocityY(xSupplier.getAsDouble())
                                                 .withTargetDirection(targetHeading));
                         } else {
@@ -146,7 +142,7 @@ public class LockOnShootAndDrive extends Command {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(0)
                                                 .withVelocityY(0));
-                                this.cancel();
+                                fault = true;
                                 return;
                         }
                 }
@@ -155,7 +151,7 @@ public class LockOnShootAndDrive extends Command {
                 if (desiredMotorRPM > shooter.getMaxRPM()) {
                         // Drive forward to get closer to the hub.
                         drive.setControl(fieldFacingAngle
-                                        .withVelocityX(LinearVelocity.ofRelativeUnits(0.5, FeetPerSecond))
+                                        .withVelocityX(LinearVelocity.ofRelativeUnits(0.1, FeetPerSecond))
                                         .withVelocityY(xSupplier.getAsDouble())
                                         .withTargetDirection(targetHeading));
 
@@ -210,5 +206,6 @@ public class LockOnShootAndDrive extends Command {
                 System.out.println("In the end.");
                 feeder.setFeederSpeed(0);
                 shooter.stopShooter();
+                fault = false;
         }
 }
