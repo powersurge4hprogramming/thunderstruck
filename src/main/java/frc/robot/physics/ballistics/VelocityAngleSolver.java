@@ -233,10 +233,13 @@ public class VelocityAngleSolver {
         // Field-relative turret direction (direction ball leaves shooter)
         double fieldYawDeg = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
 
+        System.out.println("fieldYawDeg = " + fieldYawDeg);
         // Robot-relative yaw (what you send to turret PID)
         double robotRelativeYaw = fieldYawDeg - heading.getDegrees();
+        System.out.println("robotRelativeYaw = " + robotRelativeYaw);
         // Normalize to [-180, 180]
         robotRelativeYaw = ((robotRelativeYaw + 180.0) % 360.0) - 180.0;
+        System.out.println("robotRelativeYawNormalized = " + robotRelativeYaw);
 
         // 6. Validity (Stage-1: math + geometry + drag convergence)
         double simError = Math.abs(h1 - dz);
