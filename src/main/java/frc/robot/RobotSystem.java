@@ -469,9 +469,7 @@ public class RobotSystem {
                                                                         side)
                                                         .handleInterrupt(() -> controller
                                                                         .setRumble(side.get(), 0)));
-                                        isLockedOn = true;
-                                        shooter.setRPM(0);
-                                        getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
+                                        isLockedOn = false;
                                 });
         }
 
@@ -520,7 +518,6 @@ public class RobotSystem {
                                                         commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
                                 }
                                 System.out.println("Swapping to manual.");
-                                // getCommandScheduler().schedule(commands[MANUAL_SHOOT_INDEX]);
                                 isLockedOn = false;
                         }
                 });
