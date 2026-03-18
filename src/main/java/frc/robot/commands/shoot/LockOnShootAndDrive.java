@@ -7,7 +7,6 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -118,16 +117,21 @@ public class LockOnShootAndDrive extends Command {
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
                 System.out.println(shot.toString());
+                final Rotation2d targetHeading = heading.plus(Rotation2d.fromDegrees(shot.getTurretYawDegrees()));
+                System.out.println("targetHeading = " + heading.getDegrees());
+
                 if (!shot.isValidShot()) {
                         System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(1)
-                                                .withVelocityY(xSupplier.getAsDouble()));
+                                                .withVelocityY(xSupplier.getAsDouble())
+                                                .withTargetDirection(targetHeading));
                         } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(-1)
-                                                .withVelocityY(xSupplier.getAsDouble()));
+                                                .withVelocityY(xSupplier.getAsDouble())
+                                                .withTargetDirection(targetHeading));
                         } else {
                                 // Something catostrophic has occurred.
                                 this.cancel();
@@ -140,7 +144,9 @@ public class LockOnShootAndDrive extends Command {
                         // Drive forward to get closer to the hub.
                         drive.setControl(fieldFacingAngle
                                         .withVelocityX(1)
-                                        .withVelocityY(ySupplier.getAsDouble()));
+                                        .withVelocityY(xSupplier.getAsDouble())
+                                        .withTargetDirection(targetHeading));
+
                         return;
                 }
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
@@ -173,7 +179,7 @@ public class LockOnShootAndDrive extends Command {
                 fieldFacingAngle
                                 .withVelocityX(ySupplier.getAsDouble())
                                 .withVelocityY(xSupplier.getAsDouble())
-                                .withTargetDirection(new Rotation2d(turretYaw));
+                                .withTargetDirection(targetHeading);
                 drive.setControl(fieldFacingAngle);
         }
 
