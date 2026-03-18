@@ -61,6 +61,8 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         private final SwerveRequest.FieldCentricFacingAngle fieldFacingAngle;
 
+        private boolean fault = false;
+
         // =============================================================================================================
         // Public Methods
         // =============================================================================================================
@@ -114,7 +116,8 @@ public class LockOnShootAndDrive extends Command {
                         drive.setControl(fieldFacingAngle
                                         .withVelocityX(0)
                                         .withVelocityY(0));
-                        this.cancel();
+                        // this.cancel();
+                        fault = true;
                         return;
                 }
 
@@ -190,6 +193,15 @@ public class LockOnShootAndDrive extends Command {
                                 .withVelocityY(xSupplier.getAsDouble())
                                 .withTargetDirection(targetHeading);
                 drive.setControl(fieldFacingAngle);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        @Override
+        public boolean isFinished() {
+                if (fault)
+                        return true;
+
+                return false;
         }
 
         // -------------------------------------------------------------------------------------------------------------
