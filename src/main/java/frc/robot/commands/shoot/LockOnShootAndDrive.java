@@ -79,7 +79,8 @@ public class LockOnShootAndDrive extends Command {
                                 // Add a 10% deadband
                                 .withDeadband(MaxSpeed * 0.1)
                                 // Use open-loop control for drive motors
-                                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+                                .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                                .withHeadingPID(5 /* 20 */, 0, 0);
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
                 addRequirements(this.shooter, this.drive);
@@ -171,7 +172,7 @@ public class LockOnShootAndDrive extends Command {
                                 .withVelocityX(ySupplier.getAsDouble())
                                 .withVelocityY(xSupplier.getAsDouble())
                                 .withTargetDirection(new Rotation2d(turretYaw));
-                drive.applyRequest(() -> fieldFacingAngle);
+                drive.setControl(fieldFacingAngle);
         }
 
         // -------------------------------------------------------------------------------------------------------------
