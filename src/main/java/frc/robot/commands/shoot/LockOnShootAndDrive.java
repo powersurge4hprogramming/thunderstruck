@@ -83,7 +83,7 @@ public class LockOnShootAndDrive extends Command {
                                 .withDeadband(MaxSpeed * 0.1)
                                 // Use open-loop control for drive motors
                                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                                .withHeadingPID(5, 0, 0);
+                                .withHeadingPID(5, 0, 0.08);
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
                 addRequirements(this.shooter, this.drive);
@@ -92,7 +92,7 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void execute() {
-                System.out.println("Executing lock on.");
+                // System.out.println("Executing lock on.");
                 /*
                  * 1. One physics calculation to rule them all
                  */
@@ -109,20 +109,21 @@ public class LockOnShootAndDrive extends Command {
                         /*
                          * NOTE: Not keeping up with frames; or too little frames.
                          */
-                        System.err.println("No target");
-                        // drive.setControl(fieldFacingAngle
-                        // .withVelocityX(0)
-                        // .withVelocityY(0));
-                        // fault = true;
+                        // System.err.println("No target");
+                        drive.setControl(fieldFacingAngle
+                                        .withVelocityX(0)
+                                        .withVelocityY(0));
+                        fault = true;
+                        // this.cancel();
                         return;
                 }
 
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,
                                 LAUNCH_ANGLE_DEGREES);
-                System.out.println(shot.toString());
+                // System.out.println(shot.toString());
                 final Rotation2d targetHeading = heading.plus(Rotation2d.fromDegrees(shot.getTurretYawDegrees()));
-                System.out.println("targetHeading = " + heading.getDegrees());
+                // System.out.println("targetHeading = " + heading.getDegrees());
 
                 if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                         drive.setControl(fieldFacingAngle
@@ -154,11 +155,12 @@ public class LockOnShootAndDrive extends Command {
                                                 .withVelocityX(0)
                                                 .withVelocityY(0));
                                 fault = true;
+                                // this.cancel();
                                 return;
                         }
                 }
                 final double desiredMotorRPM = vRpmSolver.calculateMotorRPM(shot.getFlywheelSpeedMPS());
-                System.out.println("desired rpm = " + desiredMotorRPM);
+                // System.out.println("desired rpm = " + desiredMotorRPM);
                 if (desiredMotorRPM > shooter.getMaxRPM()) {
                         // Drive forward to get closer to the hub.
                         drive.setControl(fieldFacingAngle
@@ -169,7 +171,7 @@ public class LockOnShootAndDrive extends Command {
                         return;
                 }
                 final boolean isShooterReady = vRpmSolver.isReadyToFire();
-                System.out.println("isShooterReady = " + isShooterReady);
+                // System.out.println("isShooterReady = " + isShooterReady);
 
                 /*
                  * 2. Command the Shooter
@@ -193,7 +195,7 @@ public class LockOnShootAndDrive extends Command {
                 // BACKWARDS_COUNTER_CLOCKWISE,
                 // BACKWARDS_CLOCKWISE);
                 final double turretYaw = shot.getTurretYawDegrees();
-                System.out.println("turretYawModulus" + turretYaw);
+                // System.out.println("turretYawModulus" + turretYaw);
                 // Actually drive.
                 fieldFacingAngle
                                 .withVelocityX(ySupplier.getAsDouble())
