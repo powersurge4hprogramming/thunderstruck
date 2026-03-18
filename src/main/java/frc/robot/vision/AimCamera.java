@@ -29,7 +29,6 @@ public class AimCamera {
     // =================================================================================================================
     private final static byte HUB_OFF_CENTER_LEFT_TAG = 9;
     private final static byte HUB_CENTER_TAG = 10;
-    private final static byte TOWER_LEFT_TAG = 15;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofRelativeUnits(-27.5, Inches),
@@ -112,24 +111,44 @@ public class AimCamera {
                     continue;
 
                 if (target.fiducialId == HUB_OFF_CENTER_LEFT_TAG) {
+                    System.out.println("hub9 hit");
                     hub9 = target.getBestCameraToTarget();
                     continue;
                 }
-                if (target.fiducialId == HUB_CENTER_TAG)
+                if (target.fiducialId == HUB_CENTER_TAG) {
+                    System.out.println("hub10 hit");
                     hub10 = target.getBestCameraToTarget();
+                }
             }
         }
+        System.out.println("hub9 = " + hub9);
+        System.out.println("hub10 = " + hub10);
 
         Transform3d hub = null;
         /*
          * The center of the hub is deeper than the tags in the x direction: account for
          * that.
+         * 
+         * Also, set the "hub" being pointed at from what tag and offset our measurement
+         * to account for what tag being used.
          */
         Transform3d tagToHubCenterOffset = null;
         if (hub9 != null && hub10 == null) {
-            // TODO: need an offset here.
+            System.out.println("Hub is tag 9.");
+            tagToHubCenterOffset = new Transform3d(
+                    // x
+                    Distance.ofRelativeUnits(-23.5, Inches),
+                    // y
+                    Distance.ofRelativeUnits(15, Inches),
+                    // z
+                    Distance.ofRelativeUnits(27.5, Inches),
+                    new Rotation3d(
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees)));
             hub = hub9;
         } else if ((hub9 == null || hub9 != null) && hub10 != null) {
+            System.out.println("Hub is tag 10.");
             tagToHubCenterOffset = new Transform3d(
                     // x
                     Distance.ofRelativeUnits(-23.5, Inches),
