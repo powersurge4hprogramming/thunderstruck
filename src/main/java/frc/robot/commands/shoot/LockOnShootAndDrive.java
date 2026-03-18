@@ -1,5 +1,6 @@
 package frc.robot.commands.shoot;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 
@@ -11,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -83,7 +85,8 @@ public class LockOnShootAndDrive extends Command {
                                 .withDeadband(MaxSpeed * 0.1)
                                 // Use open-loop control for drive motors
                                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                                .withHeadingPID(5, 0, 0.08);
+                                .withRotationalDeadband(AngularVelocity.ofRelativeUnits(5, DegreesPerSecond))
+                                .withHeadingPID(5, 0, 0.0);
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
                 addRequirements(this.shooter, this.drive);
@@ -113,7 +116,7 @@ public class LockOnShootAndDrive extends Command {
                         drive.setControl(fieldFacingAngle
                                         .withVelocityX(0)
                                         .withVelocityY(0));
-                        fault = true;
+                        // fault = true;
                         // this.cancel();
                         return;
                 }
