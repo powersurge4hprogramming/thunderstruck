@@ -33,6 +33,10 @@ public class LockOnShootAndDrive extends Command {
         private final float TOO_CLOSE_DISTANCE_INCHES = 25;
         private final float TOO_FAR_DISTANCE_INCHES = 150;
 
+        // Lower alpha (e.g., 0.1) = heavier smoothing. Higher = more responsive.
+        private final double HEADING_SMOOTHING_ALPHA = 0.15;
+        private double smoothedHeading;
+
         // =============================================================================================================
         // Sub-Systems
         // =============================================================================================================
@@ -90,6 +94,12 @@ public class LockOnShootAndDrive extends Command {
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
                 addRequirements(this.shooter, this.drive);
+        }
+
+        @Override
+        public void initialize() {
+                // Start the filter at our current actual heading
+                smoothedHeading = drive.getState().Pose.getRotation().getRadians();
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -191,19 +201,20 @@ public class LockOnShootAndDrive extends Command {
                  * 
                  * We use the driver's X/Y but OVERRIDE the rotation with our 3D solution.
                  */
-                // Correct any input.
-                // final double BACKWARDS_CLOCKWISE = 180;
-                // final double BACKWARDS_COUNTER_CLOCKWISE = -180;
-                // final double turretYaw = MathUtil.inputModulus(shot.getTurretYawDegrees(),
-                // BACKWARDS_COUNTER_CLOCKWISE,
-                // BACKWARDS_CLOCKWISE);
-                final double turretYaw = shot.getTurretYawDegrees();
-                // System.out.println("turretYawModulus" + turretYaw);
-                // Actually drive.
+                // The "raw" target from your solver
+                double rawTargetRad = targetHeading.getRadians();
+
+                // Calculate the shortest-path delta (prevents 360-degree spins)
+                double angleError = edu.wpi.first.math.MathUtil.angleModulus(rawTargetRad - smoothedHeading);
+
+                // Apply the smoothing: Move the setpoint a fraction of the way to the target
+                smoothedHeading += (angleError * HEADING_SMOOTHING_ALPHA);
+
+                // Use the smoothed heading for the Swerve Request
                 fieldFacingAngle
                                 .withVelocityX(ySupplier.getAsDouble())
                                 .withVelocityY(xSupplier.getAsDouble())
-                                .withTargetDirection(targetHeading);
+                                .withTargetDirection(Rotation2d.fromRadians(smoothedHeading));
                 drive.setControl(fieldFacingAngle);
         }
 
