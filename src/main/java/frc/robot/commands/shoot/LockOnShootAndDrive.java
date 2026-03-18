@@ -29,7 +29,7 @@ public class LockOnShootAndDrive extends Command {
         // =============================================================================================================
         private final float LAUNCH_ANGLE_DEGREES = 80;
         private final float TOO_CLOSE_DISTANCE_INCHES = 25;
-        private final float TOO_FAR_DISTANCE_INCHES = 80;
+        private final float TOO_FAR_DISTANCE_INCHES = 150;
 
         // =============================================================================================================
         // Sub-Systems
@@ -124,6 +124,17 @@ public class LockOnShootAndDrive extends Command {
                 final Rotation2d targetHeading = heading.plus(Rotation2d.fromDegrees(shot.getTurretYawDegrees()));
                 System.out.println("targetHeading = " + heading.getDegrees());
 
+                if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
+                        drive.setControl(fieldFacingAngle
+                                        .withVelocityX(LinearVelocity.ofRelativeUnits(0.1, FeetPerSecond))
+                                        .withVelocityY(xSupplier.getAsDouble())
+                                        .withTargetDirection(targetHeading));
+                } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
+                        drive.setControl(fieldFacingAngle
+                                        .withVelocityX(LinearVelocity.ofRelativeUnits(-0.1, FeetPerSecond))
+                                        .withVelocityY(xSupplier.getAsDouble())
+                                        .withTargetDirection(targetHeading));
+                }
                 if (!shot.isValidShot()) {
                         System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
