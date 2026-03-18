@@ -85,7 +85,7 @@ public class LockOnShootAndDrive extends Command {
                                 .withDeadband(MaxSpeed * 0.1)
                                 // Use open-loop control for drive motors
                                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                                .withRotationalDeadband(10)
+                                .withRotationalDeadband(6)
                                 .withHeadingPID(20, 0, 0.3);
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
