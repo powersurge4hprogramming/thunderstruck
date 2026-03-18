@@ -172,7 +172,11 @@ public class VelocityAngleSolver {
             return new ShotResult(0.0, launchAngle, 0.0, false, 999.0);
         }
 
-        double phi = Math.atan2(dy, dx); // field angle to hub
+        // Vision Transform3d is ROBOT-FRAME (standard AimCamera output).
+        // Convert angle to FIELD-FRAME so velocity subtraction is correct.
+        double robotPhiRad = Math.atan2(dy, dx);
+        double fieldPhiRad = robotPhiRad + heading.getRadians();
+        double phi = fieldPhiRad; // now field-centric (fixes aggressive yaw)
         double cosPhi = Math.cos(phi);
         double sinPhi = Math.sin(phi);
 
