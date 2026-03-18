@@ -265,37 +265,37 @@ public class RobotSystem {
         private void defaultBindingsProfile(final EventLoop profile) {
                 setDefaultBindings(profile);
 
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
-                                () -> RumbleType.kLeftRumble, driver);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble, driver);
-                commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kBothRumble, driver);
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
-                                driver);
+                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kBothRumble, driver);
-
+                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
+                commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
                 new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
-                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
                 new Trigger(profile, () -> driver.y().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> isLockedOn == false)
-                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).and(() -> isLockedOn == false)
-                                .and(() -> driver.rightBumper().getAsBoolean())
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean()).whileTrue(commands[HOPPER_IN_INDEX]);
                 new Trigger(profile, () -> driver.b().getAsBoolean())
                                 .onTrue(commands[SPEED_CHANGE_INDEX]);
+
+                // ------------
+                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -operator.getLeftTriggerAxis(),
+                                () -> RumbleType.kLeftRumble, operator);
+                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> operator.getRightTriggerAxis(),
+                                () -> RumbleType.kRightRumble, operator);
+                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
+                                operator);
+                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kBothRumble, operator);
+                commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
+                commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
+                new Trigger(profile, () -> operator.leftTrigger().getAsBoolean())
+                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
+                new Trigger(profile, () -> operator.rightTrigger().getAsBoolean())
+                                .and(() -> isLockedOn == false)
+                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                new Trigger(profile, () -> operator.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
+                new Trigger(profile, () -> operator.a().getAsBoolean()).whileTrue(commands[HOPPER_IN_INDEX]);
+                new Trigger(profile, () -> operator.b().getAsBoolean()).and(() -> isLockedOn == false)
+                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
 
         }
 
@@ -326,69 +326,6 @@ public class RobotSystem {
                 new Trigger(profile, () -> driver.povDown().getAsBoolean())
                                 .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 new Trigger(profile, () -> driver.povRight().getAsBoolean()).and(() -> isLockedOn == false)
-                                .and(() -> driver.rightBumper().getAsBoolean())
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void doubleClawBindingsProfile(final EventLoop profile) {
-                setDefaultBindings(profile);
-
-                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                () -> RumbleType.kBothRumble, driver);
-                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                () -> RumbleType.kRightRumble, driver);
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
-                                () -> RumbleType.kLeftRumble, driver);
-
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble, driver);
-
-                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
-                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> isLockedOn == false)
-                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean())
-                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> isLockedOn == false)
-                                .and(() -> driver.rightBumper().getAsBoolean())
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void rightClawBindingsProfile(final EventLoop profile) {
-                setDefaultBindings(profile);
-
-                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(
-                                () -> RumbleType.kBothRumble, driver);
-                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                () -> RumbleType.kRightRumble, driver);
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kRightRumble, driver);
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getLeftTriggerAxis(),
-                                () -> RumbleType.kLeftRumble, driver);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble, driver);
-
-                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
-                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .and(() -> isLockedOn == false)
-                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> driver.y().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.a().getAsBoolean())
-                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).and(() -> isLockedOn == false)
                                 .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
         }
