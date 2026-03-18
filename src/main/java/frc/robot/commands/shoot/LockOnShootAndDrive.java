@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -33,8 +34,8 @@ public class LockOnShootAndDrive extends Command {
         private final float TOO_CLOSE_DISTANCE_INCHES = 25;
         private final float TOO_FAR_DISTANCE_INCHES = 150;
 
-        // Lower alpha (e.g., 0.1) = heavier smoothing. Higher = more responsive.
-        private final double HEADING_SMOOTHING_ALPHA = 0.15;
+        // Max rotation speed of the setpoint: 3.14 rad/s (180 deg/s)
+        private final SlewRateLimiter headingLimiter = new SlewRateLimiter(Math.PI);
         private double smoothedHeading;
 
         // =============================================================================================================
@@ -98,8 +99,8 @@ public class LockOnShootAndDrive extends Command {
 
         @Override
         public void initialize() {
-                // Start the filter at our current actual heading
                 smoothedHeading = drive.getState().Pose.getRotation().getRadians();
+                headingLimiter.reset(0);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -201,14 +202,17 @@ public class LockOnShootAndDrive extends Command {
                  * 
                  * We use the driver's X/Y but OVERRIDE the rotation with our 3D solution.
                  */
-                // The "raw" target from your solver
                 double rawTargetRad = targetHeading.getRadians();
 
-                // Calculate the shortest-path delta (prevents 360-degree spins)
+                // 1. Get the "short way" error between where we are and where vision wants us
                 double angleError = edu.wpi.first.math.MathUtil.angleModulus(rawTargetRad - smoothedHeading);
 
-                // Apply the smoothing: Move the setpoint a fraction of the way to the target
-                smoothedHeading += (angleError * HEADING_SMOOTHING_ALPHA);
+                // 2. Slew the CHANGE. If vision jumps 10 degrees, this only allows 1 degree of
+                // change this frame.
+                double limitedChange = headingLimiter.calculate(angleError);
+
+                // 3. Update the setpoint
+                smoothedHeading = edu.wpi.first.math.MathUtil.angleModulus(smoothedHeading + limitedChange);
 
                 // Use the smoothed heading for the Swerve Request
                 fieldFacingAngle
