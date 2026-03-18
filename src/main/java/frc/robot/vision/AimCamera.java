@@ -27,8 +27,8 @@ public class AimCamera {
     // =================================================================================================================
     // Constants
     // =================================================================================================================
-    private final static byte HUB_CENTER_TAG = 9;
-    private final static byte HUB_OFF_CENTER_RIGHT_TAG = 10;
+    private final static byte HUB_OFF_CENTER_LEFT_TAG = 9;
+    private final static byte HUB_CENTER_TAG = 10;
     private final static byte TOWER_LEFT_TAG = 15;
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
             // x
@@ -115,16 +115,45 @@ public class AimCamera {
      *         null if it isn't.
      */
     public Transform3d getHubRelativeLocation() {
-        Transform3d hub = null;
-        // TODO: 2 hubs, one 9 and 1 ten. prefer 10
+        Transform3d hub9 = null;
+        Transform3d hub10 = null;
 
         for (final PhotonPipelineResult result : results) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
-                if (target.fiducialId != HUB_CENTER_TAG && target.fiducialId != HUB_OFF_CENTER_RIGHT_TAG)
+                if (target.fiducialId != HUB_OFF_CENTER_LEFT_TAG && target.fiducialId != HUB_CENTER_TAG)
                     continue;
-                hub = target.getBestCameraToTarget();
-                break;
+
+                if (target.fiducialId == HUB_OFF_CENTER_LEFT_TAG) {
+                    hub9 = target.getBestCameraToTarget();
+                    continue;
+                }
+                if (target.fiducialId == HUB_CENTER_TAG)
+                    hub10 = target.getBestCameraToTarget();
             }
+        }
+
+        Transform3d hub = null;
+        /*
+         * The center of the hub is deeper than the tags in the x direction: account for
+         * that.
+         */
+        Transform3d tagToHubCenterOffset = null;
+        if (hub9 != null && hub10 == null) {
+            // TODO: need an offset here.
+            hub = hub9;
+        } else if ((hub9 == null || hub9 != null) && hub10 != null) {
+            tagToHubCenterOffset = new Transform3d(
+                    // x
+                    Distance.ofRelativeUnits(-23.5, Inches),
+                    // y
+                    Distance.ofRelativeUnits(0, Inches),
+                    // z
+                    Distance.ofRelativeUnits(27.5, Inches),
+                    new Rotation3d(
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees),
+                            Angle.ofRelativeUnits(0, Degrees)));
+            hub = hub10;
         }
 
         if (hub != null) {
@@ -139,21 +168,6 @@ public class AimCamera {
                     hub.getMeasureX().in(Inches),
                     hub.getMeasureY().in(Inches),
                     hub.getMeasureZ().in(Inches)));
-            /*
-             * The center of the hub is deeper than the tags in the x direction: account for
-             * that.
-             */
-            final Transform3d tagToHubCenterOffset = new Transform3d(
-                    // x
-                    Distance.ofRelativeUnits(-23.5, Inches),
-                    // y
-                    Distance.ofRelativeUnits(0, Inches),
-                    // z
-                    Distance.ofRelativeUnits(27.5, Inches),
-                    new Rotation3d(
-                            Angle.ofRelativeUnits(0, Degrees),
-                            Angle.ofRelativeUnits(0, Degrees),
-                            Angle.ofRelativeUnits(0, Degrees)));
             hub = hub.plus(tagToHubCenterOffset);
 
             System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
