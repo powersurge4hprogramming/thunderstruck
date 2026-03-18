@@ -112,7 +112,7 @@ public class LockOnShootAndDrive extends Command {
                          * The interrupt handler should schedule the manual shooting command and handle
                          * any needed state.
                          */
-                        System.err.println("Cancelling lock on!");
+                        System.err.println("Cancelling lock on! No target");
                         drive.setControl(fieldFacingAngle
                                         .withVelocityX(0)
                                         .withVelocityY(0));
@@ -142,7 +142,7 @@ public class LockOnShootAndDrive extends Command {
                                                 .withTargetDirection(targetHeading));
                         } else {
                                 // Something catostrophic has occurred.
-                                System.err.println("Cancelling lock on!");
+                                System.err.println("Cancelling lock on! Shot invalid");
                                 drive.setControl(fieldFacingAngle
                                                 .withVelocityX(0)
                                                 .withVelocityY(0));
