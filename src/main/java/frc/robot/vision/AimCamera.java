@@ -130,7 +130,7 @@ public class AimCamera {
          */
         Transform3d tagToHubCenterOffset = null;
         if (hub9 != null && hub10 == null) {
-            System.out.println("Hub is tag 9.");
+            // System.out.println("Hub is tag 9.");
             tagToHubCenterOffset = new Transform3d(
                     // x
                     Distance.ofRelativeUnits(-23.5, Inches),
@@ -144,7 +144,7 @@ public class AimCamera {
                             Angle.ofRelativeUnits(0, Degrees)));
             hub = hub9;
         } else if ((hub9 == null || hub9 != null) && hub10 != null) {
-            System.out.println("Hub is tag 10.");
+            // System.out.println("Hub is tag 10.");
             tagToHubCenterOffset = new Transform3d(
                     // x
                     Distance.ofRelativeUnits(-23.5, Inches),
@@ -160,23 +160,27 @@ public class AimCamera {
         }
 
         if (hub != null) {
-            System.out.println(String.format("hub tag (x=%f,y=%f,z=%f)",
-                    hub.getMeasureX().in(Inches),
-                    hub.getMeasureY().in(Inches),
-                    hub.getMeasureZ().in(Inches)));
+            /*
+             * System.out.println(String.format("hub tag (x=%f,y=%f,z=%f)",
+             * hub.getMeasureX().in(Inches),
+             * hub.getMeasureY().in(Inches),
+             * hub.getMeasureZ().in(Inches)));
+             */
 
             hub = hub.plus(SHOOTER_TO_CAMERA_OFFSET);
-
-            System.out.println(String.format("hub shooter (x=%f,y=%f,z=%f)",
-                    hub.getMeasureX().in(Inches),
-                    hub.getMeasureY().in(Inches),
-                    hub.getMeasureZ().in(Inches)));
+            /*
+             * System.out.println(String.format("hub shooter (x=%f,y=%f,z=%f)",
+             * hub.getMeasureX().in(Inches),
+             * hub.getMeasureY().in(Inches),
+             * hub.getMeasureZ().in(Inches)));
+             */
             hub = hub.plus(tagToHubCenterOffset);
-
-            System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
-                    hub.getMeasureX().in(Inches),
-                    hub.getMeasureY().in(Inches),
-                    hub.getMeasureZ().in(Inches)));
+            /*
+             * System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
+             * hub.getMeasureX().in(Inches),
+             * hub.getMeasureY().in(Inches),
+             * hub.getMeasureZ().in(Inches)));
+             */
         }
 
         return hub;
