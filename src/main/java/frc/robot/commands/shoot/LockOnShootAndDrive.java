@@ -1,5 +1,6 @@
 package frc.robot.commands.shoot;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 
 import java.util.function.DoubleSupplier;
@@ -10,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -79,7 +81,7 @@ public class LockOnShootAndDrive extends Command {
                                 .withDeadband(MaxSpeed * 0.1)
                                 // Use open-loop control for drive motors
                                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                                .withHeadingPID(20, 0, 0);
+                                .withHeadingPID(5, 0, 0);
 
                 // REQUIRE BOTH: This stops any other drive or shooter commands
                 addRequirements(this.shooter, this.drive);
@@ -108,6 +110,10 @@ public class LockOnShootAndDrive extends Command {
                          * The interrupt handler should schedule the manual shooting command and handle
                          * any needed state.
                          */
+                        System.err.println("Cancelling lock on!");
+                        drive.setControl(fieldFacingAngle
+                                        .withVelocityX(0)
+                                        .withVelocityY(0));
                         this.cancel();
                         return;
                 }
@@ -123,16 +129,20 @@ public class LockOnShootAndDrive extends Command {
                         System.out.println("Shot is not valid.");
                         if (hubRelativeTransform.getMeasureX().in(Inches) >= TOO_FAR_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
-                                                .withVelocityX(1)
+                                                .withVelocityX(LinearVelocity.ofRelativeUnits(0.5, FeetPerSecond))
                                                 .withVelocityY(xSupplier.getAsDouble())
                                                 .withTargetDirection(targetHeading));
                         } else if (hubRelativeTransform.getMeasureX().in(Inches) <= TOO_CLOSE_DISTANCE_INCHES) {
                                 drive.setControl(fieldFacingAngle
-                                                .withVelocityX(-1)
+                                                .withVelocityX(LinearVelocity.ofRelativeUnits(-0.5, FeetPerSecond))
                                                 .withVelocityY(xSupplier.getAsDouble())
                                                 .withTargetDirection(targetHeading));
                         } else {
                                 // Something catostrophic has occurred.
+                                System.err.println("Cancelling lock on!");
+                                drive.setControl(fieldFacingAngle
+                                                .withVelocityX(0)
+                                                .withVelocityY(0));
                                 this.cancel();
                                 return;
                         }
@@ -142,7 +152,7 @@ public class LockOnShootAndDrive extends Command {
                 if (desiredMotorRPM > shooter.getMaxRPM()) {
                         // Drive forward to get closer to the hub.
                         drive.setControl(fieldFacingAngle
-                                        .withVelocityX(1)
+                                        .withVelocityX(LinearVelocity.ofRelativeUnits(0.5, FeetPerSecond))
                                         .withVelocityY(xSupplier.getAsDouble())
                                         .withTargetDirection(targetHeading));
 
@@ -154,12 +164,12 @@ public class LockOnShootAndDrive extends Command {
                 /*
                  * 2. Command the Shooter
                  */
-                shooter.setRPM(desiredMotorRPM);
-                if (isShooterReady) {
-                        feeder.setFeederSpeed(1);
-                } else {
-                        feeder.setFeederSpeed(0);
-                }
+                // shooter.setRPM(desiredMotorRPM);
+                // if (isShooterReady) {
+                // feeder.setFeederSpeed(1);
+                // } else {
+                // feeder.setFeederSpeed(0);
+                // }
 
                 /*
                  * 3. Command the Drivebase
@@ -185,6 +195,7 @@ public class LockOnShootAndDrive extends Command {
         // -------------------------------------------------------------------------------------------------------------
         @Override
         public void end(boolean interrupted) {
+                System.out.println("In the end.");
                 feeder.setFeederSpeed(0);
                 shooter.stopShooter();
         }
