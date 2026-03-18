@@ -87,9 +87,8 @@ public class Shooter extends SubsystemBase {
      * particular instant. It will shoot the ball at any given velocity and launch
      * angle.
      * 
-     * @param motorRPMScalar   The "speed" at which to set the shoot motor in
-     *                         percentage of possible RPM from 0 to 1.
-     * @param loaderMotorOnOff The toggle for the loader to turn on or off.
+     * @param motorRPMScalar The "speed" at which to set the shoot motor in
+     *                       percentage of possible RPM from 0 to 1.
      * 
      * @return The {@link Command} at which to shoot the ball.
      */
