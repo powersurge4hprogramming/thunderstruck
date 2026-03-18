@@ -235,8 +235,20 @@ public class VelocityAngleSolver {
                 : 0.0;
 
         // Field-relative turret direction (direction ball leaves shooter)
-        double fieldYawDeg = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
+        // double fieldYawDeg = Math.toDegrees(Math.atan2(vShooterY, vShooterX));
+        // System.out.println("fieldYawDeg = " + fieldYawDeg);
+        // Robot-relative yaw (what you send to turret PID)
+        // double robotRelativeYaw = fieldYawDeg - heading.getDegrees();
+        // System.out.println("robotRelativeYaw = " + robotRelativeYaw);
+        // Normalize to [-180, 180]
+        // robotRelativeYaw = ((robotRelativeYaw + 180.0) % 360.0) - 180.0;
+        // System.out.println("robotRelativeYawNormalized = " + robotRelativeYaw);
 
+        // === SHOT LEADING REMOVED (no yaw compensation for strafing/velocity) ===
+        // Pure visual direction only. Flywheel still auto-adjusts for forward/back
+        // motion.
+        // This stops the aggressive over-correction you were seeing.
+        double fieldYawDeg = Math.toDegrees(phi); // visual field angle to hub (no v_robot)
         System.out.println("fieldYawDeg = " + fieldYawDeg);
         // Robot-relative yaw (what you send to turret PID)
         double robotRelativeYaw = fieldYawDeg - heading.getDegrees();
