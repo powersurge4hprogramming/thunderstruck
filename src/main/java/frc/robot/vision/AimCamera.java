@@ -41,18 +41,6 @@ public class AimCamera {
                     Angle.ofRelativeUnits(0, Degrees),
                     Angle.ofRelativeUnits(0, Degrees),
                     Angle.ofRelativeUnits(0, Degrees)));
-    // TODO: This needs real measurements.
-    private final static Transform3d CLIMBER_TO_CAMERA_OFFSET = new Transform3d(
-            // x
-            Distance.ofBaseUnits(5, Inches),
-            // y
-            Distance.ofBaseUnits(0, Inches),
-            // z
-            Distance.ofBaseUnits(-12, Inches),
-            new Rotation3d(
-                    Angle.ofBaseUnits(0, Degrees),
-                    Angle.ofBaseUnits(0, Degrees),
-                    Angle.ofBaseUnits(0, Degrees)));
     private static final Transform3d ROBOT_TO_CAMERA_OFFSET = new Transform3d(
             // x
             Distance.ofBaseUnits(25, Inches),
@@ -177,25 +165,6 @@ public class AimCamera {
         }
 
         return hub;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public Transform3d getTowerRelativeLeftLocation() {
-        Transform3d tower = null;
-
-        for (final PhotonPipelineResult result : results) {
-            for (final PhotonTrackedTarget target : result.getTargets()) {
-                if (target.fiducialId != TOWER_LEFT_TAG)
-                    continue;
-                tower = target.getBestCameraToTarget();
-                break;
-            }
-        }
-
-        if (tower != null)
-            tower.plus(CLIMBER_TO_CAMERA_OFFSET);
-
-        return tower;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
