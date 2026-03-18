@@ -111,7 +111,6 @@ public class LockOnShootAndDrive extends Command {
                         this.cancel();
                         return;
                 }
-                System.out.println("Found the target.");
 
                 // Do some physics.
                 final ShotResult shot = vaSolver.calculate(hubRelativeTransform, heading, fieldVx, fieldVy,

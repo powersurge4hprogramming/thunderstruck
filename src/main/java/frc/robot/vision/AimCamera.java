@@ -111,18 +111,14 @@ public class AimCamera {
                     continue;
 
                 if (target.fiducialId == HUB_OFF_CENTER_LEFT_TAG) {
-                    System.out.println("hub9 hit");
                     hub9 = target.getBestCameraToTarget();
                     continue;
                 }
                 if (target.fiducialId == HUB_CENTER_TAG) {
-                    System.out.println("hub10 hit");
                     hub10 = target.getBestCameraToTarget();
                 }
             }
         }
-        System.out.println("hub9 = " + hub9);
-        System.out.println("hub10 = " + hub10);
 
         Transform3d hub = null;
         /*
