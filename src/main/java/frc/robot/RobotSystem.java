@@ -65,6 +65,7 @@ public class RobotSystem {
 
         private static final String EVENT_SHOOT = "shoot";
         private static final String EVENT_COLLECT = "collect";
+        private static final String EVENT_HOPPER = "hopper";
 
         // =============================================================================================================
         // Driver Inputs
@@ -227,6 +228,7 @@ public class RobotSystem {
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
                 eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
+                eventsAuto.put(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
