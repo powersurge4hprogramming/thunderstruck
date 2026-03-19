@@ -220,7 +220,7 @@ public class LockOnShootAndDrive extends Command {
                                 if (rpm <= shooter.getMaxRPM()) {
                                         shooter.setRPM(rpm);
                                         if (vRpmSolver.isReadyToFire()) {
-                                                feeder.setFeederSpeed(1.0);
+                                                feeder.setFeederSpeed(0.6);
                                         } else {
                                                 feeder.setFeederSpeed(0.0);
                                         }
