@@ -398,8 +398,8 @@ public class RobotSystem {
                                 drivetrain,
                                 feeder,
                                 aimCamera,
-                                () -> -driver.getLeftX() * MaxSpeed * 0.5,
-                                () -> -driver.getLeftY() * MaxSpeed * 0.5,
+                                () -> -driver.getLeftX() * MaxSpeed * 0.10,
+                                () -> -driver.getLeftY() * MaxSpeed * 0.20,
                                 () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
