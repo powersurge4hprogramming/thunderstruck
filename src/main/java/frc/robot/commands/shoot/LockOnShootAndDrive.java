@@ -46,7 +46,7 @@ public class LockOnShootAndDrive extends Command {
          * ±2° vision noise × 0.10 = ±0.2° after filter.
          * With P = 10, that produces only 0.035 rad/s of jitter — invisible.
          */
-        private static final double HEADING_ALPHA = 0.10;
+        private static final double HEADING_ALPHA = 0.15;
 
         /** Creep speed toward / away from hub (m/s). ≈ 0.5 ft/s */
         private static final double CREEP_MPS = 0.15;
@@ -143,7 +143,7 @@ public class LockOnShootAndDrive extends Command {
                                 // ω_jitter = 10 × 0.10 × 0.035 ≈ 0.035 rad/s
                                 // That's 2°/s — completely invisible.
                                 //
-                                .withHeadingPID(10, 0, 0.8);
+                                .withHeadingPID(8, 0, 0.5);
 
                 addRequirements(this.shooter, this.drive);
         }
