@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 1.6175849731663683,
-        "y": 3.3129695885509842
+        "x": 2.899391771019678,
+        "y": 3.4752236135957064
       },
       "prevControl": {
-        "x": 2.1175849731663683,
-        "y": 3.3129695885509842
+        "x": 3.399391771019678,
+        "y": 3.4752236135957064
       },
       "nextControl": null,
       "isLocked": false,
@@ -80,7 +80,7 @@
       "command": null
     },
     {
-      "name": "climb",
+      "name": "",
       "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": null
@@ -96,7 +96,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -1.5074357587749962
   },
   "reversed": false,
   "folder": "autos",

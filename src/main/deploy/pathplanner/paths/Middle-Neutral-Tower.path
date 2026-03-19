@@ -64,12 +64,12 @@
     },
     {
       "anchor": {
-        "x": 1.5473415492957754,
-        "y": 3.316426056338029
+        "x": 3.4156338028169024,
+        "y": 2.5990518783542043
       },
       "prevControl": {
-        "x": 1.419595070422536,
-        "y": 2.310422535211268
+        "x": 3.287887323943663,
+        "y": 1.5930483572274436
       },
       "nextControl": null,
       "isLocked": false,
@@ -107,7 +107,7 @@
     },
     {
       "waypointRelativePos": 3.6038647342995174,
-      "rotationDegrees": 90.0
+      "rotationDegrees": -1.3705138750959076
     }
   ],
   "constraintZones": [
@@ -199,7 +199,7 @@
       "command": null
     },
     {
-      "name": "climb",
+      "name": "",
       "waypointRelativePos": 4.0,
       "endWaypointRelativePos": null,
       "command": null

@@ -96,12 +96,44 @@
     },
     {
       "anchor": {
-        "x": 1.6112147887323953,
-        "y": 3.3323943661971827
+        "x": 2.7209123434704825,
+        "y": 3.897084078711985
       },
       "prevControl": {
-        "x": 2.1928197921080623,
-        "y": 3.474096564203019
+        "x": 3.3025173468461495,
+        "y": 4.038786276717821
+      },
+      "nextControl": {
+        "x": 2.1393073400948155,
+        "y": 3.7553818807061488
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.46,
+        "y": 5.990161001797009
+      },
+      "prevControl": {
+        "x": 0.1691974983121663,
+        "y": 5.943648006550799
+      },
+      "nextControl": {
+        "x": 0.7508025016878337,
+        "y": 6.03667399704322
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.487781753123943,
+        "y": 2.454
+      },
+      "prevControl": {
+        "x": 1.7345223589499235,
+        "y": 2.4942377116226564
       },
       "nextControl": null,
       "isLocked": false,
@@ -202,7 +234,7 @@
       "command": null
     },
     {
-      "name": "climb",
+      "name": "",
       "waypointRelativePos": 6.0,
       "endWaypointRelativePos": null,
       "command": null
@@ -218,7 +250,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 29.999999999999996
   },
   "reversed": false,
   "folder": "autos",
