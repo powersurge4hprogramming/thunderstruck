@@ -218,9 +218,6 @@ public class LockOnShootAndDrive extends Command {
                                                 shot.getFlywheelSpeedMPS());
 
                                 if (rpm <= shooter.getMaxRPM()) {
-                                        /*
-                                         * TODO: Uncomment when ready to fire.
-                                         */
                                         shooter.setRPM(rpm);
                                         if (vRpmSolver.isReadyToFire()) {
                                                 feeder.setFeederSpeed(1.0);
