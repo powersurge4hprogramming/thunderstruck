@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AimCamera {
     // =================================================================================================================
@@ -52,9 +54,8 @@ public class AimCamera {
                     Angle.ofBaseUnits(0, Degrees),
                     Angle.ofBaseUnits(0, Degrees)));
 
-    public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout
-            // TODO: make this selectable in shuffleboard.
-            .loadField(AprilTagFields.k2026RebuiltWelded);
+    private SendableChooser<AprilTagFields> fieldChooser = new SendableChooser<>();
+    private AprilTagFields lastField = null;
     public static final Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.01);
 
     // =================================================================================================================
@@ -72,8 +73,16 @@ public class AimCamera {
     // Public Parts
     // =================================================================================================================
     public AimCamera() {
+        fieldChooser.setDefaultOption("Welded", AprilTagFields.k2026RebuiltWelded);
+        fieldChooser.addOption("AndyMark", AprilTagFields.k2026RebuiltAndymark);
+        SmartDashboard.putData(fieldChooser);
         this.camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
-        photonPoseEstimator = new PhotonPoseEstimator(fieldLayout, ROBOT_TO_CAMERA_OFFSET);
+        AprilTagFields initial = fieldChooser.getSelected();
+        if (initial == null) {
+            initial = AprilTagFields.k2026RebuiltWelded;
+        }
+        photonPoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(initial),
+                ROBOT_TO_CAMERA_OFFSET);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -86,6 +95,13 @@ public class AimCamera {
     public void updateFrames() {
         // System.out.println("Updating camera frames.");
         this.results = camera.getAllUnreadResults();
+
+        AprilTagFields selected = fieldChooser.getSelected();
+        if (selected != null && selected != lastField) {
+            lastField = selected;
+            AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(selected);
+            photonPoseEstimator.setFieldTags(layout);
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
