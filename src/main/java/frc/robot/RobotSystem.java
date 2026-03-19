@@ -225,7 +225,7 @@ public class RobotSystem {
                                 new LockOnShootAndDrive(shooter, drivetrain, feeder, aimCamera, null, null,
                                                 () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
-                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 0.5));
+                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
