@@ -11,6 +11,6 @@ public class USB {
      */
     public static final class CONTROLLER {
         public static final byte DRIVER = 0;
-        public static final byte OPERATOR = 1;
+        public static final byte OPERATOR = 2;
     }
 }
