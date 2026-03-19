@@ -145,8 +145,8 @@ public class AimCamera {
          * to account for what tag being used.
          */
         Transform3d tagToHubCenterOffset = null;
-        if (hub9 != null && hub10 == null) {
-            // System.out.println("Hub is tag 9.");
+        if (true/* hub9 != null && hub10 == null */) {
+            System.out.println("Hub is tag 9.");
             tagToHubCenterOffset = new Transform3d(
                     // x
                     Distance.ofRelativeUnits(-23.5, Inches),
@@ -160,12 +160,12 @@ public class AimCamera {
                             Angle.ofRelativeUnits(0, Degrees)));
             hub = hub9;
         } else if ((hub9 == null || hub9 != null) && hub10 != null) {
-            // System.out.println("Hub is tag 10.");
+            System.out.println("Hub is tag 10.");
             tagToHubCenterOffset = new Transform3d(
                     // x
                     Distance.ofRelativeUnits(-23.5, Inches),
                     // y
-                    Distance.ofRelativeUnits(0, Inches),
+                    Distance.ofRelativeUnits(-7, Inches),
                     // z
                     Distance.ofRelativeUnits(27.5, Inches),
                     new Rotation3d(
