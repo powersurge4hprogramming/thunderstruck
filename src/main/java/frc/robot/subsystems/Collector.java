@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CANBus;
@@ -12,12 +15,14 @@ public class Collector extends SubsystemBase {
     // Private Data Members
     // =================================================================================================================
     private TalonFX krakenX60;
+    private SparkMax motor;
 
     // =================================================================================================================
     // Public Methods
     // =================================================================================================================
     public Collector() {
-        krakenX60 = new TalonFX(CANBus.ID.COLLECTOR.MOTOR, CANBus.BUS.RIO);
+        krakenX60 = new TalonFX(CANBus.ID.COLLECTOR.ENTRY_MOTOR, CANBus.BUS.RIO);
+        motor = new SparkMax(CANBus.ID.COLLECTOR.CONVEYOR, MotorType.kBrushed);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -35,9 +40,11 @@ public class Collector extends SubsystemBase {
                 () -> {
                     double mrs = motorRpmScalar.getAsDouble() * 0.5;
                     krakenX60.set(mrs);
+                    motor.set(mrs);
                 },
                 () -> {
                     krakenX60.set(0);
+                    motor.set(0);
                 });
     }
 

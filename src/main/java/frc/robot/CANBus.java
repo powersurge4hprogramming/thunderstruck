@@ -47,7 +47,8 @@ public final class CANBus {
          * The IDs for the {@link frc.robot.subsystems.Collector Collector}.
          */
         public static final class COLLECTOR {
-            public static final byte MOTOR = 1;
+            public static final byte ENTRY_MOTOR = 1;
+            public static final byte CONVEYOR = 4;
         }
 
         /**
