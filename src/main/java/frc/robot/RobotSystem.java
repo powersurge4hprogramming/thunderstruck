@@ -193,7 +193,7 @@ public class RobotSystem {
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
-                SmartDashboard.putData(autoChooser);
+                SmartDashboard.putData("Auto Chooser", autoChooser);
 
                 drivetrain.registerTelemetry(logger::telemeterize);
         }
