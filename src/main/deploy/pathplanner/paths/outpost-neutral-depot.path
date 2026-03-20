@@ -132,7 +132,7 @@
         "y": 2.454
       },
       "prevControl": {
-        "x": 1.7345223589499235,
+        "x": 1.7345223589499237,
         "y": 2.4942377116226564
       },
       "nextControl": null,
@@ -170,65 +170,17 @@
       "rotationDegrees": -90.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.2,
-      "maxWaypointRelativePos": 0.9,
-      "constraints": {
-        "maxVelocity": 1.75,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 5.1,
-      "maxWaypointRelativePos": 5.7,
-      "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.19701492537313428,
-      "maxWaypointRelativePos": 0.9,
-      "name": "Point Towards Zone"
-    },
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 5.1,
-      "maxWaypointRelativePos": 5.695522388059711,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 0.2,
       "endWaypointRelativePos": 0.9,
       "command": null
     },
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 5.1,
       "endWaypointRelativePos": 5.7,
       "command": null

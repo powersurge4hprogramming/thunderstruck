@@ -9,6 +9,18 @@
           "data": {
             "pathName": "Middle-Neutral-Tower"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Middle-Neutral-Tower"
+          }
         }
       ]
     }

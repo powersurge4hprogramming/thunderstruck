@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.980518783542039,
-        "y": 3.3129695885509842
+        "x": 1.8528533094812163,
+        "y": 5.731
       },
       "prevControl": {
-        "x": 3.8108708962180953,
-        "y": 3.07344494066366
+        "x": 2.6832054221572728,
+        "y": 5.491475352112676
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,36 +29,11 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 0.75,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 0.25,
       "endWaypointRelativePos": 0.75,
       "command": null

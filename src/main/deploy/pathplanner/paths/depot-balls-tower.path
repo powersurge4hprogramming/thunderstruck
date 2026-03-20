@@ -115,33 +115,9 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
-    },
-    {
-      "name": "FinalShots",
-      "minWaypointRelativePos": 3.5,
-      "maxWaypointRelativePos": 3.9,
-      "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
     }
   ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 3.5,
-      "maxWaypointRelativePos": 3.9,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "collect",
@@ -150,7 +126,7 @@
       "command": null
     },
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 3.5,
       "endWaypointRelativePos": 4.8,
       "command": null

@@ -45,36 +45,11 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 1.2067796610169512,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 1.21,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": 1.21,
       "command": null
@@ -96,7 +71,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.5074357587749962
+    "rotation": -1.5074357587749965
   },
   "reversed": false,
   "folder": "autos",

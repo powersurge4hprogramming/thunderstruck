@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.351760563380282,
-        "y": 7.548028169014085
+        "x": 3.352,
+        "y": 5.438
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.170105633800407,
-        "y": 6.68573943661816
+        "x": 2.170345070420125,
+        "y": 4.575711267604075
       },
       "isLocked": false,
       "linkedName": null
@@ -29,33 +29,8 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.37313432835820926,
-      "maxWaypointRelativePos": 0.8029850746268656,
-      "constraints": {
-        "maxVelocity": 2.8,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.36716417910447763,
-      "maxWaypointRelativePos": 0.8,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "hopper",
@@ -64,7 +39,7 @@
       "command": null
     },
     {
-      "name": "shoot",
+      "name": "",
       "waypointRelativePos": 0.37,
       "endWaypointRelativePos": 0.8,
       "command": null
@@ -83,10 +58,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -35.0
   },
   "useDefaultConstraints": true
 }
