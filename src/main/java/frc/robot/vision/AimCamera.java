@@ -44,7 +44,7 @@ public class AimCamera {
      * NOT rotate the camera-to-tag translation, only adds the offset.
      */
     private final static Transform3d SHOOTER_TO_CAMERA_OFFSET = new Transform3d(
-            Distance.ofRelativeUnits(-27.5, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
             Distance.ofRelativeUnits(-2, Inches),
             Distance.ofRelativeUnits(3.70, Inches),
             new Rotation3d(

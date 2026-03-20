@@ -100,7 +100,7 @@ public class VelocityToRPMSolver {
      * 
      * Losses come from slip, compression, friction. Measure empirically.
      */
-    private static final double EXIT_VELOCITY_EFFICIENCY = 0.60;
+    private static final double EXIT_VELOCITY_EFFICIENCY = 0.70;
 
     /** Acceptable RPM error band for the readiness check. */
     private static final double READY_TOLERANCE_RPM = 100.0;
