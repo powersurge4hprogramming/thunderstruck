@@ -141,6 +141,9 @@ public class LockOnShootAndDrive extends Command {
                                 // ω_jitter = 10 × 0.10 × 0.035 ≈ 0.035 rad/s
                                 // That's 2°/s — completely invisible.
                                 //
+                                // P is now 8 to reduce the jitters, and D is now 0.5
+                                // to increase responsiveness.
+                                //
                                 .withHeadingPID(8, 0, 0.5);
 
                 addRequirements(this.shooter, this.drive);
@@ -264,7 +267,7 @@ public class LockOnShootAndDrive extends Command {
                  * The EMA works on the SETPOINT itself:
                  * θ_smooth += α · wrap(θ_raw − θ_smooth)
                  *
-                 * Each frame, only α (10%) of the raw jump is let
+                 * Each frame, only α (15%) of the raw jump is let
                  * through. High-frequency noise (alternating ±2°)
                  * cancels itself out over a few frames. Sustained
                  * real changes (robot drives, target moves) are
