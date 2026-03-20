@@ -190,10 +190,11 @@ public class LockOnShootAndDrive extends Command {
                  * =============================================================
                  */
                 final Transform3d hub = aimCamera.getHubRelativeLocation();
-                System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
-                                hub.getMeasureX().in(Inches),
-                                hub.getMeasureY().in(Inches),
-                                hub.getMeasureZ().in(Inches)));
+                if (hub != null)
+                        System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
+                                        hub.getMeasureX().in(Inches),
+                                        hub.getMeasureY().in(Inches),
+                                        hub.getMeasureZ().in(Inches)));
 
                 if (hub != null) {
                         /* ---- fresh vision frame ---- */
