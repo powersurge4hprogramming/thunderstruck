@@ -104,7 +104,6 @@ public class LockOnShootAndDrive extends Command {
                         final AimCamera aimCamera,
                         final DoubleSupplier xMove,
                         final DoubleSupplier yMove,
-                        final DoubleSupplier batteryVoltageSupplier,
                         final double maxSpeed) {
 
                 this.shooter = shooter;
@@ -115,8 +114,7 @@ public class LockOnShootAndDrive extends Command {
                 this.ySupplier = yMove;
 
                 this.vaSolver = new VelocityAngleSolver();
-                this.vRpmSolver = new VelocityToRPMSolver(
-                                batteryVoltageSupplier, () -> shooter.getMotorRPM());
+                this.vRpmSolver = new VelocityToRPMSolver(() -> shooter.getMotorRPM());
 
                 this.facingAngle = new SwerveRequest.FieldCentricFacingAngle()
                                 .withDeadband(maxSpeed * 0.1)
@@ -235,7 +233,6 @@ public class LockOnShootAndDrive extends Command {
                         // This fixes: "invalid shots cancel my command".
                         // No fault, no cancel. Wait for conditions to improve.
                         //
-
                 } else {
                         /*
                          * ---- camera dropout frame ----

@@ -28,11 +28,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -89,12 +85,6 @@ public class RobotSystem {
         private final Collector collector = new Collector();
 
         // =============================================================================================================
-        // Modules
-        // =============================================================================================================
-        private final PowerDistribution powerDistribution = new PowerDistribution(CANBus.ID.POWER_DISTRIBUTION,
-                        ModuleType.kRev);
-
-        // =============================================================================================================
         // Commands
         // =============================================================================================================
         private static final byte BRAKE_INDEX = 0;
@@ -134,9 +124,6 @@ public class RobotSystem {
                         /* Hopper In */
                         null,
         };
-        private static int currentProfileIndex = 0;
-        private final List<Consumer<EventLoop>> profiles;
-        private final List<EventLoop> profileEventLoops;
 
         // =============================================================================================================
         // PathPlanner
@@ -171,25 +158,7 @@ public class RobotSystem {
         public RobotSystem() {
                 drivetrain.setAimCamera(aimCamera);
 
-                /*
-                 * IMPORTANT!
-                 * 
-                 * This setDefaultCommand method's behavior is not tied to the event loop and
-                 * can therefore be set outside the profiles. Plus, it never changes.
-                 */
-                drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
-
-                this.profiles = List.of(
-                                profile1 -> defaultBindingsProfile(profile1),
-                                profile2 -> leftClawBindingsProfile(profile2));
-
-                this.profileEventLoops = new ArrayList<>(profiles.size());
-                for (int i = 0; i < profiles.size(); i++) {
-                        EventLoop loop = new EventLoop();
-                        profiles.get(i).accept(loop);
-                        profileEventLoops.add(loop);
-                }
-                getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(0));
+                defaultBindingsProfile();
 
                 // Robot config: Pull from PathPlanner GUI settings (tune mass ~40-50kg for your
                 // bot, MOI from CAD, module drive ratios from SDS/Krakens)
@@ -225,15 +194,12 @@ public class RobotSystem {
                 eventsAuto = new HashMap<>();
                 eventsAuto.put(EVENT_SHOOT,
                                 new LockOnShootAndDrive(shooter, drivetrain, feeder, aimCamera, null, null,
-                                                () -> powerDistribution.getVoltage(),
                                                 robotConfig.moduleConfig.maxDriveVelocityMPS));
                 eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
                 eventsAuto.put(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
-                // ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
-                // autoTab.add("Auto Chooser", autoChooser).withWidget("ComboBox Chooser");
                 SmartDashboard.putData(autoChooser);
 
                 drivetrain.registerTelemetry(logger::telemeterize);
@@ -259,27 +225,30 @@ public class RobotSystem {
         // =============================================================================================================
         // Private Methods
         // =============================================================================================================
-        private void setDefaultBindings(final EventLoop profile) {
-                new Trigger(profile, () -> driver.start().getAsBoolean()).onTrue(makeProfileIncreaseCommand(driver));
-                new Trigger(profile, () -> driver.back().getAsBoolean()).onTrue(makeProfileDecreaseCommand(driver));
-                new Trigger(profile, DriverStation::isDisabled).whileTrue(makeIdleCommand());
+        private void setDefaultBindings() {
+                /*
+                 * IMPORTANT!
+                 * 
+                 * This setDefaultCommand method's behavior is not tied to the event loop and
+                 * can therefore be set outside the profiles. Plus, it never changes.
+                 */
+                drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
+                new Trigger(DriverStation::isDisabled).whileTrue(makeIdleCommand());
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private void defaultBindingsProfile(final EventLoop profile) {
-                setDefaultBindings(profile);
+        private void defaultBindingsProfile() {
+                setDefaultBindings();
 
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
                 commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
-                new Trigger(profile, () -> driver.leftBumper().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.y().getAsBoolean())
-                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean())
-                                .onTrue(commands[SPEED_CHANGE_INDEX]);
+                driver.leftBumper().whileTrue(commands[BRAKE_INDEX]);
+                driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
+                driver.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
+                driver.b().onTrue(commands[SPEED_CHANGE_INDEX]);
 
                 // ------------
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -operator.getLeftTriggerAxis(),
@@ -291,47 +260,16 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kBothRumble, operator);
                 commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
-                new Trigger(profile, () -> operator.leftTrigger().getAsBoolean())
-                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> operator.rightTrigger().getAsBoolean())
+                operator.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                operator.rightTrigger()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> operator.x().getAsBoolean()).toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> operator.a().getAsBoolean()).whileTrue(commands[HOPPER_IN_INDEX]);
-                new Trigger(profile, () -> operator.b().getAsBoolean()).and(() -> isLockedOn == false)
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private void leftClawBindingsProfile(final EventLoop profile) {
-                setDefaultBindings(profile);
-
-                commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -driver.getRightTriggerAxis(),
-                                () -> RumbleType.kRightRumble, driver);
-                commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> driver.getLeftTriggerAxis(),
-                                () -> RumbleType.kLeftRumble, driver);
-                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kRightRumble, driver);
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
-                                driver);
-                commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                () -> RumbleType.kLeftRumble, driver);
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kLeftRumble, driver);
-
-                new Trigger(profile, () -> driver.rightTrigger().getAsBoolean())
-                                .onTrue(commands[COLLECTOR_RUN_INDEX]);
-                new Trigger(profile, () -> driver.leftTrigger().getAsBoolean())
+                operator.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
+                operator.a().whileTrue(commands[HOPPER_IN_INDEX]);
+                operator.b()
                                 .and(() -> isLockedOn == false)
-                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                new Trigger(profile, () -> driver.povLeft().getAsBoolean()).onTrue(commands[WEAPON_SWAP_INDEX]);
-                new Trigger(profile, () -> driver.x().getAsBoolean()).whileTrue(commands[BRAKE_INDEX]);
-                new Trigger(profile, () -> driver.b().getAsBoolean()).onTrue(commands[WHEEL_POINT_INDEX]);
-                new Trigger(profile, () -> driver.povDown().getAsBoolean())
-                                .onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                new Trigger(profile, () -> driver.povRight().getAsBoolean()).and(() -> isLockedOn == false)
-                                .and(() -> driver.rightBumper().getAsBoolean())
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
+
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -400,7 +338,6 @@ public class RobotSystem {
                                 aimCamera,
                                 () -> -driver.getLeftX() * MaxSpeed * 0.10,
                                 () -> -driver.getLeftY() * MaxSpeed * 0.20,
-                                () -> powerDistribution.getVoltage(),
                                 MaxSpeed)
                                 .handleInterrupt(() -> {
                                         System.out.println("I am wondering if this executes on cancel()?");
@@ -488,61 +425,6 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileIncreaseCommand(final CommandXboxController controller) {
-                return new InstantCommand(() -> {
-                        System.out.println("Profile Increase");
-                        System.out.println("profiles.size() = " + profiles.size());
-                        System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
-                        System.out.println("currentProfileInex = " + currentProfileIndex);
-                        currentProfileIndex = currentProfileIndex + 1;
-                        if (currentProfileIndex == profileEventLoops.size()) {
-                                currentProfileIndex = 0;
-                        }
-                        getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(currentProfileIndex));
-                        for (int i = 0; i < commands.length; i++) {
-                                getCommandScheduler().cancel(commands[i]);
-                        }
-                        getCommandScheduler().schedule(
-                                        new RumblePulseCommand(controller,
-                                                        0.3,
-                                                        0.12,
-                                                        RumbleIntensity.SUPER_HEAVY,
-                                                        (byte) (currentProfileIndex + 1),
-                                                        () -> RumbleType.kBothRumble)
-                                                        .handleInterrupt(() -> controller
-                                                                        .setRumble(RumbleType.kBothRumble, 0)));
-                });
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeProfileDecreaseCommand(final CommandXboxController controller) {
-                return new InstantCommand(() -> {
-                        System.out.println("Profile Decrease");
-                        System.out.println("profiles.size() = " + profiles.size());
-                        System.out.println("profileEventLoops.size() = " + profileEventLoops.size());
-                        System.out.println("currentProfileInex = " + currentProfileIndex);
-                        currentProfileIndex = currentProfileIndex - 1;
-                        if (currentProfileIndex <= 0) {
-                                currentProfileIndex = profileEventLoops.size() - 1;
-                        }
-                        getCommandScheduler().setActiveButtonLoop(profileEventLoops.get(currentProfileIndex));
-                        for (int i = 0; i < commands.length; i++) {
-                                getCommandScheduler().cancel(commands[i]);
-                        }
-
-                        getCommandScheduler().schedule(
-                                        new RumblePulseCommand(controller,
-                                                        0.3,
-                                                        0.5,
-                                                        RumbleIntensity.SUPER_HEAVY,
-                                                        (byte) (currentProfileIndex + 1),
-                                                        () -> RumbleType.kBothRumble)
-                                                        .handleInterrupt(() -> controller
-                                                                        .setRumble(RumbleType.kBothRumble, 0)));
-                });
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxSpeedChangeCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
@@ -554,26 +436,6 @@ public class RobotSystem {
                                 maxSpeedScalar = 0.66;
                         }
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdDynamicForwardCommand() {
-                return drivetrain.sysIdDynamic(Direction.kForward);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdDynamicReverseCommand() {
-                return drivetrain.sysIdDynamic(Direction.kReverse);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdQuasistaticForwardCommand() {
-                return drivetrain.sysIdQuasistatic(Direction.kForward);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeSysIdQuasistaticReverseCommand() {
-                return drivetrain.sysIdQuasistatic(Direction.kReverse);
         }
 
 }
