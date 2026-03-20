@@ -1,6 +1,7 @@
 package frc.robot.commands.shoot;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.util.function.DoubleSupplier;
 
@@ -189,10 +190,6 @@ public class LockOnShootAndDrive extends Command {
                  * =============================================================
                  */
                 final Transform3d hub = aimCamera.getHubRelativeLocation();
-                System.out.println(String.format("hub dist (x=%f,y=%f,z=%f)",
-                                hub.getMeasureX().in(Inches),
-                                hub.getMeasureY().in(Inches),
-                                hub.getMeasureZ().in(Inches)));
 
                 if (hub != null) {
                         /* ---- fresh vision frame ---- */
@@ -203,18 +200,29 @@ public class LockOnShootAndDrive extends Command {
                                         LAUNCH_ANGLE_DEGREES);
                         System.out.println(shot.toString());
 
-                        // Raw heading (noisy — the EMA in step 3 cleans it)
                         rawTarget = heading.plus(
                                         Rotation2d.fromDegrees(shot.getTurretYawDegrees()));
 
-                        // FIX 3: cache so dropout frames keep aim
                         lastValidTarget = rawTarget;
 
-                        // ---- distance nudge (override fwd/back only) ----
-                        final double dist = hub.getMeasureX().in(Inches);
-                        if (dist > TOO_FAR_INCHES) {
+                        // ── Distance check ──
+                        //
+                        // [FIX] Use true horizontal distance: √(dx² + dy²)
+                        //
+                        // The old code used hub.getMeasureX() (forward component only).
+                        // On a swerve drive the target can be at any angle — if the
+                        // hub is 1 m ahead but 3 m to the left, getMeasureX() returns
+                        // ~39 in while the real range is √(1² + 3²) ≈ 124 in.
+                        //
+                        // getX() / getY() return meters (robot-frame); hypot gives
+                        // the frame-invariant horizontal distance, same value the
+                        // ballistic solver uses as distFloor.
+                        final double distInches = Meters.of(
+                                        Math.hypot(hub.getX(), hub.getY())).in(Inches);
+
+                        if (distInches > TOO_FAR_INCHES) {
                                 vx = CREEP_MPS;
-                        } else if (dist < TOO_CLOSE_INCHES) {
+                        } else if (distInches < TOO_CLOSE_INCHES) {
                                 vx = -CREEP_MPS;
                         }
 
@@ -255,7 +263,7 @@ public class LockOnShootAndDrive extends Command {
                          */
                         rawTarget = (lastValidTarget != null)
                                         ? lastValidTarget
-                                        : heading; // never seen a target yet — face forward
+                                        : heading;
                 }
 
                 /*
@@ -305,8 +313,6 @@ public class LockOnShootAndDrive extends Command {
 
         @Override
         public boolean isFinished() {
-                // Runs until the driver releases the button (interrupted).
-                // Invalid shots no longer cancel the command.
                 return false;
         }
 
