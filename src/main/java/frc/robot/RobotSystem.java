@@ -7,11 +7,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -19,6 +14,7 @@ import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -28,16 +24,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
 import frc.robot.commands.rumble.RumbleIntensity;
@@ -129,7 +124,6 @@ public class RobotSystem {
         // PathPlanner
         // =============================================================================================================
         private final SendableChooser<Command> autoChooser;
-        private final Map<String, Command> eventsAuto;
 
         // =============================================================================================================
         // Swerve Drive Configurations
@@ -190,13 +184,12 @@ public class RobotSystem {
                                 drivetrain // Subsystem ref
                 );
 
-                // Event map: For PathPlanner markers (e.g., "shoot" triggers shooter)
-                eventsAuto = new HashMap<>();
-                eventsAuto.put(EVENT_SHOOT,
-                                new LockOnShootAndDrive(shooter, drivetrain, feeder, aimCamera, null, null,
-                                                robotConfig.moduleConfig.maxDriveVelocityMPS));
-                eventsAuto.put(EVENT_COLLECT, collector.run(() -> 1));
-                eventsAuto.put(EVENT_HOPPER, collector.run(() -> 1));
+                NamedCommands.registerCommand(EVENT_COLLECT, collector.run(() -> 1));
+                NamedCommands.registerCommand(EVENT_SHOOT, shooter.manualShootBall(() -> 1)
+                                .alongWith(new WaitCommand(0.5)
+                                                .andThen(feeder.manualFeederRunIn())
+                                                .withTimeout(2.0)));
+                NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
