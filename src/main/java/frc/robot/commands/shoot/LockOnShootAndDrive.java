@@ -198,6 +198,7 @@ public class LockOnShootAndDrive extends Command {
                                         fieldV.vxMetersPerSecond,
                                         fieldV.vyMetersPerSecond,
                                         LAUNCH_ANGLE_DEGREES);
+                        System.out.println(shot.toString());
 
                         rawTarget = heading.plus(
                                         Rotation2d.fromDegrees(shot.getTurretYawDegrees()));
