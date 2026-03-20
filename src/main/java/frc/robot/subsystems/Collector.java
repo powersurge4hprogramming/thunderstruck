@@ -40,10 +40,7 @@ public class Collector extends SubsystemBase {
                 () -> {
                     double mrs = motorRpmScalar.getAsDouble() * 0.5;
                     krakenX60.set(mrs);
-                    if (mrs == 0)
-                        motor.set(0);
-                    else
-                        motor.set(-1);
+                    motor.set(-1);
                 },
                 () -> {
                     krakenX60.set(0);

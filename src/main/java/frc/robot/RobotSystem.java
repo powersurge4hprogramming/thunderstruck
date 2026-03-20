@@ -253,7 +253,7 @@ public class RobotSystem {
                 commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kBothRumble, operator);
                 commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
-                operator.leftTrigger().onTrue(commands[COLLECTOR_RUN_INDEX]);
+                operator.leftTrigger().whileTrue(commands[COLLECTOR_RUN_INDEX]);
                 operator.rightTrigger()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
