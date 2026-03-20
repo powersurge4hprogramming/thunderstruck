@@ -74,7 +74,6 @@ public class AimCamera {
      * The old values were tuned with broken code that flipped signs.</b>
      */
     private static final Transform3d TAG9_TO_HUB_CENTER_OFFSET = new Transform3d(
-            // TODO: Re-measure these in the TAG's coordinate frame.
             // Tag frame (WPILib convention):
             // X = out of tag face (toward camera)
             // Y = left when viewing tag from front
