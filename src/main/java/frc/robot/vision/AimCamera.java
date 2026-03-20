@@ -75,12 +75,13 @@ public class AimCamera {
     public AimCamera() {
         fieldChooser.setDefaultOption("Welded", AprilTagFields.k2026RebuiltWelded);
         fieldChooser.addOption("AndyMark", AprilTagFields.k2026RebuiltAndymark);
-        SmartDashboard.putData(fieldChooser);
+        SmartDashboard.putData("Field Layout", fieldChooser);
         this.camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         AprilTagFields initial = fieldChooser.getSelected();
         if (initial == null) {
             initial = AprilTagFields.k2026RebuiltWelded;
         }
+        lastField = initial;
         photonPoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(initial),
                 ROBOT_TO_CAMERA_OFFSET);
     }
@@ -93,7 +94,6 @@ public class AimCamera {
      * @apiNote Don't ever call this function unless you know what you are doing.
      */
     public void updateFrames() {
-        // System.out.println("Updating camera frames.");
         this.results = camera.getAllUnreadResults();
 
         AprilTagFields selected = fieldChooser.getSelected();
@@ -227,9 +227,8 @@ public class AimCamera {
                     pose.estimatedPose.toPose2d(),
                     result.getTimestampSeconds(),
                     dynamicStdDevs);
-            if (result.getTimestampSeconds() < 0.5) {
-                poseUpdator.accept(measurement);
-            }
+
+            poseUpdator.accept(measurement);
         }
     }
 

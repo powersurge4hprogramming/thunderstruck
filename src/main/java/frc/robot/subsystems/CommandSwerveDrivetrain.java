@@ -279,7 +279,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     // Reset if needed (syncs with internal estimator)
     public void resetPose(Pose2d pose) {
-        resetPose(pose);
+        super.resetPose(pose);
     }
 
     private void startSimThread() {

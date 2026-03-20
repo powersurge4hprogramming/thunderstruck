@@ -104,7 +104,6 @@ public class LockOnShootAndDrive extends Command {
                         final AimCamera aimCamera,
                         final DoubleSupplier xMove,
                         final DoubleSupplier yMove,
-                        final DoubleSupplier batteryVoltageSupplier,
                         final double maxSpeed) {
 
                 this.shooter = shooter;
@@ -115,8 +114,7 @@ public class LockOnShootAndDrive extends Command {
                 this.ySupplier = yMove;
 
                 this.vaSolver = new VelocityAngleSolver();
-                this.vRpmSolver = new VelocityToRPMSolver(
-                                batteryVoltageSupplier, () -> shooter.getMotorRPM());
+                this.vRpmSolver = new VelocityToRPMSolver(() -> shooter.getMotorRPM());
 
                 this.facingAngle = new SwerveRequest.FieldCentricFacingAngle()
                                 .withDeadband(maxSpeed * 0.1)
@@ -142,6 +140,9 @@ public class LockOnShootAndDrive extends Command {
                                 // With the EMA removing ~90% of noise, P=10 gives:
                                 // ω_jitter = 10 × 0.10 × 0.035 ≈ 0.035 rad/s
                                 // That's 2°/s — completely invisible.
+                                //
+                                // P is now 8 to reduce the jitters, and D is now 0.5
+                                // to increase responsiveness.
                                 //
                                 .withHeadingPID(8, 0, 0.5);
 
@@ -235,7 +236,6 @@ public class LockOnShootAndDrive extends Command {
                         // This fixes: "invalid shots cancel my command".
                         // No fault, no cancel. Wait for conditions to improve.
                         //
-
                 } else {
                         /*
                          * ---- camera dropout frame ----
@@ -267,7 +267,7 @@ public class LockOnShootAndDrive extends Command {
                  * The EMA works on the SETPOINT itself:
                  * θ_smooth += α · wrap(θ_raw − θ_smooth)
                  *
-                 * Each frame, only α (10%) of the raw jump is let
+                 * Each frame, only α (15%) of the raw jump is let
                  * through. High-frequency noise (alternating ±2°)
                  * cancels itself out over a few frames. Sustained
                  * real changes (robot drives, target moves) are

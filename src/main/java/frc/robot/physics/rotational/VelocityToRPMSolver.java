@@ -92,30 +92,25 @@ public class VelocityToRPMSolver {
     private static final double G_GEAR_RATIO = 1.0; // Gear ratio (motor turns : wheel turn)
 
     // Precomputed coefficients
-    private final double KV_RAD_PER_V = KV_RPM_PER_V * Math.PI / 30.0; // rad/s per V
     private final double OMEGA_TO_RPM_FACTOR = G_GEAR_RATIO * 60.0 / (2 * Math.PI); // rad/s wheel to motor RPM
     private final double V_TO_OMEGA_FACTOR = 1.0 / (WHEEL_RADIUS_M * EXIT_VELOCITY_EFFICIENCY); // m/s to rad/s wheel
 
     // State variables
     private double targetWheelOmega = 0.0; // Target wheel angular speed (rad/s)
     private double targetMotorRPM = 0.0; // Target motor RPM
-    private double lastBatteryVoltage = V_NOM; // Last battery voltage (V)
     private double lastReadyTime = -1.0; // Time when first became ready (s)
     private boolean wasReadyLastCall = false; // Previous readiness state
 
     // Suppliers
-    private final DoubleSupplier batteryVoltageSupplier;
     private final DoubleSupplier measuredMotorRPMSupplier;
 
     /**
      * Constructor for VelocityToRPMSolver.
      *
-     * @param batteryVoltageSupplier   Supplier for current battery voltage.
      * @param measuredMotorRPMSupplier Supplier for measured motor RPM (from
      *                                 encoder).
      */
-    public VelocityToRPMSolver(DoubleSupplier batteryVoltageSupplier, DoubleSupplier measuredMotorRPMSupplier) {
-        this.batteryVoltageSupplier = batteryVoltageSupplier;
+    public VelocityToRPMSolver(DoubleSupplier measuredMotorRPMSupplier) {
         this.measuredMotorRPMSupplier = measuredMotorRPMSupplier;
     }
 
@@ -129,9 +124,6 @@ public class VelocityToRPMSolver {
      * @return Motor RPM setpoint.
      */
     public double calculateMotorRPM(double desiredExitVelocityMps) {
-        double vbat = Math.max(batteryVoltageSupplier.getAsDouble(), 0.0); // Safe guard non-negative
-        lastBatteryVoltage = vbat;
-
         if (desiredExitVelocityMps <= 0.0) {
             targetWheelOmega = 0.0;
             targetMotorRPM = 0.0;
@@ -139,16 +131,7 @@ public class VelocityToRPMSolver {
         }
 
         // Linear surface speed
-        double targetWheelOmegaUnclamped = desiredExitVelocityMps * V_TO_OMEGA_FACTOR;
-        // System.out.println("targetWheelOmegaUnclamped = " +
-        // (targetWheelOmegaUnclamped * OMEGA_TO_RPM_FACTOR));
-
-        // Kinematic limit scaled by voltage
-        double maxWheelOmega = KV_RAD_PER_V * (vbat / V_NOM) / G_GEAR_RATIO;
-        // System.out.println("maxWheelOmega = " + (maxWheelOmega *
-        // OMEGA_TO_RPM_FACTOR));
-        // targetWheelOmega = Math.min(targetWheelOmegaUnclamped, maxWheelOmega);
-        targetWheelOmega = targetWheelOmegaUnclamped;
+        targetWheelOmega = desiredExitVelocityMps * V_TO_OMEGA_FACTOR;
 
         // Convert to motor RPM
         targetMotorRPM = targetWheelOmega * OMEGA_TO_RPM_FACTOR;
@@ -208,10 +191,6 @@ public class VelocityToRPMSolver {
     // Telemetry getters (read-only)
     public double getTargetWheelOmega() {
         return targetWheelOmega;
-    }
-
-    public double getLastBatteryVoltage() {
-        return lastBatteryVoltage;
     }
 
     public double getTargetMotorRPM() {
