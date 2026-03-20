@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -14,12 +15,14 @@ public class Robot extends TimedRobot {
 
     // Grabbed from this.autonomousInit().
     private Command autonomousCommand;
+    private final UsbCamera rearCamera;
 
     public Robot() {
         robotContainer = new RobotSystem();
-        UsbCamera rearCamera = CameraServer.startAutomaticCapture();
-        rearCamera.setResolution(320, 320);
+        rearCamera = CameraServer.startAutomaticCapture();
+        rearCamera.setResolution(160, 120);
         rearCamera.setFPS(15);
+        rearCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kForceClose);
     }
 
     @Override
@@ -62,6 +65,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             this.robotContainer.getCommandScheduler().cancel(autonomousCommand);
         }
+        rearCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
     }
 
     @Override
@@ -70,6 +74,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopExit() {
+        rearCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kForceClose);
     }
 
     @Override
