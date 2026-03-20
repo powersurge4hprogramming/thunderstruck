@@ -197,6 +197,7 @@ public class LockOnShootAndDrive extends Command {
                                         fieldV.vxMetersPerSecond,
                                         fieldV.vyMetersPerSecond,
                                         LAUNCH_ANGLE_DEGREES);
+                        System.out.println(shot.toString());
 
                         // Raw heading (noisy — the EMA in step 3 cleans it)
                         rawTarget = heading.plus(
