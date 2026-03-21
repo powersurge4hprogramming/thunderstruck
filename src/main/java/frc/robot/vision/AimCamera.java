@@ -233,26 +233,24 @@ public class AimCamera {
         }
 
         // Select which tag to use and its corresponding hub offset.
-        // Prefer tag 10 (center) when visible; fall back to tag 9.
+        // Center tags preferred (no lateral offset error).
+        // Only one hub is ever visible — single chain is sufficient.
         Transform3d cameraToTag = null;
         Transform3d tagToHubOffset = null;
 
-        if (hub9 != null && hub10 == null) {
-            cameraToTag = hub9;
-            tagToHubOffset = TAG9_TO_HUB_CENTER_OFFSET;
-        } else if (hub10 != null) {
+        if (hub10 != null) {
             cameraToTag = hub10;
             tagToHubOffset = TAG10_TO_HUB_CENTER_OFFSET;
-        }
-
-        if (hub25 != null && hub26 == null) {
-            cameraToTag = hub25;
-            tagToHubOffset = TAG25_TO_HUB_CENTER_OFFSET;
         } else if (hub26 != null) {
             cameraToTag = hub26;
             tagToHubOffset = TAG26_TO_HUB_CENTER_OFFSET;
+        } else if (hub9 != null) {
+            cameraToTag = hub9;
+            tagToHubOffset = TAG9_TO_HUB_CENTER_OFFSET;
+        } else if (hub25 != null) {
+            cameraToTag = hub25;
+            tagToHubOffset = TAG25_TO_HUB_CENTER_OFFSET;
         }
-
         if (cameraToTag == null) {
             return null;
         }
