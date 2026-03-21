@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 0.466,
-        "y": 0.603
+        "y": 0.636
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.466,
-        "y": 0.6029999999999998
+        "y": 0.6359999999999998
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.958318425760286,
-        "y": 1.6093023255813943
+        "x": 2.4450805008944543,
+        "y": 3.394096601073345
       },
       "prevControl": {
-        "x": 2.458318425760286,
-        "y": 1.6093023255813943
+        "x": 2.9450805008944543,
+        "y": 3.394096601073345
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 43.83086067209264
+    "rotation": 18.434948822922003
   },
   "reversed": false,
   "folder": "autos",

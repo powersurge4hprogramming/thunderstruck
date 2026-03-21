@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.565,
-        "y": 7.466672629695886
+        "x": 3.5159570661896247,
+        "y": 7.304418604651163
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1045185063871594,
-        "y": 6.34689133009146
+        "x": 2.0881216457960643,
+        "y": 6.898783542039356
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.438497316636852
+        "x": 0.5467084078711981,
+        "y": 6.882558139534883
       },
       "prevControl": {
-        "x": 2.3477280858676206,
-        "y": 6.6391771019678
+        "x": 0.5467084078755757,
+        "y": 7.132558139534881
+      },
+      "nextControl": {
+        "x": 0.5467084078668205,
+        "y": 6.632558139534883
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.5467084078711981,
+        "y": 5.973935599282649
+      },
+      "prevControl": {
+        "x": 0.5467084078668205,
+        "y": 6.223935599282649
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,20 +47,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "hopper",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "",
-      "waypointRelativePos": 0.37,
-      "endWaypointRelativePos": 0.8,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -55,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "autos",

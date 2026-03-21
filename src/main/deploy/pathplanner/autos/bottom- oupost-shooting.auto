@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle-outpost"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of middle-outpost"
+            "pathName": "bottom-outpost"
           }
         },
         {
@@ -25,13 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of outpost-neutral-depot"
+            "pathName": "outpost-shooting"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "outpost-neutral-depot"
+            "name": "shoot"
           }
         }
       ]
