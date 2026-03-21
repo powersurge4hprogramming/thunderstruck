@@ -189,7 +189,7 @@ public class RobotSystem {
                                 .alongWith(new WaitCommand(1)
                                                 .andThen(feeder.manualFeederRunIn())
                                                 .withTimeout(4.0))
-                                .withTimeout(1));
+                                .withTimeout(7));
                 NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1).withTimeout(0.25));
 
                 // Setup the auto UI in Shuffleboard.
