@@ -186,9 +186,9 @@ public class RobotSystem {
 
                 NamedCommands.registerCommand(EVENT_COLLECT, collector.run(() -> 1));
                 NamedCommands.registerCommand(EVENT_SHOOT, shooter.manualShootBall(() -> 1)
-                                .alongWith(new WaitCommand(0.5)
+                                .alongWith(new WaitCommand(1)
                                                 .andThen(feeder.manualFeederRunIn())
-                                                .withTimeout(2.0)));
+                                                .withTimeout(4.0)));
                 NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
