@@ -78,7 +78,7 @@
     "rotation": -35.07375449334826
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

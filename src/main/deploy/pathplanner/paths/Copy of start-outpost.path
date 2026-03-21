@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.9745438282647583,
-        "y": 0.65
+        "y": 1.0
       },
       "prevControl": null,
       "nextControl": {
         "x": 0.9745438282647583,
-        "y": 0.6500000000000001
+        "y": 1.0
       },
       "isLocked": false,
       "linkedName": null
@@ -58,7 +58,7 @@
     "rotation": -2.7547074304865946
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 52.25

@@ -164,6 +164,19 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.2000000000000086,
+      "maxWaypointRelativePos": 1.6677966101695152,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
@@ -176,14 +189,8 @@
     },
     {
       "name": "shoot",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 6.0,
       "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "",
-      "waypointRelativePos": 5.1,
-      "endWaypointRelativePos": 5.7,
       "command": null
     }
   ],
@@ -197,10 +204,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -62.41209829083553
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 51.47
