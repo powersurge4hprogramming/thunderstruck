@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Copy of top-balls-outpost"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "top-balls-outpost"
           }
         },
