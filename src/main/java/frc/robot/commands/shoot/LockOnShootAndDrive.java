@@ -147,7 +147,7 @@ public class LockOnShootAndDrive extends Command {
                                 //
                                 .withHeadingPID(8, 0, 0.5);
 
-                addRequirements(this.shooter, this.drive);
+                addRequirements(this.shooter, this.drive, this.feeder);
         }
 
         // =================================================================
