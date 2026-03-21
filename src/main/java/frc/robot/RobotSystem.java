@@ -49,7 +49,7 @@ public class RobotSystem {
         // Constants
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
-        private static final double MaxSpeed = 0.66 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private static final double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
         private static final double MaxAngularRateScaler = 0.75;
         private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
