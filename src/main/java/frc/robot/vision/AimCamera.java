@@ -29,8 +29,10 @@ public class AimCamera {
     // =================================================================================================================
     // Constants
     // =================================================================================================================
-    private final static byte HUB_OFF_CENTER_LEFT_TAG = 9;
-    private final static byte HUB_CENTER_TAG = 10;
+    private final static byte HUB_OFF_CENTER_RIGHT_RED_TAG = 9;
+    private final static byte HUB_CENTER_RED_TAG = 10;
+    private final static byte HUB_CENTER_BLUE_TAG = 26;
+    private final static byte HUB_OFF_CENTER_LEFT_BLUE_TAG = 25;
 
     /**
      * Transform from the shooter origin to the camera origin (robot frame).
@@ -92,6 +94,24 @@ public class AimCamera {
      * expressed in the <b>tag's coordinate frame</b>.
      */
     private static final Transform3d TAG10_TO_HUB_CENTER_OFFSET = new Transform3d(
+            Distance.ofRelativeUnits(-23.5, Inches),
+            Distance.ofRelativeUnits(0, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
+            new Rotation3d(
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees)));
+
+    private static final Transform3d TAG25_TO_HUB_CENTER_OFFSET = new Transform3d(
+            Distance.ofRelativeUnits(-23.5, Inches),
+            Distance.ofRelativeUnits(0, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
+            new Rotation3d(
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees)));
+
+    private static final Transform3d TAG26_TO_HUB_CENTER_OFFSET = new Transform3d(
             Distance.ofRelativeUnits(-23.5, Inches),
             Distance.ofRelativeUnits(0, Inches),
             Distance.ofRelativeUnits(27.5, Inches),
@@ -184,19 +204,30 @@ public class AimCamera {
      */
     public Transform3d getHubRelativeLocation() {
         Transform3d hub9 = null;
-        Transform3d hub10 = null;
+        Transform3d hub10 = null; // prefer
+        Transform3d hub25 = null;
+        Transform3d hub26 = null; // prefer
 
         for (final PhotonPipelineResult result : results) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
-                if (target.fiducialId != HUB_OFF_CENTER_LEFT_TAG && target.fiducialId != HUB_CENTER_TAG)
+                if (target.fiducialId != HUB_OFF_CENTER_RIGHT_RED_TAG && target.fiducialId != HUB_CENTER_RED_TAG &&
+                        target.fiducialId != HUB_CENTER_BLUE_TAG && target.fiducialId != HUB_OFF_CENTER_LEFT_BLUE_TAG)
                     continue;
 
-                if (target.fiducialId == HUB_OFF_CENTER_LEFT_TAG) {
+                if (target.fiducialId == HUB_OFF_CENTER_RIGHT_RED_TAG) {
                     hub9 = target.getBestCameraToTarget();
                     continue;
                 }
-                if (target.fiducialId == HUB_CENTER_TAG) {
+                if (target.fiducialId == HUB_CENTER_RED_TAG) {
                     hub10 = target.getBestCameraToTarget();
+                    continue;
+                }
+                if (target.fiducialId == HUB_OFF_CENTER_LEFT_BLUE_TAG) {
+                    hub25 = target.getBestCameraToTarget();
+                    continue;
+                }
+                if (target.fiducialId == HUB_CENTER_BLUE_TAG) {
+                    hub26 = target.getBestCameraToTarget();
                 }
             }
         }
