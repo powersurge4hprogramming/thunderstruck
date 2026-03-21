@@ -128,6 +128,19 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.4576271186440506,
+      "maxWaypointRelativePos": 3.6203389830508375,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
@@ -158,7 +171,7 @@
     "rotation": 53.972626614896406
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

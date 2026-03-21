@@ -36,8 +36,8 @@
         "y": 5.376338028169013
       },
       "prevControl": {
-        "x": 6.892897528282396,
-        "y": 4.370334507042253
+        "x": 7.1072540431228965,
+        "y": 5.610856048094455
       },
       "nextControl": null,
       "isLocked": false,
@@ -76,24 +76,6 @@
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "shoot",
-      "waypointRelativePos": 0.13,
-      "endWaypointRelativePos": 1.19,
-      "command": null
-    },
-    {
-      "name": "collect",
-      "waypointRelativePos": 1.25,
-      "endWaypointRelativePos": 3.16,
-      "command": null
-    },
-    {
-      "name": "shoot",
-      "waypointRelativePos": 1.85,
-      "endWaypointRelativePos": 4.0,
-      "command": null
     }
   ],
   "globalConstraints": {
@@ -109,7 +91,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

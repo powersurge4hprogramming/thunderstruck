@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 0.5385957066189622,
-        "y": 1.5606261180679777
+        "y": 1.5606261180679772
       },
       "isLocked": false,
       "linkedName": null
@@ -52,7 +52,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "autos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

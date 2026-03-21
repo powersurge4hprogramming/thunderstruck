@@ -25,6 +25,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Copy of outpost-neutral-depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "outpost-neutral-depot"
           }
         }
