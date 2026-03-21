@@ -138,8 +138,8 @@ public class AimCamera {
     // Public Parts
     // =================================================================================================================
     public AimCamera() {
-        fieldChooser.setDefaultOption("Welded", AprilTagFields.k2026RebuiltWelded);
-        fieldChooser.addOption("AndyMark", AprilTagFields.k2026RebuiltAndymark);
+        fieldChooser.setDefaultOption("AndyMark", AprilTagFields.k2026RebuiltAndymark);
+        fieldChooser.addOption("Welded", AprilTagFields.k2026RebuiltWelded);
         SmartDashboard.putData("Field Layout", fieldChooser);
         this.camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         AprilTagFields initial = fieldChooser.getSelected();
