@@ -13,13 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top-depot"
+            "pathName": "bottom-outpost"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of depot-shooting"
+            "pathName": "Copy of outpost-shooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         },
         {
