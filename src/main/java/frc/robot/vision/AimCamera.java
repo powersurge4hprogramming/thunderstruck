@@ -29,8 +29,10 @@ public class AimCamera {
     // =================================================================================================================
     // Constants
     // =================================================================================================================
-    private final static byte HUB_OFF_CENTER_LEFT_TAG = 9;
-    private final static byte HUB_CENTER_TAG = 10;
+    private final static byte HUB_OFF_CENTER_RIGHT_RED_TAG = 9;
+    private final static byte HUB_CENTER_RED_TAG = 10;
+    private final static byte HUB_CENTER_BLUE_TAG = 26;
+    private final static byte HUB_OFF_CENTER_LEFT_BLUE_TAG = 25;
 
     /**
      * Transform from the shooter origin to the camera origin (robot frame).
@@ -100,9 +102,26 @@ public class AimCamera {
                     Angle.ofRelativeUnits(0, Degrees),
                     Angle.ofRelativeUnits(0, Degrees)));
 
+    private static final Transform3d TAG25_TO_HUB_CENTER_OFFSET = new Transform3d(
+            Distance.ofRelativeUnits(-23.5, Inches),
+            Distance.ofRelativeUnits(0, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
+            new Rotation3d(
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees)));
+
+    private static final Transform3d TAG26_TO_HUB_CENTER_OFFSET = new Transform3d(
+            Distance.ofRelativeUnits(-23.5, Inches),
+            Distance.ofRelativeUnits(0, Inches),
+            Distance.ofRelativeUnits(27.5, Inches),
+            new Rotation3d(
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees),
+                    Angle.ofRelativeUnits(0, Degrees)));
+
     private SendableChooser<AprilTagFields> fieldChooser = new SendableChooser<>();
     private AprilTagFields lastField = null;
-    public static final Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.01);
 
     // =================================================================================================================
     // Private Members
@@ -185,19 +204,30 @@ public class AimCamera {
      */
     public Transform3d getHubRelativeLocation() {
         Transform3d hub9 = null;
-        Transform3d hub10 = null;
+        Transform3d hub10 = null; // prefer
+        Transform3d hub25 = null;
+        Transform3d hub26 = null; // prefer
 
         for (final PhotonPipelineResult result : results) {
             for (final PhotonTrackedTarget target : result.getTargets()) {
-                if (target.fiducialId != HUB_OFF_CENTER_LEFT_TAG && target.fiducialId != HUB_CENTER_TAG)
+                if (target.fiducialId != HUB_OFF_CENTER_RIGHT_RED_TAG && target.fiducialId != HUB_CENTER_RED_TAG &&
+                        target.fiducialId != HUB_CENTER_BLUE_TAG && target.fiducialId != HUB_OFF_CENTER_LEFT_BLUE_TAG)
                     continue;
 
-                if (target.fiducialId == HUB_OFF_CENTER_LEFT_TAG) {
+                if (target.fiducialId == HUB_OFF_CENTER_RIGHT_RED_TAG) {
                     hub9 = target.getBestCameraToTarget();
                     continue;
                 }
-                if (target.fiducialId == HUB_CENTER_TAG) {
+                if (target.fiducialId == HUB_CENTER_RED_TAG) {
                     hub10 = target.getBestCameraToTarget();
+                    continue;
+                }
+                if (target.fiducialId == HUB_OFF_CENTER_LEFT_BLUE_TAG) {
+                    hub25 = target.getBestCameraToTarget();
+                    continue;
+                }
+                if (target.fiducialId == HUB_CENTER_BLUE_TAG) {
+                    hub26 = target.getBestCameraToTarget();
                 }
             }
         }
@@ -246,11 +276,27 @@ public class AimCamera {
 
             EstimatedRobotPose pose = optionalPose.get();
 
-            Vector<N3> dynamicStdDevs = visionStdDevs;
-            if (result.getTargets().size() == 1) {
-                dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.02); // Less trust with single tag
-            } else if (pose.estimatedPose.getTranslation().getNorm() > 5.0) { // Example: Far away
-                dynamicStdDevs = VecBuilder.fill(0.15, 0.15, 0.015);
+            Vector<N3> dynamicStdDevs;
+            int tagCount = result.getTargets().size();
+            double avgDist = pose.estimatedPose.getTranslation().getNorm();
+            if (tagCount >= 2) {
+                // Multi-tag: geometry resolves ambiguity, trust XY well.
+                // Heading is better than single-tag but Pigeon is still superior.
+                if (avgDist < 3.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.1, 0.1, 0.4);
+                } else {
+                    dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.5);
+                }
+            } else {
+                // Single-tag: XY is decent at close range, degrades with distance.
+                // Heading is unreliable — let Pigeon handle it entirely.
+                if (avgDist < 3.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.3, 0.3, 999.0);
+                } else if (avgDist < 5.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.5, 0.5, 999.0);
+                } else {
+                    dynamicStdDevs = VecBuilder.fill(1.0, 1.0, 999.0);
+                }
             }
 
             final VisionMeasurement measurement = new VisionMeasurement(
