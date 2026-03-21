@@ -104,7 +104,7 @@ public class AimCamera {
 
     private static final Transform3d TAG25_TO_HUB_CENTER_OFFSET = new Transform3d(
             Distance.ofRelativeUnits(-23.5, Inches),
-            Distance.ofRelativeUnits(0, Inches),
+            Distance.ofRelativeUnits(15, Inches),
             Distance.ofRelativeUnits(27.5, Inches),
             new Rotation3d(
                     Angle.ofRelativeUnits(0, Degrees),
@@ -112,7 +112,7 @@ public class AimCamera {
                     Angle.ofRelativeUnits(0, Degrees)));
 
     private static final Transform3d TAG26_TO_HUB_CENTER_OFFSET = new Transform3d(
-            Distance.ofRelativeUnits(-23.5, Inches),
+            Distance.ofRelativeUnits(23.5, Inches),
             Distance.ofRelativeUnits(0, Inches),
             Distance.ofRelativeUnits(27.5, Inches),
             new Rotation3d(
