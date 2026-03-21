@@ -102,7 +102,6 @@ public class AimCamera {
 
     private SendableChooser<AprilTagFields> fieldChooser = new SendableChooser<>();
     private AprilTagFields lastField = null;
-    public static final Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.01);
 
     // =================================================================================================================
     // Private Members
@@ -246,11 +245,27 @@ public class AimCamera {
 
             EstimatedRobotPose pose = optionalPose.get();
 
-            Vector<N3> dynamicStdDevs = visionStdDevs;
-            if (result.getTargets().size() == 1) {
-                dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.02); // Less trust with single tag
-            } else if (pose.estimatedPose.getTranslation().getNorm() > 5.0) { // Example: Far away
-                dynamicStdDevs = VecBuilder.fill(0.15, 0.15, 0.015);
+            Vector<N3> dynamicStdDevs;
+            int tagCount = result.getTargets().size();
+            double avgDist = pose.estimatedPose.getTranslation().getNorm();
+            if (tagCount >= 2) {
+                // Multi-tag: geometry resolves ambiguity, trust XY well.
+                // Heading is better than single-tag but Pigeon is still superior.
+                if (avgDist < 3.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.1, 0.1, 0.4);
+                } else {
+                    dynamicStdDevs = VecBuilder.fill(0.2, 0.2, 0.5);
+                }
+            } else {
+                // Single-tag: XY is decent at close range, degrades with distance.
+                // Heading is unreliable — let Pigeon handle it entirely.
+                if (avgDist < 3.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.3, 0.3, 999.0);
+                } else if (avgDist < 5.0) {
+                    dynamicStdDevs = VecBuilder.fill(0.5, 0.5, 999.0);
+                } else {
+                    dynamicStdDevs = VecBuilder.fill(1.0, 1.0, 999.0);
+                }
             }
 
             final VisionMeasurement measurement = new VisionMeasurement(
