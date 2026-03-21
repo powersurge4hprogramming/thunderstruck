@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "hopper"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "bottom-outpost"
@@ -14,6 +20,12 @@
           "type": "path",
           "data": {
             "pathName": "Copy of outpost-shooting"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]
