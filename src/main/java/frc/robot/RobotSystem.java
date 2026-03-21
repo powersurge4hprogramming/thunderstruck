@@ -49,7 +49,7 @@ public class RobotSystem {
         // Constants
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
-        private static final double MaxSpeed = 1 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private static final double MaxSpeed = 0.66 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         // 3/4 of a rotation per second max angular velocity
         private static final double MaxAngularRateScaler = 0.75;
         private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
@@ -184,12 +184,12 @@ public class RobotSystem {
                                 drivetrain // Subsystem ref
                 );
 
-                NamedCommands.registerCommand(EVENT_COLLECT, collector.run(() -> 1));
+                // NamedCommands.registerCommand(EVENT_COLLECT, collector.run(() -> 1));
                 NamedCommands.registerCommand(EVENT_SHOOT, shooter.manualShootBall(() -> 1)
                                 .alongWith(new WaitCommand(1)
                                                 .andThen(feeder.manualFeederRunIn())
                                                 .withTimeout(4.0)));
-                NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1));
+                // NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
