@@ -184,16 +184,12 @@ public class RobotSystem {
                                 drivetrain // Subsystem ref
                 );
 
-                NamedCommands.registerCommand(EVENT_COLLECT, new InstantCommand(() -> {
-                        return;
-                }));
+                NamedCommands.registerCommand(EVENT_COLLECT, collector.run(() -> 1));
                 NamedCommands.registerCommand(EVENT_SHOOT, shooter.manualShootBall(() -> 1)
                                 .alongWith(new WaitCommand(1)
                                                 .andThen(feeder.manualFeederRunIn())
                                                 .withTimeout(4.0)));
-                NamedCommands.registerCommand(EVENT_HOPPER, new InstantCommand(() -> {
-                        return;
-                }));
+                NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> 1));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
