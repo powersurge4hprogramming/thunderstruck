@@ -13,7 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "depot-balls-tower"
+            "pathName": "Copy of start-collector"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "depot-balls-shooting"
           }
         }
       ]

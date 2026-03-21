@@ -19,7 +19,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "outpost-climber-shooting"
+            "pathName": "Copy of start-outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "outpost-shooting"
           }
         }
       ]

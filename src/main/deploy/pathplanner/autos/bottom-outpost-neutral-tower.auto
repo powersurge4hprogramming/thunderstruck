@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of start-outpost"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 2.5

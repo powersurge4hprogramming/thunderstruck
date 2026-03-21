@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of middle-outpost"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 2.5

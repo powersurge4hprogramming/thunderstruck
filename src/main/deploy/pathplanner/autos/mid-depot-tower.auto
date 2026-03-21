@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle-depot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "depot-balls-tower"
+            "pathName": "depot-balls-shooting"
           }
         }
       ]

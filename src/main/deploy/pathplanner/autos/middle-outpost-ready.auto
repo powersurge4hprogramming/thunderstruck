@@ -19,7 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "outpost-climber-shooting"
+            "pathName": "Copy of middle-outpost"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "outpost-shooting"
           }
         }
       ]
