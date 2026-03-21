@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 0.466,
-        "y": 0.603
+        "x": 2.8182647584973166,
+        "y": 2.761305903398926
       },
       "prevControl": {
-        "x": 1.466,
-        "y": 0.6029999999999999
+        "x": 2.9717499118760458,
+        "y": 2.958643957743008
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,9 +39,9 @@
       "command": null
     },
     {
-      "name": "",
-      "waypointRelativePos": 0.31,
-      "endWaypointRelativePos": 0.73,
+      "name": "shoot",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -55,10 +55,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 29.981639368849333
   },
   "reversed": false,
-  "folder": "autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

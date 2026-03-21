@@ -13,7 +13,19 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Copy of start-collector"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "depot-outpost-shooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of depot-outpost-shooting"
           }
         },
         {
@@ -25,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "outpost-climber-shooting"
+            "pathName": "outpost-shooting"
           }
         }
       ]

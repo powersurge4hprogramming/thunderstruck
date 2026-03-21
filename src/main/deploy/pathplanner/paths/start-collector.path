@@ -16,28 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.250375670840353,
-        "y": 7.223291592124237
+        "x": 1.942,
+        "y": 7.223
       },
       "prevControl": {
-        "x": 3.0222135608164393,
-        "y": 7.018950462639277
-      },
-      "nextControl": {
-        "x": -0.0015845070422528806,
-        "y": 7.819489436619719
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.45,
-        "y": 5.7305545617173514
-      },
-      "prevControl": {
-        "x": 0.45000000000000034,
-        "y": 6.958554561717351
+        "x": 1.5689087656529512,
+        "y": 6.655402504472272
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,15 +30,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.1449275362318836,
+      "waypointRelativePos": 0.55,
       "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
     {
       "name": "depot",
-      "minWaypointRelativePos": 1.5462686567164179,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.5,
         "maxAcceleration": 3.0,
@@ -81,7 +65,7 @@
     },
     {
       "name": "collect",
-      "waypointRelativePos": 1.55,
+      "waypointRelativePos": 0.8,
       "endWaypointRelativePos": 2.0,
       "command": null
     }
@@ -96,10 +80,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -60.93009999579787
   },
   "reversed": false,
-  "folder": "autos",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -86.09950625761812
