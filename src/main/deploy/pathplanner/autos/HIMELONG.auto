@@ -5,27 +5,45 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Copy of top-balls-outpost"
+            "name": "hopper"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top-balls-outpost"
+            "pathName": "bottom-outpost"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.5
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "outpost-shooting"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot-depot-shootagain"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]

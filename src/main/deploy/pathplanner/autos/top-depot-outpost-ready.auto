@@ -44,6 +44,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "bad ones or maybe ones",
   "choreoAuto": false
 }

@@ -5,21 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Copy of top-balls-outpost"
+            "name": "hopper"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "top-balls-outpost"
+            "pathName": "bottom-outpost"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.5
+            "waitTime": 3.0
           }
         },
         {
@@ -27,11 +27,17 @@
           "data": {
             "pathName": "outpost-shooting"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "bad ones or maybe ones",
+  "folder": null,
   "choreoAuto": false
 }
