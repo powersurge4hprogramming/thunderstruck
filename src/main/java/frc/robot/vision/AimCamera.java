@@ -245,6 +245,14 @@ public class AimCamera {
             tagToHubOffset = TAG10_TO_HUB_CENTER_OFFSET;
         }
 
+        if (hub25 != null && hub26 == null) {
+            cameraToTag = hub25;
+            tagToHubOffset = TAG25_TO_HUB_CENTER_OFFSET;
+        } else if (hub26 != null) {
+            cameraToTag = hub26;
+            tagToHubOffset = TAG26_TO_HUB_CENTER_OFFSET;
+        }
+
         if (cameraToTag == null) {
             return null;
         }
