@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -191,7 +192,10 @@ public class RobotSystem {
                                                 .withTimeout(4.0))
                                 .withTimeout(7));
                 NamedCommands.registerCommand(EVENT_HOPPER,
-                                collector.runCollectorOnly().withTimeout(2.5));
+                                new RunCommand(() -> collector.setCollector()).withTimeout(2)
+                                                .finallyDo(() -> collector.stopCollector())
+                                                .andThen(collector.run(() -> -1))
+                                                .withTimeout(1.5));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
