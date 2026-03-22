@@ -13,7 +13,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom-outpost"
+            "pathName": "middle-outpost"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of middle-outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         },
         {
