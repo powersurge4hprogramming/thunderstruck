@@ -53,6 +53,22 @@ public class Collector extends SubsystemBase {
         motor.set(-1);
     }
 
+    public void stopConveyor() {
+        motor.set(0);
+    }
+
+    public void stopCollector() {
+        krakenX60.set(0);
+    }
+
+    public Command runCollectorOnly() {
+        return this.runEnd(() -> krakenX60.set(-0.5), () -> krakenX60.set(0));
+    }
+
+    public Command runConveyorOnly() {
+        return this.runEnd(() -> motor.set(-1), () -> motor.set(0));
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     public void setCollector() {
         krakenX60.set(-0.5);
