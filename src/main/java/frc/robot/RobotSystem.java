@@ -129,7 +129,6 @@ public class RobotSystem {
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.Velocity);
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        final SwerveRequest.PointWheelsAt brickWall = new SwerveRequest.PointWheelsAt();
 
         // =============================================================================================================
         // Logging
