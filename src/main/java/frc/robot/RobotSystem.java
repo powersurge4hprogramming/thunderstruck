@@ -20,7 +20,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -82,25 +81,22 @@ public class RobotSystem {
         // =============================================================================================================
         // Commands
         // =============================================================================================================
-        private static final byte BRAKE_INDEX = 0;
-        private static final byte BRICK_WALL_INDEX = 1;
-        private static final byte MANUAL_SHOOT_INDEX = 2;
-        private static final byte COLLECTOR_RUN_INDEX = 3;
-        private static final byte RESET_FIELD_ORIENTATION_INDEX = 4;
-        private static final byte FEEDER_RUN_OUT_INDEX = 5;
-        private static final byte SPEED_CHANGE_INDEX = 6;
-        private static final byte FEEDER_IN_INDEX = 7;
+        private static final byte BRICK_WALL_INDEX = 0;
+        private static final byte MANUAL_SHOOT_INDEX = 1;
+        private static final byte COLLECTOR_RUN_INDEX = 2;
+        private static final byte RESET_FIELD_ORIENTATION_INDEX = 3;
+        private static final byte FEEDER_RUN_OUT_INDEX = 4;
+        private static final byte SPEED_CHANGE_INDEX = 5;
+        private static final byte FEEDER_IN_INDEX = 6;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
          * it when a profile is switched.
          */
         private final Command[] commands = {
-                        /* Brake */
+                        /* Brick Wall */
                         null,
-                        /* Wheels Point */
-                        null,
-                        /* ManualShoot */
+                        /* Manual Shoot */
                         null,
                         /* Collector.run() */
                         null,
@@ -232,14 +228,12 @@ public class RobotSystem {
         private void defaultBindingsProfile() {
                 setDefaultBindings();
 
-                commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
                 commands[BRICK_WALL_INDEX] = makeBrickWallCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
-                driver.leftBumper().whileTrue(commands[BRAKE_INDEX]);
+                driver.leftBumper().whileTrue(commands[BRICK_WALL_INDEX]);
                 driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                driver.povLeft().onTrue(commands[BRICK_WALL_INDEX]);
                 driver.b().onTrue(commands[SPEED_CHANGE_INDEX]);
 
                 // ------------
@@ -292,27 +286,9 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeBrakeCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
+        private Command makeBrickWallCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
                 return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
                                 RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
-                                                side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeBrickWallCommand(final Supplier<RumbleType> side,
-                        final CommandXboxController controller) {
-                /*
-                 * NOTE:
-                 * All this does it point the wheels to whatever direction it is controlled to
-                 * point towards. Not sure of its usefulness.
-                 * 
-                 * Point the wheels to the zero position.
-                 */
-                final Command zeroWheels = drivetrain.applyRequest(
-                                () -> brickWall.withModuleDirection(
-                                                new Rotation2d(0, 0)));
-                return new ParallelCommandGroup(zeroWheels,
-                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
                                                 side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
