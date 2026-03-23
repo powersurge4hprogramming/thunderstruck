@@ -87,10 +87,9 @@ public class RobotSystem {
         private static final byte MANUAL_SHOOT_INDEX = 2;
         private static final byte COLLECTOR_RUN_INDEX = 3;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 4;
-        private static final byte WEAPON_SWAP_INDEX = 5;
-        private static final byte FEEDER_RUN_OUT_INDEX = 6;
-        private static final byte SPEED_CHANGE_INDEX = 7;
-        private static final byte HOPPER_IN_INDEX = 8;
+        private static final byte FEEDER_RUN_OUT_INDEX = 5;
+        private static final byte SPEED_CHANGE_INDEX = 6;
+        private static final byte FEEDER_IN_INDEX = 7;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -107,13 +106,11 @@ public class RobotSystem {
                         null,
                         /* Reset Field Orientation */
                         null,
-                        /* Weapon Swap */
-                        null,
                         /* Manual Feeder Out */
                         null,
                         /* Speed Changing */
                         null,
-                        /* Hopper In */
+                        /* Manual Feeder In */
                         null,
         };
 
@@ -238,7 +235,7 @@ public class RobotSystem {
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
-                commands[BRICK_WALL_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
+                commands[BRICK_WALL_INDEX] = makeBrickWallCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
                 driver.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
@@ -250,14 +247,13 @@ public class RobotSystem {
                                 () -> RumbleType.kLeftRumble, operator);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> operator.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble, operator);
-                commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
+                commands[FEEDER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
                 operator.leftTrigger().whileTrue(commands[COLLECTOR_RUN_INDEX]);
                 operator.rightTrigger()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                operator.x().toggleOnTrue(commands[WEAPON_SWAP_INDEX]);
-                operator.a().whileTrue(commands[HOPPER_IN_INDEX]);
+                operator.a().whileTrue(commands[FEEDER_IN_INDEX]);
                 operator.b()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
@@ -303,7 +299,7 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeWheelsPointCommand(final Supplier<RumbleType> side,
+        private Command makeBrickWallCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 /*
                  * NOTE:
