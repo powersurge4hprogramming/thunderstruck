@@ -38,7 +38,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.commands.rumble.RumbleDynamicCommand;
 import frc.robot.commands.rumble.RumbleIntensity;
 import frc.robot.commands.rumble.RumblePulseCommand;
-import frc.robot.commands.shoot.LockOnShootAndDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -84,15 +83,14 @@ public class RobotSystem {
         // Commands
         // =============================================================================================================
         private static final byte BRAKE_INDEX = 0;
-        private static final byte WHEEL_POINT_INDEX = 1;
-        private static final byte LOCK_ON_SHOOT_AND_DRIVE_INDEX = 2;
-        private static final byte MANUAL_SHOOT_INDEX = 3;
-        private static final byte COLLECTOR_RUN_INDEX = 4;
-        private static final byte RESET_FIELD_ORIENTATION_INDEX = 5;
-        private static final byte WEAPON_SWAP_INDEX = 6;
-        private static final byte FEEDER_RUN_OUT_INDEX = 7;
-        private static final byte SPEED_CHANGE_INDEX = 8;
-        private static final byte HOPPER_IN_INDEX = 9;
+        private static final byte BRICK_WALL_INDEX = 1;
+        private static final byte MANUAL_SHOOT_INDEX = 2;
+        private static final byte COLLECTOR_RUN_INDEX = 3;
+        private static final byte RESET_FIELD_ORIENTATION_INDEX = 4;
+        private static final byte WEAPON_SWAP_INDEX = 5;
+        private static final byte FEEDER_RUN_OUT_INDEX = 6;
+        private static final byte SPEED_CHANGE_INDEX = 7;
+        private static final byte HOPPER_IN_INDEX = 8;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -102,8 +100,6 @@ public class RobotSystem {
                         /* Brake */
                         null,
                         /* Wheels Point */
-                        null,
-                        /* Lock on Shoot and Drive */
                         null,
                         /* ManualShoot */
                         null,
@@ -140,7 +136,7 @@ public class RobotSystem {
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.Velocity);
         final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+        final SwerveRequest.PointWheelsAt brickWall = new SwerveRequest.PointWheelsAt();
 
         // =============================================================================================================
         // Logging
@@ -242,11 +238,11 @@ public class RobotSystem {
                 commands[BRAKE_INDEX] = makeBrakeCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
-                commands[WHEEL_POINT_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
+                commands[BRICK_WALL_INDEX] = makeWheelsPointCommand(() -> RumbleType.kLeftRumble, driver);
                 commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
                 driver.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                driver.povLeft().onTrue(commands[WHEEL_POINT_INDEX]);
+                driver.povLeft().onTrue(commands[BRICK_WALL_INDEX]);
                 driver.b().onTrue(commands[SPEED_CHANGE_INDEX]);
 
                 // ------------
@@ -254,9 +250,6 @@ public class RobotSystem {
                                 () -> RumbleType.kLeftRumble, operator);
                 commands[MANUAL_SHOOT_INDEX] = makeManualShootCommand(() -> operator.getRightTriggerAxis(),
                                 () -> RumbleType.kRightRumble, operator);
-                commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX] = makeLockOnShootAndDriveCommand(() -> RumbleType.kBothRumble,
-                                operator);
-                commands[WEAPON_SWAP_INDEX] = makeWeaponSwapCommand(() -> RumbleType.kBothRumble, operator);
                 commands[HOPPER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
                 operator.leftTrigger().whileTrue(commands[COLLECTOR_RUN_INDEX]);
@@ -320,34 +313,11 @@ public class RobotSystem {
                  * Point the wheels to the zero position.
                  */
                 final Command zeroWheels = drivetrain.applyRequest(
-                                () -> point.withModuleDirection(
+                                () -> brickWall.withModuleDirection(
                                                 new Rotation2d(0, 0)));
                 return new ParallelCommandGroup(zeroWheels,
                                 RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.VERY_LIGHT,
                                                 side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeLockOnShootAndDriveCommand(final Supplier<RumbleType> side,
-                        final CommandXboxController controller) {
-                return new LockOnShootAndDrive(
-                                shooter,
-                                drivetrain,
-                                feeder,
-                                aimCamera,
-                                () -> -driver.getLeftX() * MaxSpeed * 0.10,
-                                () -> -driver.getLeftY() * MaxSpeed * 0.20,
-                                MaxSpeed)
-                                .handleInterrupt(() -> {
-                                        System.out.println("I am wondering if this executes on cancel()?");
-                                        getCommandScheduler().schedule(RumblePulseCommand
-                                                        .createShortDoublePulse(controller,
-                                                                        RumbleIntensity.SUPER_HEAVY,
-                                                                        side)
-                                                        .handleInterrupt(() -> controller
-                                                                        .setRumble(side.get(), 0)));
-                                        isLockedOn = false;
-                                });
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -373,35 +343,6 @@ public class RobotSystem {
                 return new ParallelCommandGroup(
                                 feeder.manualFeederRunOut(),
                                 new RumbleDynamicCommand(controller, () -> RumbleIntensity.MEDIUM, side)
-                                                .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeWeaponSwapCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
-                final Command weaponSwap = new InstantCommand(() -> {
-                        System.out.println("Swapping.");
-                        if (!isLockedOn) {
-                                System.out.println("Currently manual, swapping to lock on.");
-                                if (commands[MANUAL_SHOOT_INDEX].isScheduled()) {
-                                        getCommandScheduler().cancel(commands[MANUAL_SHOOT_INDEX]);
-                                }
-                                System.out.println("Swapping to lock on.");
-                                getCommandScheduler().schedule(commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
-                                isLockedOn = true;
-                        } else {
-                                System.out.println("Currently locked on, swapping to manual.");
-                                if (commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX].isScheduled()) {
-                                        getCommandScheduler().cancel(
-                                                        commands[LOCK_ON_SHOOT_AND_DRIVE_INDEX]);
-                                }
-                                System.out.println("Swapping to manual.");
-                                isLockedOn = false;
-                        }
-                });
-
-                return new ParallelCommandGroup(weaponSwap,
-                                RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.SUPER_HEAVY,
-                                                side)
                                                 .handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
 
