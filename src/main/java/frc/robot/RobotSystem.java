@@ -372,4 +372,5 @@ public class RobotSystem {
                         maxSpeedScalar = 1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
+
 }
