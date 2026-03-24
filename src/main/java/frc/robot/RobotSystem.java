@@ -243,8 +243,8 @@ public class RobotSystem {
                 commands[DRIVE_ANGLE_SPEED_MAX_INDEX] = makeMaxAngleDriveSpeedFullCommand(() -> RumbleType.kRightRumble,
                                 operator);
                 operator.rightTrigger().whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                operator.leftBumper().whileTrue(commands[FEEDER_IN_INDEX]);
-                operator.rightBumper().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
+                operator.rightBumper().whileTrue(commands[FEEDER_IN_INDEX]);
+                operator.leftBumper().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 operator.povUp().onTrue(commands[DRIVE_SPEED_UP_INDEX]);
                 operator.povDown().onTrue(commands[DRIVE_SPEED_DOWN_INDEX]);
                 operator.povRight().onTrue(commands[DRIVE_SPEED_MAX_INDEX]);
