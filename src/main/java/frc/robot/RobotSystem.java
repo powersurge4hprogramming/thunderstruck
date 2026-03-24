@@ -88,8 +88,11 @@ public class RobotSystem {
         private static final byte COLLECTOR_RUN_INDEX = 3;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 4;
         private static final byte FEEDER_RUN_OUT_INDEX = 5;
-        private static final byte SPEED_CHANGE_INDEX = 6;
-        private static final byte FEEDER_IN_INDEX = 7;
+        private static final byte DRIVE_SPEED_UP_INDEX = 6;
+        private static final byte DRIVE_SPEED_DOWN_INDEX = 7;
+        private static final byte DRIVE_SPEED_MAX_INDEX = 8;
+        private static final byte DRIVE_SPEED_DEFAULT_INDEX = 9;
+        private static final byte FEEDER_IN_INDEX = 10;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -108,7 +111,13 @@ public class RobotSystem {
                         null,
                         /* Manual Feeder Out */
                         null,
-                        /* Speed Changing */
+                        /* Speed up(drive) */
+                        null,
+                        /* speed down (drive) */
+                        null,
+                        /* speed max (drive) */
+                        null,
+                        /* speed default (drive) */
                         null,
                         /* Manual Feeder In */
                         null,
@@ -236,11 +245,10 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
                 commands[BRICK_WALL_INDEX] = makeBrickWallCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
+
                 driver.leftBumper().whileTrue(commands[BRAKE_INDEX]);
                 driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
                 driver.povLeft().onTrue(commands[BRICK_WALL_INDEX]);
-                driver.b().onTrue(commands[SPEED_CHANGE_INDEX]);
 
                 // ------------
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -operator.getLeftTriggerAxis(),
@@ -249,7 +257,12 @@ public class RobotSystem {
                                 () -> RumbleType.kRightRumble, operator);
                 commands[FEEDER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
-                operator.leftTrigger().whileTrue(commands[COLLECTOR_RUN_INDEX]);
+                commands[DRIVE_SPEED_UP_INDEX] = makeMaxDriveSpeedGoUpCommand(() -> RumbleType.kRightRumble, operator);
+                commands[DRIVE_SPEED_DOWN_INDEX] = makeMaxDriveSpeedGoDownCommand(() -> RumbleType.kLeftRumble,
+                                operator);
+                commands[DRIVE_SPEED_DEFAULT_INDEX] = makeMaxDriveSpeedDefaultCommand(() -> RumbleType.kLeftRumble,
+                                operator);
+                commands[DRIVE_SPEED_MAX_INDEX] = makeMaxDriveSpeedFullCommand(() -> RumbleType.kRightRumble, operator);
                 operator.rightTrigger()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[MANUAL_SHOOT_INDEX]);
@@ -257,7 +270,8 @@ public class RobotSystem {
                 operator.b()
                                 .and(() -> isLockedOn == false)
                                 .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
-
+                operator.povUp().onTrue(commands[DRIVE_SPEED_UP_INDEX]);
+                operator.povDown().onTrue(commands[DRIVE_SPEED_DOWN_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -361,17 +375,31 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeMaxSpeedChangeCommand(final Supplier<RumbleType> side,
+        private Command makeMaxDriveSpeedGoDownCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
-                        if (maxSpeedScalar == 1) {
-                                maxSpeedScalar = 0.33;
-                        } else if (maxSpeedScalar == 0.66) {
-                                maxSpeedScalar = 1;
-                        } else if (maxSpeedScalar == 0.33) {
-                                maxSpeedScalar = 0.66;
-                        }
+                        maxSpeedScalar = maxSpeedScalar - 0.1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        private Command makeMaxDriveSpeedGoUpCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxSpeedScalar = maxSpeedScalar + 0.1;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxDriveSpeedDefaultCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxSpeedScalar = 0.5;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxDriveSpeedFullCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxSpeedScalar = 1;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
 }
