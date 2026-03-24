@@ -234,6 +234,8 @@ public class RobotSystem {
                 operator.b().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 operator.povUp().onTrue(commands[DRIVE_SPEED_UP_INDEX]);
                 operator.povDown().onTrue(commands[DRIVE_SPEED_DOWN_INDEX]);
+                operator.povRight().onTrue(commands[DRIVE_SPEED_MAX_INDEX]);
+                operator.povLeft().onTrue(commands[DRIVE_SPEED_DEFAULT_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
