@@ -90,33 +90,7 @@ public class RobotSystem {
         private static final byte DRIVE_SPEED_DOWN_INDEX = 7;
         private static final byte DRIVE_SPEED_MAX_INDEX = 8;
         private static final byte DRIVE_SPEED_DEFAULT_INDEX = 9;
-        /**
-         * {@summary}
-         * The purpose of this array is for cancelling the "active" commands that are in
-         * it when a profile is switched.
-         */
-        private final Command[] commands = {
-                        /* Stasis */
-                        null,
-                        /* Manual Shoot */
-                        null,
-                        /* Collector.run() */
-                        null,
-                        /* Reset Field Orientation */
-                        null,
-                        /* Manual Feeder Out */
-                        null,
-                        /* Speed up(drive) */
-                        null,
-                        /* speed down (drive) */
-                        null,
-                        /* speed max (drive) */
-                        null,
-                        /* speed default (drive) */
-                        null,
-                        /* Manual Feeder In */
-                        null,
-        };
+        private final Command[] commands = new Command[10];
 
         // =============================================================================================================
         // PathPlanner
