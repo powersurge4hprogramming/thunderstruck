@@ -209,7 +209,7 @@ public class RobotSystem {
                 setDefaultBindings();
 
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                () -> RumbleType.kBothRumble, driver);
+                                () -> RumbleType.kRightRumble, driver);
                 commands[STASIS_INDEX] = makeStasisCommand(() -> RumbleType.kLeftRumble, driver);
 
                 drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
