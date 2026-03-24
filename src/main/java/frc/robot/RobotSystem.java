@@ -93,7 +93,7 @@ public class RobotSystem {
         private static final byte DRIVE_ANGLE_SPEED_DOWN_INDEX = 11;
         private static final byte DRIVE_ANGLE_SPEED_MAX_INDEX = 12;
         private static final byte DRIVE_ANGLE_SPEED_DEFAULT_INDEX = 13;
-        private final Command[] commands = new Command[10];
+        private final Command[] commands = new Command[14];
 
         // =============================================================================================================
         // PathPlanner
