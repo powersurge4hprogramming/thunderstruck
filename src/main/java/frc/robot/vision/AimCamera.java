@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Inches;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.Consumer;
 
 import org.photonvision.EstimatedRobotPose;
@@ -284,7 +285,15 @@ public class AimCamera {
 
             Vector<N3> dynamicStdDevs;
             int tagCount = result.getTargets().size();
-            double avgDist = pose.estimatedPose.getTranslation().getNorm();
+            OptionalDouble avgDistOptional = result.getTargets().stream()
+                    .mapToDouble(t -> t.getBestCameraToTarget().getTranslation().getNorm())
+                    .average();
+            if (avgDistOptional.isEmpty()) {
+                System.err.println("Could not get an avg distance.");
+                continue;
+            }
+            double avgDist = avgDistOptional.getAsDouble();
+
             if (tagCount >= 2) {
                 // Multi-tag: geometry resolves ambiguity, trust XY well.
                 // Heading is better than single-tag but Pigeon is still superior.
