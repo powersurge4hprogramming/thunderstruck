@@ -342,17 +342,25 @@ public class RobotSystem {
         private Command makeMaxDriveSpeedGoDownCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
+                        if (maxSpeedScalar == 0.2) {
+                                return;
+                        }
                         maxSpeedScalar = maxSpeedScalar - 0.1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxDriveSpeedGoUpCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
+                        if (maxSpeedScalar == 1) {
+                                return;
+                        }
                         maxSpeedScalar = maxSpeedScalar + 0.1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxDriveSpeedDefaultCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
@@ -360,6 +368,7 @@ public class RobotSystem {
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxDriveSpeedFullCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
@@ -367,27 +376,37 @@ public class RobotSystem {
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxAngleDriveSpeedGoDownCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
+                        if (maxRotSpeedScalar == 0.2) {
+                                return;
+                        }
                         maxRotSpeedScalar = maxRotSpeedScalar - 0.1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxAngleDriveSpeedGoUpCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
+                        if (maxRotSpeedScalar == 1) {
+                                return;
+                        }
                         maxRotSpeedScalar = maxRotSpeedScalar + 0.1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxAngleDriveSpeedDefaultCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
-                        maxRotSpeedScalar = 0.5;
+                        maxRotSpeedScalar = 0.75;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
+        // -------------------------------------------------------------------------------------------------------------
         private Command makeMaxAngleDriveSpeedFullCommand(final Supplier<RumbleType> side,
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
