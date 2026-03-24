@@ -48,7 +48,7 @@ public class RobotSystem {
         // Constants
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
-        private static final double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private static final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private static final double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond);
 
         private static final String EVENT_SHOOT = "shoot";
@@ -60,7 +60,7 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
-        private double maxSpeedScalar = 1.0;
+        private double maxSpeedScalar = 0.5;
         private double maxRotSpeedScalar = 0.75;
 
         // =============================================================================================================
@@ -93,33 +93,7 @@ public class RobotSystem {
         private static final byte DRIVE_ANGLE_SPEED_DOWN_INDEX = 11;
         private static final byte DRIVE_ANGLE_SPEED_MAX_INDEX = 12;
         private static final byte DRIVE_ANGLE_SPEED_DEFAULT_INDEX = 13;
-        /**
-         * {@summary}
-         * The purpose of this array is for cancelling the "active" commands that are in
-         * it when a profile is switched.
-         */
-        private final Command[] commands = {
-                        /* Stasis */
-                        null,
-                        /* Manual Shoot */
-                        null,
-                        /* Collector.run() */
-                        null,
-                        /* Reset Field Orientation */
-                        null,
-                        /* Manual Feeder Out */
-                        null,
-                        /* Speed up(drive) */
-                        null,
-                        /* speed down (drive) */
-                        null,
-                        /* speed max (drive) */
-                        null,
-                        /* speed default (drive) */
-                        null,
-                        /* Manual Feeder In */
-                        null,
-        };
+        private final Command[] commands = new Command[10];
 
         // =============================================================================================================
         // PathPlanner
@@ -238,7 +212,7 @@ public class RobotSystem {
                 setDefaultBindings();
 
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
-                                () -> RumbleType.kBothRumble, driver);
+                                () -> RumbleType.kRightRumble, driver);
                 commands[STASIS_INDEX] = makeStasisCommand(() -> RumbleType.kLeftRumble, driver);
 
                 drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
