@@ -49,9 +49,7 @@ public class RobotSystem {
         // =============================================================================================================
         // kSpeedAt12Volts desired top speed
         private static final double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-        // 3/4 of a rotation per second max angular velocity
-        private static final double MaxAngularRateScaler = 0.75;
-        private static final double MaxAngularRate = RotationsPerSecond.of(MaxAngularRateScaler).in(RadiansPerSecond);
+        private static final double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond);
 
         private static final String EVENT_SHOOT = "shoot";
         private static final String EVENT_COLLECT = "collect";
@@ -63,6 +61,7 @@ public class RobotSystem {
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
         private double maxSpeedScalar = 1.0;
+        private double maxRotSpeedScalar = 0.75;
 
         // =============================================================================================================
         // Systems
@@ -90,6 +89,10 @@ public class RobotSystem {
         private static final byte DRIVE_SPEED_DOWN_INDEX = 7;
         private static final byte DRIVE_SPEED_MAX_INDEX = 8;
         private static final byte DRIVE_SPEED_DEFAULT_INDEX = 9;
+        private static final byte DRIVE_ANGLE_SPEED_UP_INDEX = 10;
+        private static final byte DRIVE_ANGLE_SPEED_DOWN_INDEX = 11;
+        private static final byte DRIVE_ANGLE_SPEED_MAX_INDEX = 12;
+        private static final byte DRIVE_ANGLE_SPEED_DEFAULT_INDEX = 13;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -255,13 +258,27 @@ public class RobotSystem {
                 commands[DRIVE_SPEED_DEFAULT_INDEX] = makeMaxDriveSpeedDefaultCommand(() -> RumbleType.kLeftRumble,
                                 operator);
                 commands[DRIVE_SPEED_MAX_INDEX] = makeMaxDriveSpeedFullCommand(() -> RumbleType.kRightRumble, operator);
+                commands[DRIVE_ANGLE_SPEED_UP_INDEX] = makeMaxAngleDriveSpeedGoUpCommand(() -> RumbleType.kRightRumble,
+                                operator);
+                commands[DRIVE_ANGLE_SPEED_DOWN_INDEX] = makeMaxAngleDriveSpeedGoDownCommand(
+                                () -> RumbleType.kLeftRumble,
+                                operator);
+                commands[DRIVE_ANGLE_SPEED_DEFAULT_INDEX] = makeMaxAngleDriveSpeedDefaultCommand(
+                                () -> RumbleType.kLeftRumble,
+                                operator);
+                commands[DRIVE_ANGLE_SPEED_MAX_INDEX] = makeMaxAngleDriveSpeedFullCommand(() -> RumbleType.kRightRumble,
+                                operator);
                 operator.rightTrigger().whileTrue(commands[MANUAL_SHOOT_INDEX]);
-                operator.a().whileTrue(commands[FEEDER_IN_INDEX]);
-                operator.b().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
+                operator.leftBumper().whileTrue(commands[FEEDER_IN_INDEX]);
+                operator.rightBumper().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
                 operator.povUp().onTrue(commands[DRIVE_SPEED_UP_INDEX]);
                 operator.povDown().onTrue(commands[DRIVE_SPEED_DOWN_INDEX]);
                 operator.povRight().onTrue(commands[DRIVE_SPEED_MAX_INDEX]);
                 operator.povLeft().onTrue(commands[DRIVE_SPEED_DEFAULT_INDEX]);
+                operator.y().onTrue(commands[DRIVE_ANGLE_SPEED_UP_INDEX]);
+                operator.a().onTrue(commands[DRIVE_ANGLE_SPEED_DOWN_INDEX]);
+                operator.b().onTrue(commands[DRIVE_ANGLE_SPEED_MAX_INDEX]);
+                operator.x().onTrue(commands[DRIVE_ANGLE_SPEED_DEFAULT_INDEX]);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -281,7 +298,8 @@ public class RobotSystem {
                                         // Drive left with negative X (left)
                                         .withVelocityY(-controller.getLeftX() * MaxSpeed * maxSpeedScalar)
                                         // Drive counterclockwise with negative X (left)
-                                        .withRotationalRate(-controller.getRightX() * MaxAngularRate);
+                                        .withRotationalRate(
+                                                        -controller.getRightX() * MaxAngularRate * maxRotSpeedScalar);
                 });
         }
 
@@ -372,6 +390,34 @@ public class RobotSystem {
                         final CommandXboxController controller) {
                 return new ParallelCommandGroup(new InstantCommand(() -> {
                         maxSpeedScalar = 1;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxAngleDriveSpeedGoDownCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxRotSpeedScalar = maxRotSpeedScalar - 0.1;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxAngleDriveSpeedGoUpCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxRotSpeedScalar = maxRotSpeedScalar + 0.1;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxAngleDriveSpeedDefaultCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxRotSpeedScalar = 0.5;
+                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
+        }
+
+        private Command makeMaxAngleDriveSpeedFullCommand(final Supplier<RumbleType> side,
+                        final CommandXboxController controller) {
+                return new ParallelCommandGroup(new InstantCommand(() -> {
+                        maxRotSpeedScalar = 1;
                 }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
