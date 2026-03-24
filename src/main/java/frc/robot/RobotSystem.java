@@ -79,7 +79,7 @@ public class RobotSystem {
         // =============================================================================================================
         // Commands
         // =============================================================================================================
-        private static final byte BRICK_WALL_INDEX = 0;
+        private static final byte STASIS_INDEX = 0;
         private static final byte MANUAL_SHOOT_INDEX = 1;
         private static final byte COLLECTOR_RUN_INDEX = 2;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 3;
@@ -91,7 +91,7 @@ public class RobotSystem {
          * it when a profile is switched.
          */
         private final Command[] commands = {
-                        /* Brick Wall */
+                        /* Stasis */
                         null,
                         /* Manual Shoot */
                         null,
@@ -125,7 +125,7 @@ public class RobotSystem {
                         .withDeadband(0).withRotationalDeadband(0)
                         // Use open-loop control for drive motors
                         .withDriveRequestType(DriveRequestType.Velocity);
-        final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        final SwerveRequest.SwerveDriveBrake stasis = new SwerveRequest.SwerveDriveBrake();
 
         // =============================================================================================================
         // Logging
@@ -225,10 +225,10 @@ public class RobotSystem {
 
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
-                commands[BRICK_WALL_INDEX] = makeBrickWallCommand(() -> RumbleType.kLeftRumble, driver);
+                commands[STASIS_INDEX] = makeStasisCommand(() -> RumbleType.kLeftRumble, driver);
 
                 drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
-                driver.leftBumper().whileTrue(commands[BRICK_WALL_INDEX]);
+                driver.leftBumper().whileTrue(commands[STASIS_INDEX]);
                 driver.rightBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
 
                 // ------------
@@ -277,8 +277,8 @@ public class RobotSystem {
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        private Command makeBrickWallCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
-                return new ParallelCommandGroup(drivetrain.applyRequest(() -> brake),
+        private Command makeStasisCommand(final Supplier<RumbleType> side, final CommandXboxController controller) {
+                return new ParallelCommandGroup(drivetrain.applyRequest(() -> stasis),
                                 RumblePulseCommand.createLongSinglePulse(controller, RumbleIntensity.MEDIUM_LIGHT,
                                                 side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
         }
