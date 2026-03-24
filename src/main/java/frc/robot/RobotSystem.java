@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -62,7 +61,6 @@ public class RobotSystem {
         // =============================================================================================================
         private final CommandXboxController driver = new CommandXboxController(USB.CONTROLLER.DRIVER);
         private final CommandXboxController operator = new CommandXboxController(USB.CONTROLLER.OPERATOR);
-        private boolean isLockedOn = false;
         private double maxSpeedScalar = 1.0;
 
         // =============================================================================================================
@@ -86,8 +84,7 @@ public class RobotSystem {
         private static final byte COLLECTOR_RUN_INDEX = 2;
         private static final byte RESET_FIELD_ORIENTATION_INDEX = 3;
         private static final byte FEEDER_RUN_OUT_INDEX = 4;
-        private static final byte SPEED_CHANGE_INDEX = 5;
-        private static final byte FEEDER_IN_INDEX = 6;
+        private static final byte FEEDER_IN_INDEX = 5;
         /**
          * {@summary}
          * The purpose of this array is for cancelling the "active" commands that are in
@@ -219,7 +216,6 @@ public class RobotSystem {
                  * This setDefaultCommand method's behavior is not tied to the event loop and
                  * can therefore be set outside the profiles. Plus, it never changes.
                  */
-                drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
                 new Trigger(DriverStation::isDisabled).whileTrue(makeIdleCommand());
         }
 
@@ -230,10 +226,10 @@ public class RobotSystem {
                 commands[RESET_FIELD_ORIENTATION_INDEX] = makeResetFieldOrientationCommand(
                                 () -> RumbleType.kBothRumble, driver);
                 commands[BRICK_WALL_INDEX] = makeBrickWallCommand(() -> RumbleType.kLeftRumble, driver);
-                commands[SPEED_CHANGE_INDEX] = makeMaxSpeedChangeCommand(() -> RumbleType.kRightRumble, driver);
+
+                drivetrain.setDefaultCommand(makeNormalDriveCommand(driver));
                 driver.leftBumper().whileTrue(commands[BRICK_WALL_INDEX]);
-                driver.y().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
-                driver.b().onTrue(commands[SPEED_CHANGE_INDEX]);
+                driver.rightBumper().onTrue(commands[RESET_FIELD_ORIENTATION_INDEX]);
 
                 // ------------
                 commands[COLLECTOR_RUN_INDEX] = makeCollectorRunCommand(() -> -operator.getLeftTriggerAxis(),
@@ -243,13 +239,9 @@ public class RobotSystem {
                 commands[FEEDER_IN_INDEX] = makeManualFeederInCommand(() -> RumbleType.kLeftRumble, operator);
                 commands[FEEDER_RUN_OUT_INDEX] = makeManualFeederOutCommand(() -> RumbleType.kLeftRumble, operator);
                 operator.leftTrigger().whileTrue(commands[COLLECTOR_RUN_INDEX]);
-                operator.rightTrigger()
-                                .and(() -> isLockedOn == false)
-                                .whileTrue(commands[MANUAL_SHOOT_INDEX]);
+                operator.rightTrigger().whileTrue(commands[MANUAL_SHOOT_INDEX]);
                 operator.a().whileTrue(commands[FEEDER_IN_INDEX]);
-                operator.b()
-                                .and(() -> isLockedOn == false)
-                                .whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
+                operator.b().whileTrue(commands[FEEDER_RUN_OUT_INDEX]);
 
         }
 
@@ -333,20 +325,6 @@ public class RobotSystem {
                 return new ParallelCommandGroup(drivetrain.runOnce(drivetrain::seedFieldCentric),
                                 RumblePulseCommand.createLongDoublePulse(controller, RumbleIntensity.MEDIUM_HEAVY,
                                                 side).handleInterrupt(() -> controller.setRumble(side.get(), 0)));
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        private Command makeMaxSpeedChangeCommand(final Supplier<RumbleType> side,
-                        final CommandXboxController controller) {
-                return new ParallelCommandGroup(new InstantCommand(() -> {
-                        if (maxSpeedScalar == 1) {
-                                maxSpeedScalar = 0.33;
-                        } else if (maxSpeedScalar == 0.66) {
-                                maxSpeedScalar = 1;
-                        } else if (maxSpeedScalar == 0.33) {
-                                maxSpeedScalar = 0.66;
-                        }
-                }), RumblePulseCommand.createShortSinglePulse(controller, RumbleIntensity.MEDIUM_HEAVY, side));
         }
 
 }
