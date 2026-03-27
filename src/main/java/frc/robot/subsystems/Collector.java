@@ -40,7 +40,7 @@ public class Collector extends SubsystemBase {
                 () -> {
                     double mrs = motorRpmScalar.getAsDouble() * 0.5;
                     krakenX60.set(mrs);
-                    motor.set(-1);
+                    motor.set(1);
                 },
                 () -> {
                     krakenX60.set(0);
@@ -50,7 +50,7 @@ public class Collector extends SubsystemBase {
 
     // -----------------------------------------------------------------------------------------------------------------
     public void setConveyor() {
-        motor.set(-1);
+        motor.set(1);
     }
 
     public void stopConveyor() {
@@ -66,7 +66,7 @@ public class Collector extends SubsystemBase {
     }
 
     public Command runConveyorOnly() {
-        return this.runEnd(() -> motor.set(-1), () -> motor.set(0));
+        return this.runEnd(() -> motor.set(1), () -> motor.set(0));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
