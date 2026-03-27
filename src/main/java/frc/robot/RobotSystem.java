@@ -164,11 +164,14 @@ public class RobotSystem {
                                                 .andThen(feeder.manualFeederRunIn())
                                                 .withTimeout(4.0))
                                 .withTimeout(7));
-                NamedCommands.registerCommand(EVENT_HOPPER,
-                                new RunCommand(() -> collector.setCollector()).withTimeout(2)
-                                                .finallyDo(() -> collector.stopCollector())
-                                                .andThen(collector.run(() -> -1))
-                                                .withTimeout(1.5));
+                /*
+                 * NamedCommands.registerCommand(EVENT_HOPPER,
+                 * new RunCommand(() -> collector.setCollector()).withTimeout(2)
+                 * .finallyDo(() -> collector.stopCollector())
+                 * .andThen(collector.run(() -> -1))
+                 * .withTimeout(1.5));
+                 */
+                NamedCommands.registerCommand(EVENT_HOPPER, collector.run(() -> -1).withTimeout(1.5));
 
                 // Setup the auto UI in Shuffleboard.
                 autoChooser = AutoBuilder.buildAutoChooser();
