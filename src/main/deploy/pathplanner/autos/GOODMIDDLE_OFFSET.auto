@@ -21,30 +21,6 @@
           "data": {
             "name": "shoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of middle-outpost"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 7.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of outpost-shooting"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
         }
       ]
     }

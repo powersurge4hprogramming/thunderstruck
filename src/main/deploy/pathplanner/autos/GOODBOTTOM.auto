@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "outpost-shooting"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "shoot"
