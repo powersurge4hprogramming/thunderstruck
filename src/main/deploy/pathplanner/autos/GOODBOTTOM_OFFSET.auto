@@ -17,15 +17,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of outpost-shooting"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 7.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of outpost-shooting"
           }
         },
         {
